@@ -1,0 +1,15 @@
+venv/
+calypso/static/
+calypso/media/*
+calypso/media/
+.DS_Store
+venv
+.pyc
+*.pyc
+.DOCS
+### Django ###
+*.log
+*.pot
+*.pyc
+.dev-env.sh
+.production-env.sh

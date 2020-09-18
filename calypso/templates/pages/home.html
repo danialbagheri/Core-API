@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<!-- Staticfiles-->
+{% load static %}
+<!-- Block contetnt starts here -->
+{% block content %}
+
+
+<div class="jumbotron bg-dark rounded-0" 
+style="height: 30vh;background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url({% static "images/home.png" %});background-size:cover;background-position:center center;background-repeat: no-repeat;">
+<h1 class="text-light" style="margin-top: 100px;">
+  Calypso
+</h1>
+</div>
+<div class="container">
+    {% for product_category in product_categories %}
+        {{ product_category.name }}<br >
+    {% endfor %}
+</div>
+
+{% endblock content %}
