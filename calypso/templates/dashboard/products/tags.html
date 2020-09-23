@@ -1,0 +1,51 @@
+{% extends "dashboard/admin-base.html" %} {% load static %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Products</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered table-hover"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">icon</th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">icon</th>
+              <th scope="col">Name</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            {% for tag in tags %}
+            <tr>
+              <th scope="row"><a href="">{{ tag.id }}</a></th>
+              <td>
+                <img src="{{tag.icon.url}}" style="width: 50px" />
+              </td>
+              <td><strong>{{ tag.name }}</strong><br /></td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- end of new table-->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

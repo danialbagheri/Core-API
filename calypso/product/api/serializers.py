@@ -9,6 +9,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     image_list = ProductImageSerializer(many=True, read_only=True, source='image')
+    #shopify_information = serializers.ReadOnlyField()
     class Meta:
         model= Product
         fields = '__all__'
@@ -19,6 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductCategorySerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
     main_image = serializers.ReadOnlyField()
+    lowest_variant_price = serializers.ReadOnlyField()
     class Meta:
         model = ProductCategory
         fields = '__all__'

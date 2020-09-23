@@ -31,10 +31,11 @@ else:
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-API_KEY = "6ecca01fd4cd7d6de94633be0dc37cab"
-PASSWORD = "91731abe18c5cbaa5d764af617a48824"
+SHOPIFY_API_KEY = os.environ.get('SHOPIFY_API_KEY', None)
+SHOPIFY_PASSWORD = os.environ.get('SHOPIFY_PASSWORD', None)
 API_VERSION = "2020-10"
-SHOPIFY_URL = "https://%s:%s@SHOP_NAME.myshopify.com/admin/api/%s" % (API_KEY, PASSWORD, API_VERSION)
+SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
+    SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
 
 # product = shopify.Product.find( title = "Scalp protection" )
 # Quick-start development settings - unsuitable for production
@@ -174,13 +175,13 @@ MANAGERS = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-#TODO: to be deleted on the live server
+# TODO: to be deleted on the live server
 CORS_ALLOWED_ORIGINS = (
     'http://127.0.0.1:3000',
     'http://127.0.0.1:8000',
     'http://localhost:3000',
 )
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -211,10 +212,10 @@ SUMMERNOTE_CONFIG = {
             ['redo', ['redo', ]],
             ['style', ['style']],
             ['fontsize', ['fontsize']],
-            ['font', ['bold', 'italic', 'clear', 'strikethrough', 'underline',]],
+            ['font', ['bold', 'italic', 'clear', 'strikethrough', 'underline', ]],
             ['fontname', ['fontname']],
             ['color', ['forecolor', 'backcolor', 'color']],
-            ['misc', ['link','picture', 'print', 'help', ]],
+            ['misc', ['link', 'picture', 'print', 'help', ]],
             ['para', ['ul', 'ol', 'paragraph']],
             ['view', ['fullscreen', 'codeview']],
             ['cleaner', ['cleaner']],

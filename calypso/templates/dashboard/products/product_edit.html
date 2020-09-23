@@ -1,0 +1,140 @@
+{% extends "dashboard/admin-base.html" %}
+<!-- loading crispy forms -->
+{% load crispy_forms_tags %}
+<!--starts here-->
+{% block content %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.1.0/dist/tagify.css"
+/>
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      {{product_category_form.instance.name}}
+      <!-- form inputs -->
+      {{product_category_form.instance.sub_title }}
+    </h1>
+  </div>
+</div>
+
+<!-- container with rows -->
+
+<!-- Bigger row -->
+<form method="post">
+  <div class="row p-4">
+    <!-- Longer row -->
+    <div class="col-8">
+      <!-- first card -->
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          {% csrf_token %}
+          <!-- form inputs -->
+          {{ product_category_form.name | as_crispy_field }}
+          <!-- form inputs -->
+          {{ product_category_form.sub_title | as_crispy_field }}
+
+          <!-- form inputs -->
+          {{ product_category_form.description | as_crispy_field }}
+        </div>
+      </div>
+      <!-- direction_of_use -->
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <!-- form inputs -->
+          {{ product_category_form.direction_of_use | as_crispy_field }}
+        </div>
+      </div>
+
+      <!-- End of direction of use card -->
+    </div>
+    <!-- End of column -->
+
+    <!-- Second column -->
+    <div class="col-4">
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <!-- form inputs -->
+          {{ product_category_form.slug | as_crispy_field }}
+          <!-- form inputs -->
+          {{ product_category_form.types | as_crispy_field }}
+          <label>Tags</label>
+          <input
+            class="mb-3"
+            id="tagholder"
+            name="editable_form"
+            placeholder="write some tags"
+            value="{{ tags }}"
+          />
+          <input type="hidden" name="tagslist" id="tags" />
+        </div>
+      </div>
+      <!-- Product Image card-->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Images</h6>
+        </div>
+        <div class="card-body">
+          <p>Editing option will be added soon</p>
+          <img
+            src="{{product_category_form.instance.main_image}}"
+            width="80px"
+          />
+        </div>
+      </div>
+      <!-- SEO Card -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SEO</h6>
+        </div>
+        <div class="card-body"></div>
+      </div>
+      <!-- End of SEO Card -->
+    </div>
+    <!-- End of Row -->
+  </div>
+
+  <!-- new row for variations -->
+  <div class="row p-4">
+    <div class="row" id="itemRow">
+        
+    <div class="col-12">
+      <!-- Save button -->
+      <div class="mb-4 float-right">
+        <button
+          href="#"
+          type="submit"
+          class="d-none d-sm-inline-block btn btn-success shadow-sm"
+        >
+          <i class="fas fa-download fa-sm text-white-50"></i>
+          Save
+        </button>
+      </div>
+      <!-- end of Save button -->
+    </div>
+  </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.7.3/dist/tagify.min.js"></script>
+<script>
+  var inputElm = document.getElementById('tagholder'),
+      tags = document.getElementById('tags')
+   tagify = new Tagify (inputElm, {
+          whitelist : {{ available_tags | safe }},
+          dropdown : {
+              classname     : "color-blue",
+              enabled       : 0,              // show the dropdown immediately on focus
+              maxItems      : 5,
+              position      : "text",         // place the dropdown near the typed text
+              closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
+              highlightFirst: true
+          }
+      });
+  inputElm.addEventListener('change', onChange)
+  tags.value = inputElm.value
+  function onChange(e){
+    // outputs a String
+    tags.value = e.target.value
+  }
+</script>
+{% endblock %}
