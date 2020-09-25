@@ -165,6 +165,7 @@ class Product(models.Model):
     ingredients = models.ManyToManyField(
         "Ingredient", verbose_name=_("ingredients"))
     discontinued = models.BooleanField(default=False)
+    size = models.CharField(max_length=200, null=True, blank=True)
     # rrp = models.FloatField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True, default=0)
     # sale_price = models.FloatField(blank=True, null=True)
@@ -230,12 +231,12 @@ class Stockist(models.Model):
         upload_to="where-to-buy/logos", null=True, blank=True)
 
     def __str__(self):
-        return self.buyer_name
+        return self.name
 
 
 class WhereToBuy(models.Model):
     product = models.ForeignKey(
-        "Product", null=True, on_delete=models.CASCADE)
+        "Product", null=True, on_delete=models.CASCADE, related_name='wheretobuy')
     stockist = models.ForeignKey(
         "Stockist", null=True, on_delete=models.CASCADE)
     url = models.CharField(max_length=250, null=True, blank=True)
