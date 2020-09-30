@@ -55,6 +55,8 @@
       <div class="card shadow mb-4">
         <div class="card-body">
           <!-- form inputs -->
+          {{ product_category_form.top_seller | as_crispy_field }}
+          <!-- form inputs -->
           {{ product_category_form.slug | as_crispy_field }}
           <!-- form inputs -->
           {{ product_category_form.types | as_crispy_field }}

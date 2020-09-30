@@ -16,7 +16,12 @@
 
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Products</h6>
+      <a href="{% url "dashboard:products" %}" style="float:left;" class="nav-link mr-4 panel-tab">
+      <h6 class="m-0 font-weight-bold text-primary">All Products</h6>
+      </a>
+      <a href="{% url "dashboard:products" %}?top=yes" style="float:left;" class="nav-link mr-4 panel-tab">
+      <h6 class="m-0 font-weight-bold text-primary">Top Seller</h6>
+      </a>
     </div>
     <div class="card-body">
       <div class="table-responsive">

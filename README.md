@@ -2,8 +2,15 @@
 
 DISCLAIMER: All rights of this project are reserved for Linco Care limited.
 
-
-
 ## Instructions for future developers
 
 All passwords are saved in environment.sh type files. It is not in the repository, and if you don't have it, you should be able to find it on the live server. use `source environment.sh` to activate it.
+
+## Versions and Updates
+
+### Beta 0.1
+
+- top seller products can now be requested from the API
+- product category endpoint can now be filtered with counts, top products & product types
+- Added top seller filter in the dashboard
+- Prettify the code editor in the front end for easier edit of the code

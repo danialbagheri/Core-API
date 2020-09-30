@@ -18,6 +18,8 @@ class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = ProductCategory.objects.all()
         product_type = self.request.query_params.get('type', None)
+        count = self.request.query_params.get('count', None)
+        top_seller = self.request.query_params.get('top', None)
         if product_type is not None:
             try:
                 product_type_instance = ProductType.objects.get(
@@ -25,4 +27,9 @@ class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(types=product_type_instance)
             except:
                 pass
+        if top_seller and top_seller.lower() == "yes":
+            queryset = queryset.filter(top_seller=True)
+        # slide should happen after filtering
+        if count:
+            queryset = queryset[: int(count)]
         return queryset

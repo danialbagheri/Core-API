@@ -73,6 +73,7 @@ class ProductCategory(models.Model):
     tags = models.ManyToManyField("Tag", verbose_name=_("tags"), blank=True)
     types = models.ManyToManyField(
         "ProductType", verbose_name=_("types"), blank=True)
+    top_seller = models.BooleanField(default=False)
 
     @property
     def all_images(self):

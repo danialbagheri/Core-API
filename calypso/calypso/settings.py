@@ -36,7 +36,10 @@ SHOPIFY_PASSWORD = os.environ.get('SHOPIFY_PASSWORD', None)
 API_VERSION = "2020-10"
 SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
     SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
-
+DRF_RECAPTCHA_SECRET_KEY = os.environ.get('DRF_RECAPTCHA_SECRET_KEY', None)
+# DRF_RECAPTCHA_DOMAIN = ""
+DRF_RECAPTCHA_PROXY = {'http': 'http://127.0.0.1:8000',
+                       'https': 'https://127.0.0.1:8000'}
 # product = shopify.Product.find( title = "Scalp protection" )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -70,6 +73,7 @@ INSTALLED_APPS = [
     'dashboard',
     'django.contrib.sitemaps',
     'rest_framework',
+    'drf_recaptcha',
     'django.contrib.sites',
 ]
 
@@ -207,8 +211,9 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
-        'width': '920px',
+        'width': '100%',
         'height': '400px',
+        'prettifyHtml': True,
         'toolbar': [
             ['undo', ['undo', ]],
             ['redo', ['redo', ]],
@@ -222,6 +227,14 @@ SUMMERNOTE_CONFIG = {
             ['view', ['fullscreen', 'codeview']],
             ['cleaner', ['cleaner']],
         ],
+        'codemirror': {  # codemirror options
+            'mode': 'htmlmixed',
+            'lineNumbers': 'true',
+            'theme': 'monokai',
+            'smartIndent': True,
+            'lineWrapping': True,
+            'spellcheck': True,
+        },
         'cleaner': {
             'action': 'button',
             'newline': '<br>',  # Summernote's default is to use '<p><br></p>'
@@ -240,7 +253,10 @@ SUMMERNOTE_CONFIG = {
             'limitStop': False  # true/false
         }
     },
-    'js': (
-        os.path.join(STATIC_URL, '/static/scripts/summernote-cleaner.js'),
+    'css': (
+        '//cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/theme/monokai.min.css',
     ),
+    # 'js_for_code_highlight': (  # Also for SummernoteInplaceWidget
+    #     os.path.join(STATIC_URL, '/summernote/summernote-ext-highlight.js'),
+    # ),
 }

@@ -22,6 +22,10 @@ def dashboard(request):
 @staff_required(login_url="/accounts/login")
 def products(request):
     product_category = ProductCategory.objects.all()
+    top_seller = request.GET.get('top', None)
+
+    if top_seller is not None and top_seller.lower() == "yes":
+        product_category = product_category.filter(top_seller=True)
     context = {
         "product_categories": product_category
     }

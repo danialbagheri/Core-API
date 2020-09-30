@@ -8,9 +8,11 @@ Django==3.1
 django-cors-headers==3.5.0
 django-crispy-forms==1.9.2
 django-filter==2.3.0
+django-ipware==3.0.1
 django-phonenumber-field==5.0.0
 django-summernote==0.8.11.6
 djangorestframework==3.11.1
+drf-recaptcha==2.0.3
 idna==2.10
 ipython==7.17.0
 ipython-genutils==0.2.0
