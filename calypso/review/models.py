@@ -2,7 +2,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.models import User
-from product.models import ProductCategory
+from product.models import Product
 # Create your models here.
 
 
@@ -29,7 +29,7 @@ class Review(models.Model):
     #     u"Content ID", blank=True, null=True)
     # content = GenericForeignKey(ct_field="content_type", fk_field="content_id")
     product = models.ForeignKey(
-        ProductCategory, null=True, on_delete=models.SET_NULL)
+        Product, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, verbose_name="user",
                              blank=True, null=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=200, blank=True, null=True)

@@ -3,7 +3,8 @@ from .models import *
 from django_summernote.admin import SummernoteModelAdmin
 # Register your models here.
 
-class ProductCategoryAdmin(SummernoteModelAdmin):
+
+class ProductAdmin(SummernoteModelAdmin):
 
     # filter_horizontal = ('tags', 'product_types')
     summernote_fields = ('__all__')
@@ -15,35 +16,36 @@ class ProductCategoryAdmin(SummernoteModelAdmin):
     search_fields = ['name']
 
 
-class ProductAdmin(admin.ModelAdmin):
+class ProductVariantAdmin(admin.ModelAdmin):
 
     # filter_horizontal = ('tags', 'product_types')
-    list_filter = ('product_category',)
+    list_filter = ('product',)
     list_display = [
-        "product_code",
-        "product_category",
-        "option_name",
-        "option_value",
+        "sku",
+        "product",
+        "name",
         "size",
     ]
-    search_fields = ['product_code', ]
+    search_fields = ['sku', ]
+
 
 class ProductImageAdmin(admin.ModelAdmin):
 
     readonly_fields = ["image_preview"]
     list_display = [
-        "product",
+        "variant",
         "image_preview",
         "image_type",
         "image_angle",
         "alternate_text",
     ]
-    search_fields = ['product__product_code', 'product__option_value']
+    search_fields = ['variant__sku', 'variant__name']
 
-admin.site.register(ProductCategory,ProductCategoryAdmin)
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag)
 admin.site.register(ProductType)
-admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductVariant, ProductVariantAdmin)
 admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(Stockist)
 admin.site.register(WhereToBuy)

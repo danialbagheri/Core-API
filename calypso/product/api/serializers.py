@@ -1,4 +1,4 @@
-from product.models import ProductCategory, Product, ProductImage, WhereToBuy
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy
 from review.models import Review, Reply
 from rest_framework import serializers
 
@@ -17,26 +17,26 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductVariantSerializer(serializers.ModelSerializer):
     image_list = ProductImageSerializer(
         many=True, read_only=True, source='image')
     where_to_buy = WhereToBuySerializer(
         many=True, read_only=True, source='wheretobuy')
 
     class Meta:
-        model = Product
+        model = ProductVariant
         fields = '__all__'
-        lookup_field = "product_code"
+        lookup_field = "sku"
         extra__kwargs = {'url': {'lookup_field': 'product_code'}}
 
 
-class ProductCategorySerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True, read_only=True)
+class ProductSerializer(serializers.ModelSerializer):
+    variants = ProductVariantSerializer(many=True, read_only=True)
     main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
 
     class Meta:
-        model = ProductCategory
+        model = Product
         fields = '__all__'
         lookup_field = "slug"
         depth = 3

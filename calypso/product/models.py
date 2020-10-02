@@ -64,7 +64,7 @@ class Tag(models.Model):
         return self.name
 
 
-class ProductCategory(models.Model):
+class Product(models.Model):
     name = models.CharField(_('name'), max_length=300)
     sub_title = models.CharField(_('sub title'), max_length=300)
     slug = models.SlugField(_("slug"), unique=True)
@@ -77,7 +77,7 @@ class ProductCategory(models.Model):
 
     @property
     def all_images(self):
-        return ProductImage.objects.filter(product__product_category=self)
+        return ProductImage.objects.filter(variant__product=self)
 
     @property
     def main_image_object(self):
@@ -86,8 +86,8 @@ class ProductCategory(models.Model):
     @property
     def lowest_variant_price(self):
         list_of_prices = []
-        for product in self.products.all():
-            list_of_prices.append(product.price)
+        for variant in self.variants.all():
+            list_of_prices.append(variant.price)
         lowest_price = min(float(sub) for sub in list_of_prices)
         return lowest_price
 
@@ -108,13 +108,13 @@ class ProductImage(models.Model):
     def image_directory_path(self, filename):
         extension = os.path.splitext(filename)[1]
         random_id = random.randint(100, 120)
-        new_file_name = "{}-{}-{}-{}-type-{}-{}-id{}{}".format(
-            self.product.product_code, self.product.product_category.name, self.product.option_name, self.product.option_value, self.image_type, self.image_angle, random_id, extension).replace(" ", "_")
+        new_file_name = "{}-{}-{}-type-{}-{}-id{}{}".format(
+            self.variant.sku, self.variant.product.name, self.variant.name, self.image_type, self.image_angle, random_id, extension).replace(" ", "_")
         # file will upload to media root "product_images/bandName/product_code/Image_type/fileName"
-        return "product-images/{0}/{1}/{2}".format(self.product.product_category.name, self.product.product_code, new_file_name).replace(" ", "_")
+        return "product-images/{0}/{1}/{2}".format(self.variant.product.name, self.variant.sku, new_file_name).replace(" ", "_")
 
-    product = models.ForeignKey(
-        'Product', on_delete=models.CASCADE, related_name='image')
+    variant = models.ForeignKey(
+        'ProductVariant', on_delete=models.CASCADE, related_name='variant_images')
     image = models.ImageField(upload_to=image_directory_path)
     image_type = models.CharField(max_length=2, choices=IMAGE_TYPE, blank=True)
     image_angle = models.CharField(
@@ -143,14 +143,15 @@ class ProductImage(models.Model):
         return str(b64encode(data).decode('utf-8'))
 
     def __str__(self):
-        return "{} - {}".format(self.product.product_category.name, self.product)
+        return "{} - {}".format(self.variant.product.name, self.variant)
 
 
-class Product(models.Model):
+class ProductVariant(models.Model):
 
-    product_code = models.CharField(max_length=100, blank=True)
-    product_category = models.ForeignKey(
-        "ProductCategory", null=True, on_delete=models.CASCADE, related_name="products")
+    sku = models.CharField(max_length=100, blank=True)
+    product = models.ForeignKey(
+        "Product", null=True, on_delete=models.CASCADE, related_name="variants")
+    name = models.CharField(max_length=255, null=True, blank=True, default="")
     option_name = models.CharField(max_length=255, null=True, blank=True)
     option_value = models.CharField(max_length=200, null=True, blank=True)
     size = models.CharField(max_length=355, blank=True)
@@ -181,14 +182,14 @@ class Product(models.Model):
     @property
     def category_product_types(self):
         product_types = []
-        for product_type in self.product_category.product_types.all():
+        for product_type in self.product.product_types.all():
             product_types.append(str(product_type))
         return product_types
 
     @property
     def category_product_tags(self):
         tags = []
-        for tag in self.product_category.tags.all():
+        for tag in self.product.tags.all():
             tags.append(str(tag))
         return ','.join(tags)
 
@@ -200,9 +201,9 @@ class Product(models.Model):
 
     @property
     def synchronise_with_shopify(self):
-        if self.product_code:
+        if self.sku:
             try:
-                info = get_variant_info_by_sku(self.product_code)
+                info = get_variant_info_by_sku(self.sku)
                 self.price = info['price']
                 self.shopify_rest_variant_id = info['legacyResourceId']
                 self.shopify_storefront_variant_id = info['storefrontId']
@@ -216,7 +217,7 @@ class Product(models.Model):
         pass
 
     def __str__(self):
-        return "{}, {}, {}, {}".format(self.product_code, self.product_category, self.option_name, self.option_value, self.size)
+        return "{}, {}, {}".format(self.sku, self.product, self.name, self.size)
 
 
 class Ingredient(models.Model):
@@ -236,8 +237,21 @@ class Stockist(models.Model):
 
 
 class WhereToBuy(models.Model):
-    product = models.ForeignKey(
-        "Product", null=True, on_delete=models.CASCADE, related_name='wheretobuy')
+    variant = models.ForeignKey(
+        "ProductVariant", null=True, on_delete=models.CASCADE, related_name='wheretobuy')
     stockist = models.ForeignKey(
         "Stockist", null=True, on_delete=models.CASCADE)
     url = models.CharField(max_length=250, null=True, blank=True)
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=250, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
+    products = models.ManyToManyField(
+        'Product',
+        blank=True,
+        related_name="collections",
+    )
+
+    background_image_alt = models.CharField(max_length=128, blank=True)
+    description = models.TextField(blank=True)

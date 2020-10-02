@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('web.urls', namespace='web')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
     path('api/reviews/', include('review.urls', namespace='review_api')),
+    path('api/web/', include('web.api.urls', namespace='web_api')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),

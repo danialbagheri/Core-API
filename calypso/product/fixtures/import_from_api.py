@@ -30,7 +30,7 @@ def get_the_products():
     request = requests.get(
         'https://api.lincocare.co.uk/product-categories/').json()
     for i in request:
-        product_category = ProductCategory.objects.create(
+        product_category = Product.objects.create(
             name=i["name"],
             slug=i["slug"],
             sub_title=i["second_title"],
@@ -57,18 +57,18 @@ def get_the_products():
             product_category.tags.add(tag_instance)
             product_category.save()
         for product in i['products']:
-            product_instance = Product.objects.create(
-                product_code=product['product_code'],
-                product_category=product_category,
-                option_name=product['option_name'],
-                option_value=product['option_value'],
+            product_instance = ProductVariant.objects.create(
+                sku=product['product_code'],
+                product=product_category,
+                name="{} {}".format(product['option_name'],
+                                    product['option_value']),
                 shopify_rest_variant_id=product['shopify_variant_id'],
             )
             for image in product['images']:
                 image_path = save_image(
                     image['image_url'], product['product_code'])
                 image_instance = ProductImage.objects.create(
-                    product=product_instance,
+                    variant=product_instance,
                     image_type=image['image_type'],
                     image_angle=image['image_angle'],
                     alternate_text=image['image_alt:']

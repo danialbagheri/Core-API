@@ -24,6 +24,7 @@ if PRODUCTION_ENVIRONMENT:
         pass
 else:
     # it's development
+
     try:
         from .development import *
     except ImportError:
@@ -37,9 +38,12 @@ API_VERSION = "2020-10"
 SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
     SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
 DRF_RECAPTCHA_SECRET_KEY = os.environ.get('DRF_RECAPTCHA_SECRET_KEY', None)
-# DRF_RECAPTCHA_DOMAIN = ""
-DRF_RECAPTCHA_PROXY = {'http': 'http://127.0.0.1:8000',
-                       'https': 'https://127.0.0.1:8000'}
+# DRF_RECAPTCHA_DOMAIN = "127.0.0.1:8000"
+DRF_RECAPTCHA_PROXY = {
+    'http': 'http://127.0.0.1:8000',
+    'https': 'https://127.0.0.1:8000',
+    'https': 'https://34ce4fe2bd40.ngrok.io'
+}
 # product = shopify.Product.find( title = "Scalp protection" )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -50,7 +54,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

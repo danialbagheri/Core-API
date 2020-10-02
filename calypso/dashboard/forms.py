@@ -1,13 +1,13 @@
 from django import forms
 
-from product.models import ProductCategory, Product
+from product.models import ProductVariant, Product
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 
-class ProductCategoryForm(forms.ModelForm):
+class ProductForm(forms.ModelForm):
 
     class Meta:
-        model = ProductCategory
+        model = Product
         fields = "__all__"
         exclude = ['tags']
         widgets = {
@@ -16,8 +16,8 @@ class ProductCategoryForm(forms.ModelForm):
         }
 
 
-class ProductForm(forms.ModelForm):
+class ProductVariantForm(forms.ModelForm):
 
     class Meta:
-        model = Product
+        model = ProductVariant
         fields = "__all__"

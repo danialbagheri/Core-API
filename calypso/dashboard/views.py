@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib import messages
 from django.shortcuts import render
-from product.models import Product, ProductCategory, ProductImage, ProductType, Tag
-from .forms import ProductCategoryForm, ProductForm
+from product.models import ProductVariant, Product, ProductImage, ProductType, Tag
+from .forms import ProductForm, ProductVariantForm
 # Create your views here.
 
 
@@ -12,7 +12,7 @@ def staff_required(login_url=None):
 
 @staff_required(login_url="/accounts/login")
 def dashboard(request):
-    sku_count = Product.objects.all().count()
+    sku_count = ProductVariant.objects.all().count()
     context = {
         "sku_count": sku_count
     }
@@ -21,13 +21,13 @@ def dashboard(request):
 
 @staff_required(login_url="/accounts/login")
 def products(request):
-    product_category = ProductCategory.objects.all()
+    product = Product.objects.all()
     top_seller = request.GET.get('top', None)
 
     if top_seller is not None and top_seller.lower() == "yes":
-        product_category = product_category.filter(top_seller=True)
+        product = product.filter(top_seller=True)
     context = {
-        "product_categories": product_category
+        "products": product
     }
     return render(request, "dashboard/products/products.html", context=context)
 
@@ -48,13 +48,13 @@ def product_add_or_edit(request, slug=None):
     for tag in available_tags:
         available_tags_list.append(tag.name)
     if slug:
-        product_category_instance = ProductCategory.objects.filter(
+        product_category_instance = Product.objects.filter(
             slug=slug).first()
     tags = list_of_tags(product_category_instance.tags.all()) or ""
-    product_category_form = ProductCategoryForm(
+    product_form = ProductForm(
         instance=product_category_instance)
     context = {
-        "product_category_form": product_category_form,
+        "product_form": product_form,
         "tags": tags,
         "available_tags": available_tags_list
     }

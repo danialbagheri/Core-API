@@ -1,22 +1,22 @@
-from product.models import ProductCategory, Product, ProductType
+from product.models import Product, ProductVariant, ProductType
 from review.models import Review, Reply
 from rest_framework import viewsets
-from .serializers import ProductSerializer, ProductCategorySerializer
+from .serializers import ProductVariantSerializer, ProductSerializer
+
+
+class VariantViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ProductVariant.objects.all()
+    serializer_class = ProductVariantSerializer
+    lookup_field = "sku"
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_field = "product_code"
-
-
-class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    # queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
     lookup_field = 'slug'
 
     def get_queryset(self):
-        queryset = ProductCategory.objects.all()
+        queryset = Product.objects.all()
         product_type = self.request.query_params.get('type', None)
         count = self.request.query_params.get('count', None)
         top_seller = self.request.query_params.get('top', None)
