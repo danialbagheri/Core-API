@@ -11,15 +11,28 @@
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">
-      {{product_category_form.instance.name}}
+      {{product_form.instance.name}} - 
       <!-- form inputs -->
-      {{product_category_form.instance.sub_title }}
+      {{product_form.instance.sub_title }}
     </h1>
   </div>
 </div>
 
 <!-- container with rows -->
-
+{% if product_form.errors %}
+  {% for field in product_form %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger">
+      <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+  {% endfor %}
+  {% for error in product_form.non_field_errors %}
+    <div class="alert alert-danger">
+      <strong>{{ error|escape }}</strong>
+    </div>
+  {% endfor %}
+{% else %}
 <!-- Bigger row -->
 <form method="post">
   <div class="row p-4">
@@ -30,19 +43,72 @@
         <div class="card-body">
           {% csrf_token %}
           <!-- form inputs -->
-          {{ product_category_form.name | as_crispy_field }}
+          {{ product_form.name | as_crispy_field }}
           <!-- form inputs -->
-          {{ product_category_form.sub_title | as_crispy_field }}
+          {{ product_form.sub_title | as_crispy_field }}
 
           <!-- form inputs -->
-          {{ product_category_form.description | as_crispy_field }}
+          {{ product_form.description | as_crispy_field }}
         </div>
       </div>
       <!-- direction_of_use -->
       <div class="card shadow mb-4">
         <div class="card-body">
           <!-- form inputs -->
-          {{ product_category_form.direction_of_use | as_crispy_field }}
+          {{ product_form.direction_of_use | as_crispy_field }}
+        </div>
+      </div>
+      <!-- variants -->
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <div class="d-flex justify-content-between">
+            <h5 class="font-weight-bold text-primary pt-2">Variants</h5>
+            <a class="btn btn-light text-primary">CREATE VARIANT</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- form inputs -->
+          {% for variant in variant_forms %}
+            <div class="form-row">
+              <div class="col">
+                  {{variant.sku | as_crispy_field}}
+              </div>
+              <div class="col">
+                  {{variant.name | as_crispy_field}}
+              </div>
+              <div class="col">
+                  {{variant.price | as_crispy_field}}
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label >Get the price and Shopify IDs</label>
+                  <a class="btn btn-light text-primary">Synchronise</a>
+                </div>
+              </div>
+            </div>
+            <!-- Secondary hidden information row with dropdown -->
+
+              <div id="accordion">
+                <div data-toggle="collapse" data-target="#collapse{{variant.instance.pk}}" aria-expanded="true" aria-controls="collapseOne" class="separator link" style="cursor: pointer;">
+                 ADVANCE
+                </div>
+                <div id="collapse{{variant.instance.pk}}" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="form-row mt-2 bg-light p-1">
+                      <div class="col">
+                        {{variant.size | as_crispy_field}}
+                      </div>
+                      <div class="col">
+                        {{variant.shopify_rest_variant_id | as_crispy_field}}
+                      </div>
+                      <div class="col">
+                        {{variant.shopify_storefront_variant_id | as_crispy_field}}
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+             <hr/>
+          {% endfor %}
         </div>
       </div>
 
@@ -55,11 +121,12 @@
       <div class="card shadow mb-4">
         <div class="card-body">
           <!-- form inputs -->
-          {{ product_category_form.top_seller | as_crispy_field }}
+          {{ product_form.top_seller | as_crispy_field }}
           <!-- form inputs -->
-          {{ product_category_form.slug | as_crispy_field }}
+          {{ product_form.slug | as_crispy_field }}
           <!-- form inputs -->
-          {{ product_category_form.types | as_crispy_field }}
+          {{ product_form.types | as_crispy_field }}
+          <a href="{% url "dashboard:collection-add" %}" class="btn btn-sm btn-light text-primary mb-2">ADD TYPE</a><br/>
           <label>Tags</label>
           <input
             class="mb-3"
@@ -69,6 +136,8 @@
             value="{{ tags }}"
           />
           <input type="hidden" name="tagslist" id="tags" />
+          {{ product_form.collections | as_crispy_field }}
+          <a href="{% url "dashboard:collection-add" %}" class="btn btn-sm btn-light text-primary">ADD COLLECTION</a>
         </div>
       </div>
       <!-- Product Image card-->
@@ -78,10 +147,11 @@
         </div>
         <div class="card-body">
           <p>Editing option will be added soon</p>
-          <img
-            src="{{product_category_form.instance.main_image}}"
-            width="80px"
-          />
+
+          {% for image in product_form.instance.all_images %}
+           <img src="{{image.image.url}}" width="80px" />
+            
+          {% endfor %}
         </div>
       </div>
       <!-- SEO Card -->
@@ -114,8 +184,8 @@
       </div>
       <!-- end of Save button -->
     </div>
-  </div>
-</form>
+  </form>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.7.3/dist/tagify.min.js"></script>
 <script>
@@ -139,4 +209,5 @@
     tags.value = e.target.value
   }
 </script>
+{% endif %}
 {% endblock %}

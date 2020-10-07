@@ -1,0 +1,65 @@
+{% extends "dashboard/admin-base.html" %} {% load static %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Collection</h1>
+      <a href="{% url "dashboard:collection-add" %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Create Colection</a>
+    </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Collections</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <p>Collections are used to group products together for different uses</p>
+        <table
+          class="table table-bordered table-hover"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Slug</th>
+              <th scope="col">Name</th>
+              <th scope="col">Product Counts</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th scope="col">Slug</th>
+              <th scope="col">Name</th>
+              <th scope="col">Product Counts</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            {% for collection in collections %}
+            <tr>
+              <th scope="row"><a href="{% url "dashboard:collection-edit" collection.pk %}">{{collection.slug}}</a></th>
+              <td><strong>{{ collection.name }}</strong><br /></td>
+              <td>
+                <strong>{{ collection.products.all.count }}</strong><br />
+              </td>
+              <td>
+                <a href="{% url "dashboard:collection-delete" collection.pk %}" class="btn btn-sm btn-danger">
+                  Delete
+                </a>
+              </td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- end of new table-->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

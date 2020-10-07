@@ -1,0 +1,32 @@
+{% extends 'admin/base.html' %}
+<!-- statuc -->
+{% load static %}
+<!-- block content -->
+{% block javascripts %}
+<!-- block -->
+{{ block.super }}
+
+<script type="text/javascript" src="{% static 'app/js/action.js' %}"></script>
+
+{% endblock %}
+<!-- block extra head -->
+{% block extrahead %}
+<style>
+  #header {
+    background-color: rgb(255, 132, 0) !important;
+    color: #fff;
+  }
+  #site-name,
+  #site-name a {
+    color: #ffff !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px;
+  }
+  .module table caption {
+    background-color: rgb(255, 132, 0) !important;
+  }
+</style>
+<link rel="shortcut icon" href="{% static 'app/img/favicon.ico'  %}" />
+{% endblock %}
+<!-- stylesheet -->
+{% block stylesheets %} {{ block.super }} {% endblock %}

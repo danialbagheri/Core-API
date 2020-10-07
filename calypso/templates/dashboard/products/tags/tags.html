@@ -19,6 +19,7 @@
               <th scope="col">id</th>
               <th scope="col">icon</th>
               <th scope="col">Name</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tfoot>
@@ -26,16 +27,24 @@
               <th scope="col">id</th>
               <th scope="col">icon</th>
               <th scope="col">Name</th>
+              <th scope="col">Delete</th>
             </tr>
           </tfoot>
           <tbody>
             {% for tag in tags %}
             <tr>
-              <th scope="row"><a href="">{{ tag.id }}</a></th>
+              <th scope="row"><a href="{% url "dashboard:tag-edit" tag.pk %}">{{ tag.id }}</a></th>
               <td>
+                {% if tag.icon %}
                 <img src="{{tag.icon.url}}" style="width: 50px" />
+                {% endif %}
               </td>
               <td><strong>{{ tag.name }}</strong><br /></td>
+              <td>
+                <a href="{% url "dashboard:tag-delete" tag.pk %}" class="btn btn-sm btn-danger">
+                  Delete
+                </a>
+              </td>
             </tr>
 
             {% endfor %}

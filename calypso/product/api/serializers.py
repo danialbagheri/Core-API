@@ -19,7 +19,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductVariantSerializer(serializers.ModelSerializer):
     image_list = ProductImageSerializer(
-        many=True, read_only=True, source='image')
+        many=True, read_only=True, source='variant_images')
     where_to_buy = WhereToBuySerializer(
         many=True, read_only=True, source='wheretobuy')
 

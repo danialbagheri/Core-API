@@ -36,7 +36,7 @@
               <th scope="col">slug</th>
               <th scope="col">Image</th>
               <th scope="col">Name</th>
-              <th scope="col">Variants</th>
+              <th scope="col">Variants count</th>
               <th scope="col">Starting Price</th>
             </tr>
           </thead>
@@ -45,12 +45,12 @@
               <th scope="col">slug</th>
               <th scope="col">Image</th>
               <th scope="col">Name</th>
-              <th scope="col">Variants</th>
+              <th scope="col">Variants count</th>
               <th scope="col">Starting Price</th>
             </tr>
           </tfoot>
           <tbody>
-            {% for product in product_categories %}
+            {% for product in products %}
             <tr>
               <th scope="row"><a href="{% url "dashboard:product-edit" product.slug %}">{{ product.slug }}</a></th>
               <td>
@@ -58,17 +58,17 @@
               </td>
               <td>
                 <strong>{{ product.name }}</strong><br />
-                {% for p in product.products.all %}
+                {% for variant in product.variants.all %}
                 <!-- option name & value -->
                 <small
-                  >{{ p.option_name}} {{ p.option_value}} -
-                  {{p.product_code}}</small
+                  >{{ variant_name}}  -
+                  {{variant.sku}}</small
                 ><br />
                 <!-- end of forloop -->
                 {% endfor %}
               </td>
               <td>
-                {{ product.products.count }}
+                {{ product.variants.count }}
                 <!-- If condition -->
               </td>
               <td>£ {{ product.lowest_variant_price }}</td>

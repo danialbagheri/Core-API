@@ -7,8 +7,8 @@ app_name = "review_api"
 
 
 review_routers = routers.DefaultRouter()
-review_routers.register(r'product_category',
-                        views.ReviewViewSet, basename="product_category")
+review_routers.register(r'product',
+                        views.ReviewViewSet, basename="product")
 
 urlpatterns = [
     path('', include(review_routers.urls)),

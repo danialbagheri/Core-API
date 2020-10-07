@@ -50,8 +50,8 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="{% url "dashboard:home
-        " %}">
+        <a class="nav-link" href="{% url "dashboard:home" %}">
+          <!-- Icon -->
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -77,6 +77,7 @@
             <button class="collapse-item btn btn-sm" href="cards.html" disabled>SKU</button>
             <a class="collapse-item" href="cards.html">Product Images</a>
             <a class="collapse-item" href="{% url "dashboard:tags" %}">Product Tags</a>
+            <a class="collapse-item" href="{% url "dashboard:collections" %}">Collections</a>
             <a class="collapse-item" href="cards.html">Ingredients</a>
             <a class="collapse-item" href="cards.html">Stockists </a>
           </div>
@@ -143,7 +144,7 @@
       <li class="nav-item">
         <a class="nav-link" href="charts.html">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
+          <span>API endpints</span></a>
       </li>
 
       <!-- Nav Item - Tables -->
@@ -351,6 +352,7 @@
   
           </nav>
     <!-- <div class="container mt-3"> -->
+      {% include 'messages.html' %}
       {% block content %} {% endblock content %}
     <!-- </div> -->
   <!-- Bootstrap core JavaScript-->

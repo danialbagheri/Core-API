@@ -23,10 +23,10 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         if product_type is not None:
             try:
                 product_type_instance = ProductType.objects.get(
-                    name=product_type)
+                    name__icontains=product_type)
                 queryset = queryset.filter(types=product_type_instance)
             except:
-                pass
+                print(queryset)
         if top_seller and top_seller.lower() == "yes":
             queryset = queryset.filter(top_seller=True)
         # slide should happen after filtering
