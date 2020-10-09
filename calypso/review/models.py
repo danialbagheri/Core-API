@@ -22,12 +22,6 @@ class Review(models.Model):
     if the user is authenticated we save the user otherwise the name and the
     email.
     '''
-    # # External relationship of the Reviews in case if it is required to review particular SKU (Variant)
-    # content_type = models.ForeignKey(
-    #     ContentType, on_delete=models.CASCADE)
-    # content_id = models.PositiveIntegerField(
-    #     u"Content ID", blank=True, null=True)
-    # content = GenericForeignKey(ct_field="content_type", fk_field="content_id")
     product = models.ForeignKey(
         Product, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, verbose_name="user",

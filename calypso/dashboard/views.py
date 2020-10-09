@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required, permission_required, 
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView
+from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection
@@ -92,6 +92,18 @@ class ProductEdit(StaffRequiredMixin, View):
         context = self.get_context_data()
         return render(request, "dashboard/products/product_edit.html", context=context)
 
+    def save_tag_list(self, product, tags_list):
+        if len(tags_list) >= 1:
+            product.tags.clear()
+            for tag in tags_list:
+                tag_instance, created = Tag.objects.get_or_create(
+                    name=tag['value'])
+                product.tags.add(tag_instance)
+            product.save()
+
+    def save_variants(self):
+        pass
+
     def post(self, request, *args, **kwargs):
         product_instance = self.get_object()
         context = self.get_context_data()
@@ -100,14 +112,9 @@ class ProductEdit(StaffRequiredMixin, View):
             product = product_form.save()
             tags_list = json.loads(request.POST.get(
                 'tagslist').replace("'", "\""))
-            if len(tags_list) >= 1:
-                product.tags.clear()
-                for tag in tags_list:
-                    tag_instance, created = Tag.objects.get_or_create(
-                        name=tag['value'])
-                    product.tags.add(tag_instance)
-                product.save()
-                # TODO: Save collections, variants
+            self.save_tag_list(product, tags_list)
+            import pdb
+            pdb.set_trace()
             messages.success(
                 request, f"{product_form.instance.name} have been updated.")
             return redirect(reverse("dashboard:products"))
@@ -175,3 +182,11 @@ class ProductTagDelete(StaffRequiredMixin, DeleteView):
         messages.success(
             self.request, f"tag name: \"{form.instance.name}\" Sussessfully deleted.")
         return super().form_valid(form)
+
+
+class ImageUploadView(TemplateView):
+    template_name = "dashboard/products/images/upload.html"
+
+
+class ApiEndpointView(TemplateView):
+    template_name = "dashboard/api-endpoint.html"

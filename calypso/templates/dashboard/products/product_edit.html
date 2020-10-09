@@ -34,7 +34,7 @@
   {% endfor %}
 {% else %}
 <!-- Bigger row -->
-<form method="post">
+<form method="post" id="productForm">
   <div class="row p-4">
     <!-- Longer row -->
     <div class="col-8">
@@ -176,6 +176,7 @@
         <button
           href="#"
           type="submit"
+          
           class="d-none d-sm-inline-block btn btn-success shadow-sm"
         >
           <i class="fas fa-download fa-sm text-white-50"></i>
@@ -210,4 +211,17 @@
   }
 </script>
 {% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const form = document.getElementById('productForm');
+  form.addEventListener('submit', submitForm);
+function submitForm(e){
+e.preventDefault()
+new formData(form)
+console.debug(e)
+}
+
+</script>
 {% endblock %}

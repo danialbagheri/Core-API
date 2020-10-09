@@ -13,3 +13,6 @@ venv
 *.pyc
 .dev-env.sh
 .production-env.sh
+dist
+node_modules
+

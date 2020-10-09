@@ -1,0 +1,63 @@
+{% extends "dashboard/admin-base.html" %}
+<!--starts here-->
+{% load static %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">API Endpoints</h1>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">API Endpoints</h6>
+    </div>
+    <div class="card-body text-dark">
+      <p>
+        Below are the list of Calypso API endpoints for front end development.
+        There will be CORS security applied to all these endpoints.
+      </p>
+      <h5>Products Endpoints</h5>
+      <p>
+        This endpoint only allows "GET" requests and takes parameters below:
+        <br />
+        count, product, top, collection
+      </p>
+      <pre class="bg-light text-danger">
+      <code >
+        /api/products/product/ #lists all products (max 30)<br />
+        /api/products/product/&#60;product-slug&#62;/ #query the database for the product by it's slug<br />
+        /api/products/product/?count=2 #limit the counts shown<br />
+        /api/products/product/?count=2&type=kids #product type <br />
+        http://localhost:8000/api/products/product/?count=2&top=yes #filter top products <br />
+        http://localhost:8000/api/products/product/?&collection=best #filter by collection <br />
+      </code></pre>
+      <p>
+        This endpoint is for product variants and only allows "GET" requests
+      </p>
+      <pre class="bg-light text-danger">
+      <code>
+        /api/products/variant/ #lists all variants (max 30)<br />
+        /api/products/variant/&#60;sku&#62;/ #queries the database for the relevant sku<br />
+      </code></pre>
+
+      <h5>Reviews</h5>
+      <p>
+        Accepts "GET" and returns the approved reviews filtered by product slug
+      </p>
+      <pre class="bg-light text-danger">
+        <code>
+            /api/reviews/product/&#60;product-slug&#62;/
+        </code>
+        </pre>
+      <h5>Website</h5>
+      <p>This endpoint only accepts "POST"</p>
+      <pre class="bg-light text-danger">
+      <code>/api/web/contact-us/</code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

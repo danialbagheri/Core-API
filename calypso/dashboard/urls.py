@@ -7,7 +7,9 @@ from dashboard.views import (
     CollectionCreate,
     CollectionDelete,
     ProductTagUpdate,
-    ProductTagDelete
+    ProductTagDelete,
+    ImageUploadView,
+    ApiEndpointView
 )
 app_name = "dashboard"
 
@@ -16,6 +18,7 @@ urlpatterns = [
     path('products/', views.products, name="products"),
     path('products/<slug:slug>/',
          ProductEdit.as_view(), name="product-edit"),
+    path('images/upload/', ImageUploadView.as_view(), name="image-upload"),
     path('tags/', views.product_tags, name="tags"),
     path('tags/<int:pk>/', ProductTagUpdate.as_view(), name="tag-edit"),
     path('tags/<int:pk>/delete/', ProductTagDelete.as_view(), name="tag-delete"),
@@ -26,4 +29,6 @@ urlpatterns = [
          name="collection-edit"),
     path('collection/<int:pk>/delete/', CollectionDelete.as_view(),
          name="collection-delete"),
+    path('api-endpoint/', ApiEndpointView.as_view(),
+         name="api-endpoint"),
 ]

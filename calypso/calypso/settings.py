@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_recaptcha',
     'django.contrib.sites',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -171,7 +172,8 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_root')
+    os.path.join(BASE_DIR, 'static_root'),
+    os.path.join(BASE_DIR, 'node/dist'),
 ]
 # The full path on the system
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

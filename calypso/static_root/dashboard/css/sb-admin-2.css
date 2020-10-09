@@ -43,6 +43,7 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 }
+
 /* customer CSS for Calypso dashboard */
 .panel-tab {
   border: 1px solid #e0e3e9;
@@ -53,20 +54,21 @@
   background-color: #e0e3e9;
 }
 .separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
-.separator::before, .separator::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #000;
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #000;
 }
 .separator::before {
-    margin-right: .25em;
+  margin-right: 0.25em;
 }
 .separator::after {
-    margin-left: .25em;
+  margin-left: 0.25em;
 }
 *,
 *::before,
