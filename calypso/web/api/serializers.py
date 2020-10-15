@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from drf_recaptcha.fields import ReCaptchaV2Field, ReCaptchaV3Field
+from web.models import Slider, Slide, SliderSlidesThroughModel
 
 
 REASON_CHOICES = [
@@ -20,3 +21,25 @@ class ContactFormSerializer(serializers.Serializer):
     reason = serializers.ChoiceField(choices=REASON_CHOICES,)
     message = serializers.CharField()
     recaptcha = ReCaptchaV2Field()
+
+
+class SlideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SliderSlidesThroughModel
+        fields = ('slide', 'order')
+        depth = 2
+
+
+class SliderSerializer(serializers.ModelSerializer):
+    # slides = serializers.SerializerMethodField()
+    slider_slides = SlideSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Slider
+        fields = '__all__'
+        depth = 2
+
+    # def get_slides(self, instance):
+
+    #     slides = instance.slides.all().order_by('order')
+    #     return SlideSerializer(slides, many=True, read_only=True).data

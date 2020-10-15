@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from ordered_model.models import OrderedModel
 # Create your models here.
 
 
@@ -7,7 +8,7 @@ class Slider(models.Model):
     name = models.CharField("name", max_length=150)
     slug = models.SlugField()
     slides = models.ManyToManyField(
-        "web.Slide", verbose_name="slides", blank=True)
+        "web.Slide", verbose_name="slides", blank=True, related_name='slider')
     mobile = models.BooleanField()
 
     def __str__(self):
@@ -16,16 +17,29 @@ class Slider(models.Model):
 
 class Slide(models.Model):
     name = models.CharField("name", max_length=150)
-    order = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField(
-        upload_to=None, height_field=None, width_field=None, max_length=None)
+        upload_to="slide/", height_field=None, width_field=None, max_length=None, blank=True)
     active = models.BooleanField(default=False)
     custom_slide = models.BooleanField(default=False)
-    custom_code = models.TextField()
+    custom_code = models.TextField(blank=True)
     link = models.URLField(null=True, blank=True)
+    # order_with_respect_to = 'slider__slug'
+
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
+
+class SliderSlidesThroughModel(OrderedModel):
+    slider = models.ForeignKey(
+        Slider, on_delete=models.CASCADE, related_name="slider_slides")
+    slide = models.ForeignKey(Slide, on_delete=models.CASCADE)
+    order_with_respect_to = 'slider'
+
+    class Meta:
+        ordering = ('slider', 'order')
 
 
 class Setting(models.Model):

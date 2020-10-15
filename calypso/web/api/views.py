@@ -1,10 +1,10 @@
 from django.core.mail import send_mail
 from rest_framework.views import APIView
-from .serializers import ContactFormSerializer, REASON_CHOICES
-from rest_framework import authentication
+from .serializers import REASON_CHOICES, ContactFormSerializer, SliderSerializer
+from rest_framework import authentication, viewsets
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-
+from web.models import Slider
 import pdb
 
 
@@ -30,3 +30,19 @@ class ContactForm(APIView):
             except Exception as e:
                 return JsonResponse({"success": "Failed", "message": f"{e}"}, status=400)
         return JsonResponse(contact_serializer.errors, status=400)
+
+
+class SliderViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Slider.objects.all()
+    serializer_class = SliderSerializer
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        slug = self.request.query_params.get('slug', False)
+        mobile = self.request.query_params.get('mobile', False)
+        if slug:
+            queryset = queryset.filter(slug=slug)
+        if mobile and mobile.lower() == "true":
+            queryset = queryset.filter(mobile=True)
+        return queryset

@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'rest_framework',
     'drf_recaptcha',
+    'ordered_model',
     'django.contrib.sites',
     'django_cleanup.apps.CleanupConfig',
 ]

@@ -13,4 +13,6 @@ web_routers = routers.DefaultRouter()
 urlpatterns = [
     path('', include(web_routers.urls)),
     path('contact-us/', views.ContactForm.as_view(), name="contact-us"),
+    path(
+        'slider/', views.SliderViewSet.as_view({'get': 'list'}), name="sliders"),
 ]
