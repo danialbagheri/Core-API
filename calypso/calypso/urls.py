@@ -19,7 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
-
 urlpatterns = [
     path('', include('web.urls', namespace='web')),
     path('api/products/', include('product.api.urls', namespace='products_api')),

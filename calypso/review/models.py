@@ -26,11 +26,13 @@ class Review(models.Model):
         Product, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, verbose_name="user",
                              blank=True, null=True, on_delete=models.SET_NULL)
-    user_name = models.CharField(max_length=200, blank=True, null=True)
-    user_email = models.EmailField(max_length=254, blank=True, null=True)
+    customer_name = models.CharField(max_length=200, blank=True, null=True)
+    customer_email = models.EmailField(max_length=254, blank=True, null=True)
     location = models.CharField(max_length=200, blank=True, null=True)
+    source = models.CharField(max_length=200, blank=True, null=True)
     score = models.PositiveIntegerField()
-    verified = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
+    recommended = models.BooleanField(default=False)
     title = models.CharField(max_length=200, blank=True, null=True)
     comment = models.TextField(blank=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
@@ -50,7 +52,7 @@ class Review(models.Model):
         if self.user is not None:
             return self.user.get_full_name()
         else:
-            return self.user_name
+            return self.customer_name
 
     @ property
     def email(self):
@@ -60,7 +62,7 @@ class Review(models.Model):
         if self.user is not None:
             return self.user.email
         else:
-            return self.user_email
+            return self.customer_email
 
     def save(self, *args, **kwargs):
         if self.score > 5:

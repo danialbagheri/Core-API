@@ -11,6 +11,7 @@ class ReplySerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
+    approved = serializers.ReadOnlyField()
 
     class Meta:
         model = Review
