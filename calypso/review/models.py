@@ -39,7 +39,8 @@ class Review(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     helpful = models.PositiveIntegerField(default=0, blank=True, null=True)
     reply = models.ManyToManyField(
-        Reply, related_name="review", verbose_name="Replies", blank=True, null=True)
+        Reply, related_name="review", verbose_name="Replies", blank=True)
+    # media = models.FileField()
 
     class Meta:
         ordering = ("-date_created",)
@@ -51,6 +52,8 @@ class Review(models.Model):
         """
         if self.user is not None:
             return self.user.get_full_name()
+        elif self.customer_name is None:
+            return "Anonymous"
         else:
             return self.customer_name
 

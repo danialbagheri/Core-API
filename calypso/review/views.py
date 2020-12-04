@@ -3,7 +3,7 @@ from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
-from .serializers import ReviewSerializer
+from .serializers import ReviewSerializer, ReviewCreateSerializer
 # Create your views here.
 import pdb
 
@@ -25,7 +25,7 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CreateReview(generics.CreateAPIView):
     queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewCreateSerializer
     # lookup_fields = 'product__slug'
 
     @classmethod
