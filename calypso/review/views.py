@@ -3,7 +3,7 @@ from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
-from .serializers import ReviewSerializer, ReviewCreateSerializer
+from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination
 # Create your views here.
 import pdb
 
@@ -11,7 +11,8 @@ import pdb
 class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
     # queryset = Review.objects.filter(verified=True)
     serializer_class = ReviewSerializer
-
+    pagination_class = ReviewPagination
+    
     def get_queryset(self):
         queryset = Review.objects.filter(approved=True)
         product_slug = self.request.query_params.get('product_slug', None)

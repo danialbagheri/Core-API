@@ -8,6 +8,8 @@ product_routers = routers.DefaultRouter()
 product_routers.register(r'variant', views.VariantViewSet, basename="variant")
 product_routers.register(r'product',
                          views.ProductViewSet, basename="product")
+product_routers.register(r'image',
+                         views.ProductImageViewSet, basename="image")
 
 urlpatterns = [
     path('', include(product_routers.urls)),

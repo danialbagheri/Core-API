@@ -13,7 +13,8 @@ class ReviewAdmin(admin.ModelAdmin):
         "title",
         "score",
         'location',
-        'product'
+        'product',
+        'approved'
     ]
     search_fields = ['name']
 

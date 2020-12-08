@@ -33,6 +33,16 @@
         http://localhost:8000/api/products/product/?count=2&top=yes #filter top products <br />
         http://localhost:8000/api/products/product/?&collection=best #filter by collection <br />
       </code></pre>
+      <h5>Product image Endpoints</h5>
+      <p>
+        This endpoint only allows "GET" requests and takes parameters below:
+        <br />
+        product sku, product type
+      </p>
+      <pre class="bg-light text-danger">
+      <code >
+        /api/products/images/ #lists all products (max 30)<br />
+      </code></pre>
       <p>
         This endpoint is for product variants and only allows "GET" requests
       </p>
@@ -57,8 +67,10 @@
       <pre class="bg-light text-danger">
       <code>/api/web/contact-us/</code>
       </pre>
-      <p>API endpoints for Slides and Slider. It takes parameters below:<br />
-      slug, mobile</p>
+      <p>
+        API endpoints for Slides and Slider. It takes parameters below:<br />
+        slug, mobile
+      </p>
       <pre class="bg-light text-danger">
       <code>
         /api/web/slider/<br />
