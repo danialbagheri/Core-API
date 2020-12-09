@@ -33,6 +33,9 @@ def get_variant_info_by_sku(sku):
     edges {
       node {
         price
+        availableForSale
+        barcode
+        updatedAt
         storefrontId
         displayName
         legacyResourceId

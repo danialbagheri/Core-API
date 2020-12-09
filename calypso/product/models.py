@@ -167,8 +167,9 @@ class ProductVariant(models.Model):
         "Ingredient", verbose_name=_("ingredients"))
     discontinued = models.BooleanField(default=False)
     size = models.CharField(max_length=200, null=True, blank=True)
-    # rrp = models.FloatField(blank=True, null=True)
+    rrp = models.FloatField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True, default=0)
+    inventory_quantity = models.IntegerField(blank=True, null=True)
     # sale_price = models.FloatField(blank=True, null=True)
 
     @property
@@ -206,6 +207,7 @@ class ProductVariant(models.Model):
                 self.price = info['price']
                 self.shopify_rest_variant_id = info['legacyResourceId']
                 self.shopify_storefront_variant_id = info['storefrontId']
+                self.inventory_quantity = info['inventoryQuantity']
                 self.save()
                 return True
             except:

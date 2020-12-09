@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
 from django.views.generic.edit import FormView
@@ -190,3 +191,23 @@ class ImageUploadView(TemplateView):
 
 class ApiEndpointView(TemplateView):
     template_name = "dashboard/api-endpoint.html"
+
+class ShopifySyncView(TemplateView):
+    template_name = "dashboard/products/shopify.html"
+
+@staff_required(login_url="/accounts/login")
+def synchronise_with_shopify(request):
+    products_variants = ProductVariant.objects.all() #TODO: remove after test
+    result_list = []
+    for variant in products_variants:
+        synch = variant.synchronise_with_shopify
+        if synch:
+            result_list.append(
+                {"success": f"{variant.sku} Successfully synched."}
+            )
+        else:
+            result_list.append(
+                {"failed": f"{variant.sku} couldn't be synchronised. please make sure the SKU on Shopify matches your product variant SKU."}
+            )
+    return JsonResponse(result_list, safe=False)
+

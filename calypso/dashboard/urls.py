@@ -9,7 +9,9 @@ from dashboard.views import (
     ProductTagUpdate,
     ProductTagDelete,
     ImageUploadView,
-    ApiEndpointView
+    ApiEndpointView,
+    ShopifySyncView,
+    synchronise_with_shopify
 )
 app_name = "dashboard"
 
@@ -31,4 +33,8 @@ urlpatterns = [
          name="collection-delete"),
     path('api-endpoint/', ApiEndpointView.as_view(),
          name="api-endpoint"),
+    path('product/shopify-sync/', ShopifySyncView.as_view(),
+         name="shopify-sync"),
+    path('product/shopify-sync/api/', synchronise_with_shopify,
+         name="shopify-sync-rest"),
 ]

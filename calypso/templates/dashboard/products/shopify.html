@@ -1,0 +1,63 @@
+{% extends "dashboard/admin-base.html" %}
+<!--starts here-->
+{% load static %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Shopify Synchronisation</h1>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Shopify Synchronisation</h6>
+    </div>
+    <div class="card-body text-dark">
+      <div id="shopify">
+        <span class="text-center text-secondary">LOADING....</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var shopify = document.getElementById("shopify");
+  function shopifySync() {
+    fetch("/dashboard/product/shopify-sync/api/")
+      .then((response) => response.json())
+      .then((result) => {
+        //console.log(result);
+        return result;
+      });
+  }
+  window.onload = function () {
+    var shopify_data;
+
+    fetch("/dashboard/product/shopify-sync/api/")
+      .then((response) => response.json())
+      .then((result) => {
+        result.map((each) => {
+          //console.log(each["success"]);
+
+          if (each["success"]) {
+            var success_node = document.createElement("LI");
+            success_node.className = "success-danger";
+            var success = document.createTextNode(each["success"]);
+            success_node.appendChild(success);
+            shopify.appendChild(success_node);
+          } else {
+            var danger_node = document.createElement("LI");
+            danger_node.className = "text-danger";
+            var failed = document.createTextNode(each["failed"]);
+            danger_node.appendChild(failed);
+            shopify.appendChild(danger_node);
+          }
+        });
+      });
+    //console.log(shopify_data);
+    //shopify.innerHTML = shopify_data;
+  };
+</script>
+
+{% endblock %}

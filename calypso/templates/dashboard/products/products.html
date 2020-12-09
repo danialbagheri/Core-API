@@ -5,13 +5,22 @@
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Product List</h1>
-    <a
-      href="#"
-      class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-    >
-      <i class="fas fa-download fa-sm text-white-50"></i>
-      Add Product
-    </a>
+    <div>
+      <a
+        href="#"
+        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+      >
+        <i class="fas fa-download fa-sm text-white-50"></i>
+        Add Product
+      </a>
+      <a
+        href="{% url "dashboard:shopify-sync" %}"
+        class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+      >
+        <i class="fas fa-sync fa-sm text-white-50"></i>
+        Synchronise with Shopify
+      </a>
+    </div>
   </div>
 
   <div class="card shadow mb-4">
@@ -35,9 +44,10 @@
             <tr>
               <th scope="col">slug</th>
               <th scope="col">Image</th>
-              <th scope="col">Name</th>
+              <th scope="col">Name and Variants name</th>
               <th scope="col">Variants count</th>
               <th scope="col">Starting Price</th>
+              <th scope="col">Inventory Quantity</th>
             </tr>
           </thead>
           <tfoot>
@@ -47,6 +57,7 @@
               <th scope="col">Name</th>
               <th scope="col">Variants count</th>
               <th scope="col">Starting Price</th>
+              <th scope="col">Inventory Quantity</th>
             </tr>
           </tfoot>
           <tbody>
@@ -72,6 +83,7 @@
                 <!-- If condition -->
               </td>
               <td>£ {{ product.lowest_variant_price }}</td>
+              <td>{{ product.variants.first.inventory_quantity }}</td>
             </tr>
 
             {% endfor %}
