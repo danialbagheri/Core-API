@@ -15,4 +15,6 @@ urlpatterns = [
     path('contact-us/', views.ContactForm.as_view(), name="contact-us"),
     path(
         'slider/', views.SliderViewSet.as_view({'get': 'list'}), name="sliders"),
+    path(
+        'instagram-feed/', views.InstagramFeed.as_view(), name="instagram"),
 ]

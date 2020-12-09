@@ -2,6 +2,8 @@ from django.urls import path, include
 from dashboard import views
 from dashboard.views import (
     ProductEdit,
+    ReviewList,
+    ReviewEditView,
     CollectionsList,
     CollectionEditView,
     CollectionCreate,
@@ -24,7 +26,10 @@ urlpatterns = [
     path('tags/', views.product_tags, name="tags"),
     path('tags/<int:pk>/', ProductTagUpdate.as_view(), name="tag-edit"),
     path('tags/<int:pk>/delete/', ProductTagDelete.as_view(), name="tag-delete"),
-    path('collection/', CollectionsList.as_view(), name="collections"),
+    path('product/collection/', CollectionsList.as_view(), name="collections"),
+    path('reviews/', ReviewList.as_view(), name="reviews"),
+    path('reviews/<int:pk>/', ReviewEditView.as_view(),
+         name="review-edit"),
     path('collection/add/', CollectionCreate.as_view(),
          name="collection-add"),
     path('collection/<int:pk>/', CollectionEditView.as_view(),

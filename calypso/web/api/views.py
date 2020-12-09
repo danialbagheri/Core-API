@@ -5,6 +5,7 @@ from rest_framework import authentication, viewsets
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from web.models import Slider
+from web.instagram import get_user_feed
 import pdb
 
 
@@ -46,3 +47,9 @@ class SliderViewSet(viewsets.ReadOnlyModelViewSet):
         if mobile and mobile.lower() == "true":
             queryset = queryset.filter(mobile=True)
         return queryset
+
+
+class InstagramFeed(APIView):
+    def get(self, request, *args, **kwargs):
+        queryset = get_user_feed()
+        return JsonResponse(queryset, safe=False, status=200)

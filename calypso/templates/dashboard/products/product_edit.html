@@ -77,7 +77,7 @@
                   {{variant.name | as_crispy_field}}
               </div>
               <div class="col">
-                  {{variant.price | as_crispy_field}}
+                  {{variant.size | as_crispy_field}}
               </div>
               <div class="col">
                 <div class="form-group">
@@ -90,12 +90,12 @@
 
               <div id="accordion">
                 <div data-toggle="collapse" data-target="#collapse{{variant.instance.pk}}" aria-expanded="true" aria-controls="collapseOne" class="separator link" style="cursor: pointer;">
-                 ADVANCE
+                 SHOPIFY & MORE
                 </div>
                 <div id="collapse{{variant.instance.pk}}" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordion">
                   <div class="form-row mt-2 bg-light p-1">
                       <div class="col">
-                        {{variant.size | as_crispy_field}}
+                        {{variant.price | as_crispy_field}}
                       </div>
                       <div class="col">
                         {{variant.shopify_rest_variant_id | as_crispy_field}}
@@ -148,10 +148,14 @@
         <div class="card-body">
           <p>Editing option will be added soon</p>
 
+          <div class="d-flex">
           {% for image in product_form.instance.all_images %}
-           <img src="{{image.image.url}}" width="80px" />
-            
-          {% endfor %}
+            <img src="{{image.image.url}}" width="80px"/>
+            {% endfor %}
+              <div style="display:block;width:80px;" class="bg-light">
+                <p style="font-size:4rem;text-align:center;">+</p>
+              </div>
+          </div>
         </div>
       </div>
       <!-- SEO Card -->

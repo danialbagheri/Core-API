@@ -7,7 +7,8 @@ from django.views.generic import View, UpdateView, DetailView, ListView, DeleteV
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection
-from .forms import ProductForm, ProductVariantForm, CollectionForm
+from review.models import Review
+from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm
 import json
 # Create your views here.
 
@@ -131,8 +132,18 @@ def product_tags(request):
     }
     return render(request, "dashboard/products/tags/tags.html", context=context)
 
+class ReviewList(StaffRequiredMixin, ListView):
+    model = Review
+    context_object_name = 'reviews'
+    template_name = 'dashboard/reviews/list.html'
 
-class CollectionsList(ListView):
+class ReviewEditView(StaffRequiredMixin, UpdateView):
+    model = Review
+    template_name = 'dashboard/reviews/edit.html'
+    form_class = ReviewForm
+    success_url = reverse_lazy('dashboard:reviews')
+
+class CollectionsList(StaffRequiredMixin, ListView):
     model = Collection
     context_object_name = 'collections'
     template_name = 'dashboard/products/collection/collection_list.html'
