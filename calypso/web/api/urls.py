@@ -6,8 +6,8 @@ app_name = "web_api"
 
 
 web_routers = routers.DefaultRouter()
-# web_routers.register(r'contact-us', views.ContactForm,
-#                      basename="contact-us")
+web_routers.register(r'configuration', views.ConfigurationView,
+                     basename="configuration")
 
 
 urlpatterns = [
@@ -17,4 +17,6 @@ urlpatterns = [
         'slider/', views.SliderViewSet.as_view({'get': 'list'}), name="sliders"),
     path(
         'instagram-feed/', views.InstagramFeed.as_view(), name="instagram"),
+    # path(
+    #     'configuration/<slug:slug>/', views.ConfigurationView.as_view({"slug":"slug"}), name="configuration"),
 ]

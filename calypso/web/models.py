@@ -62,8 +62,10 @@ class Configuration(models.Model):
     A key and Value database of different settings and models. 
     Fixtures needs to be applied at the initial setup.
     '''
+    name = models.CharField(max_length=250, unique=True)
     key = models.CharField(max_length=250, unique=True)
     value = models.CharField(max_length=350)
+    active = models.BooleanField(default=True)
     description = models.CharField(
         max_length=250, default="", blank=True, null=True)
     setting = models.ManyToManyField(

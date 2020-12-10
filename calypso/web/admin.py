@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Slide, Slider, SliderSlidesThroughModel
+from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration
 from ordered_model.admin import OrderedTabularInline, OrderedStackedInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
 # Register your models here.
 admin.site.site_header = 'Calypso'
@@ -28,6 +28,12 @@ class SlideAdmin(OrderedModelAdmin):
                     'link', 'move_up_down_links')
 
 
+
+class ConfigurationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'key', 'value')
+
 admin.site.register(Slider, SliderAdmin)
 admin.site.register(Slide, SlideAdmin)
+admin.site.register(Configuration, ConfigurationAdmin)
+admin.site.register(Setting)
 #
