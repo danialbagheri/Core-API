@@ -3,7 +3,7 @@ from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
-from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination
+from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
 # Create your views here.
 import pdb
 
@@ -45,3 +45,13 @@ class CreateReview(generics.CreateAPIView):
             user_ip = self.get_client_ip(request=self.request)
             product_instance = get_object_or_404(Product, slug=slug)
         return serializer.save(product=product_instance, ip_address=user_ip, source=user_source)
+
+
+class RateReview(generics.UpdateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewRateSerializer
+    lookup_fields = 'pk'
+
+    # def put(self, request, *args, **kwargs):
+        
+    #     return self.update(request, *args, **kwargs)

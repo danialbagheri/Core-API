@@ -37,7 +37,8 @@ class Review(models.Model):
     comment = models.TextField(blank=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    helpful = models.PositiveIntegerField(default=0, blank=True, null=True)
+    like = models.PositiveIntegerField(default=0, blank=True, null=True)
+    dislike = models.PositiveIntegerField(default=0, blank=True, null=True)
     reply = models.ManyToManyField(
         Reply, related_name="review", verbose_name="Replies", blank=True)
     # media = models.FileField()
@@ -66,6 +67,16 @@ class Review(models.Model):
             return self.user.email
         else:
             return self.customer_email
+
+    @property
+    def helpful(self):
+        """
+        returns the helpfulness of the review
+        """
+        helpful = 0
+        helpful += self.like
+        helpful -= self.dislike
+        return helpful
 
     def save(self, *args, **kwargs):
         if self.score > 5:

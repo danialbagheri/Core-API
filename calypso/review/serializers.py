@@ -31,12 +31,27 @@ class ReviewSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
+    helpful = serializers.ReadOnlyField()
     
     class Meta:
         model = Review
         exclude = ['customer_email', 'ip_address']
 
-
+class ReviewRateSerializer(serializers.ModelSerializer):
+    
+    def update(self, instance, validated_data):
+        like = validated_data["like"]
+        dislike = validated_data["dislike"]
+        if like is not None and like >= 1:
+            instance.like += 1
+        if dislike is not None and dislike >= 1:
+            #dislike is a positiveInteger Model and cannot go lower than 0
+            instance.dislike += 1
+        instance.save()
+        return instance
+    class Meta:
+        model = Review
+        fields = ['like', 'dislike']
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
@@ -46,5 +61,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+        lookup_fields = 'pk'
 
 
