@@ -9,8 +9,8 @@ class ReviewPagination(pagination.PageNumberPagination):
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'count': self.page.paginator.count,
-            'review_count': len(data),
-            'total_score':self.get_total_review_score(data),
+            'total_review_count': len(data),
+            'review_average_score':self.get_total_review_score(data),
             'results': data
         })
     
@@ -19,8 +19,11 @@ class ReviewPagination(pagination.PageNumberPagination):
         score = 0
         for review in data:
             score += review['score']
-        total_score = score / review_count
-        return total_score
+        try:
+            total_score = score / review_count
+            return total_score
+        except ZeroDivisionError:
+            return 0
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply

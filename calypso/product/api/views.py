@@ -1,5 +1,5 @@
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, IMAGE_TYPE
-from review.models import Review, Reply
+# from review.models import Review, Reply
 from rest_framework import viewsets
 from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer
 
