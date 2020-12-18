@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
 # Create your views here.
-import pdb
+
 
 
 class ReviewViewSet(viewsets.ReadOnlyModelViewSet):

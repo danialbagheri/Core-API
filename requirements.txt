@@ -11,6 +11,7 @@ django-cleanup==5.1.0
 django-cors-headers==3.5.0
 django-crispy-forms==1.9.2
 django-filter==2.3.0
+django-grapesjs==0.0.7
 django-ipware==3.0.1
 django-ordered-model==3.4.1
 django-phonenumber-field==5.0.0

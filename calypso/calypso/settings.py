@@ -60,6 +60,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_grapesjs',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     'web',
     'product',
     'blog',
+    'page',
     'review',
     'dashboard',
     'django.contrib.sitemaps',
@@ -193,6 +195,9 @@ STATICFILES_DIRS = [
 # The full path on the system
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+TEMPLATES_ROOT = os.path.join(BASE_DIR, 'templates')
+GRAPESJS_DEFAULT_HTML =  os.path.join(TEMPLATES_ROOT ,'django_grapesjs/default.html')
 
 ADMINS = [
     ('Danial', 'danial@lincocare.com'),

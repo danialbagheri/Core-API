@@ -1,14 +1,14 @@
 from django.db import models
-
+from django_grapesjs.models import GrapesJsHtmlField
 # Create your models here.
 
 
 class Page(models.Model):
     slug = models.SlugField(unique=True, max_length=255)
     title = models.CharField(max_length=250)
-    content = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
-
+    html = GrapesJsHtmlField()
+    published= models.BooleanField(default=True)
     class Meta:
         ordering = ("slug",)
 

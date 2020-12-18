@@ -27,7 +27,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         model = ProductVariant
         fields = '__all__'
         lookup_field = "sku"
-        extra__kwargs = {'url': {'lookup_field': 'product_code'}}
+        extra__kwargs = {'url': {'lookup_field': 'sku'}}
 
 
 class ProductSerializer(serializers.ModelSerializer):
