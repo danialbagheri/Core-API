@@ -4,6 +4,7 @@ from .models import Page
 from django_grapesjs.admin import GrapesJsAdminMixin
 
 
-@admin.register(Page)
-class ExampleAdmin(GrapesJsAdminMixin, admin.ModelAdmin):
+class PageAdmin(GrapesJsAdminMixin, admin.ModelAdmin):
     pass
+
+admin.site.register(Page, PageAdmin)

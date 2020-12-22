@@ -1,13 +1,16 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
+from django.db.models import Q
 from rest_framework.views import APIView
 from .serializers import REASON_CHOICES, ContactFormSerializer, SliderSerializer,ConfigurationSerializer
-from rest_framework import authentication, viewsets
+from rest_framework import authentication, viewsets, generics
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from web.models import Slider, Configuration
 from web.instagram import get_user_feed
+from product.models import Product, Tag
+from product.api.serializers import ProductSerializer
 from PIL import Image, ImageTk
 from io import BytesIO
 import requests
@@ -81,3 +84,17 @@ class ConfigurationView(viewsets.ReadOnlyModelViewSet):
     queryset = Configuration
     serializer_class = ConfigurationSerializer
     lookup_field = 'key'
+
+
+class Search(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    def get_queryset(self):
+        queryset = []
+        query = self.request.query_params.get('q', None)
+        if query is not None:
+            try:
+                tag = Tag.objects.filter(Q(name__contains=query)).first()
+                queryset = Product.objects.filter(Q(name__contains=query) | Q(sub_title__contains=query) | Q(tags=tag)).distinct()
+            except:
+                pass
+        return queryset

@@ -1,7 +1,5 @@
 from django.db import models
 from django_grapesjs.models import GrapesJsHtmlField
-# Create your models here.
-
 
 class Page(models.Model):
     slug = models.SlugField(unique=True, max_length=255)
@@ -14,3 +12,4 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+

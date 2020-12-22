@@ -17,6 +17,8 @@ urlpatterns = [
         'slider/', views.SliderViewSet.as_view({'get': 'list'}), name="sliders"),
     path(
         'instagram-feed/', views.InstagramFeed.as_view(), name="instagram"),
+    path(
+        'search/', views.Search.as_view(), name="search"),
     # path(
     #     'configuration/<slug:slug>/', views.ConfigurationView.as_view({"slug":"slug"}), name="configuration"),
 ]
