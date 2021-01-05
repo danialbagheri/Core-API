@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from web.models import Slider, Configuration
 from web.instagram import get_user_feed
-from product.models import Product, Tag
+from product.models import Product, Tag, Keyword
 from product.api.serializers import ProductSerializer
 from PIL import Image, ImageTk
 from io import BytesIO
@@ -94,7 +94,8 @@ class Search(generics.ListAPIView):
         if query is not None:
             try:
                 tag = Tag.objects.filter(Q(name__contains=query)).first()
-                queryset = Product.objects.filter(Q(name__contains=query) | Q(sub_title__contains=query) | Q(tags=tag)).distinct()
+                keyword = Keyword.objects.filter(Q(name__contains=query)).first()
+                queryset = Product.objects.filter(Q(name__contains=query) | Q(sub_title__contains=query) | Q(tags=tag)| Q(keyword=keyword)).distinct()
             except:
                 pass
         return queryset

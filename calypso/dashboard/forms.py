@@ -32,7 +32,8 @@ class ProductForm(forms.ModelForm):
 
 
 class ProductVariantForm(forms.ModelForm):
-
+    sku = forms.CharField(required=True)
     class Meta:
         model = ProductVariant
         fields = "__all__"
+        

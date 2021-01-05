@@ -44,6 +44,7 @@ class ProductImageAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag)
+admin.site.register(Keyword)
 admin.site.register(ProductType)
 admin.site.register(ProductVariant, ProductVariantAdmin)
 admin.site.register(ProductImage, ProductImageAdmin)

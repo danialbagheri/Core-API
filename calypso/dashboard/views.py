@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection
+from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword
 from review.models import Review
 from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm
 import json
@@ -65,6 +65,13 @@ class ProductEdit(StaffRequiredMixin, View):
             available_tags_list.append(tag.name)
         return available_tags_list
 
+    def get_the_keywords(self):
+        available_keywords = Keyword.objects.all()
+        available_keyword_list = []
+        for keyword in available_keywords:
+            available_keyword_list.append(keyword.name)
+        return available_keyword_list
+
     def variant_form_list(self):
         product_instance = self.get_object()
         variant_forms = []
@@ -79,6 +86,7 @@ class ProductEdit(StaffRequiredMixin, View):
             instance=product_instance)
         variant_forms = self.variant_form_list()
         available_tags_list = self.get_the_tags()  # Get all the tags
+        available_keyword_list = self.get_the_keywords()  # Get all the tags
         tags = self.list_of_tags(
             product_instance.tags.all())  # Get the instance tags
 
@@ -86,6 +94,7 @@ class ProductEdit(StaffRequiredMixin, View):
             "product_form": product_form,
             "tags": tags,
             "available_tags": available_tags_list,
+            "available_keywords": available_keyword_list,
             "variant_forms": variant_forms
         }
         return context
@@ -101,6 +110,15 @@ class ProductEdit(StaffRequiredMixin, View):
                 tag_instance, created = Tag.objects.get_or_create(
                     name=tag['value'])
                 product.tags.add(tag_instance)
+            product.save()
+
+    def save_keyword_list(self, product, keyword_list):
+        if len(keyword_list) >= 1:
+            product.keyword.clear()
+            for keyword in keyword_list:
+                keyword_instance, created = Keyword.objects.get_or_create(
+                    name=keyword['value'])
+                product.keyword.add(keyword_instance)
             product.save()
 
     def save_variants(self):

@@ -49,7 +49,7 @@ class ProductType(models.Model):
 
 class Tag(models.Model):
     '''
-    Product tags to be used for tagging products with different keywords
+    Tags to be used for tagging products with different benefits
     example: paraben-free, sensitive lotion etc
     '''
 
@@ -64,6 +64,16 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class Keyword(models.Model):
+    '''
+    keywords to be used for tagging products with different keywords more suitable for search
+    example: paraben-free, sensitive lotion , atti-bac, spf20, etc
+    '''
+
+    name = models.CharField(_('name'), max_length=200, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     name = models.CharField(_('name'), max_length=300)
@@ -72,6 +82,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     direction_of_use = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField("Tag", verbose_name=_("tags"), blank=True)
+    keyword = models.ManyToManyField("Keyword", verbose_name=_("keywords"), blank=True)
     types = models.ManyToManyField(
         "ProductType", verbose_name=_("types"), blank=True)
     top_seller = models.BooleanField(default=False)

@@ -63,12 +63,14 @@
         <div class="card-header">
           <div class="d-flex justify-content-between">
             <h5 class="font-weight-bold text-primary pt-2">Variants</h5>
-            <a class="btn btn-light text-primary">CREATE VARIANT</a>
+            <a class="btn btn-light text-primary" onclick="createAnEmptyVariant()">CREATE VARIANT</a>
           </div>
         </div>
         <div class="card-body">
           <!-- form inputs -->
           {% for variant in variant_forms %}
+          <section id="variantsParent">
+            <div id="variantForm">
             <div class="form-row">
               <div class="col">
                   {{variant.sku | as_crispy_field}}
@@ -108,6 +110,8 @@
               </div>
 
              <hr/>
+             </div>
+            </section>
           {% endfor %}
         </div>
       </div>
@@ -162,8 +166,18 @@
       <div class="card shadow mb-4">
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">SEO</h6>
+          </div>
+        <div class="card-body">
+          <label>Keywords</label>
+          <input
+            class="mb-3"
+            id="keywordholder"
+            name="editable_form"
+            placeholder="write some keywords"
+            value="{{ keywords }}"
+          />
         </div>
-        <div class="card-body"></div>
+        
       </div>
       <!-- End of SEO Card -->
     </div>
@@ -194,6 +208,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.7.3/dist/tagify.min.js"></script>
 <script>
+  // Tagify code for tags
   var inputElm = document.getElementById('tagholder'),
       tags = document.getElementById('tags')
    tagify = new Tagify (inputElm, {
@@ -213,19 +228,47 @@
     // outputs a String
     tags.value = e.target.value
   }
+  // Tagify code for keywords
+    var keywordInput = document.getElementById('keywordholder')
+    var keywords = document.getElementById('keywords')
+   keywordify = new Tagify (keywordInput, {
+          whitelist : {{ available_keywords | safe }},
+          dropdown : {
+              classname     : "color-blue",
+              enabled       : 0,              // show the dropdown immediately on focus
+              maxItems      : 5,
+              position      : "text",         // place the dropdown near the typed text
+              closeOnSelect : false,          // keep the dropdown open after selecting a suggestion
+              highlightFirst: true
+          }
+      });
+  keywordInput.addEventListener('change', keywordChange)
+  keywords.value = keywordInput.value
+  function keywordChange(e){
+    // outputs a String
+    keywords.value = e.target.value
+  }
 </script>
 {% endif %}
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-  const form = document.getElementById('productForm');
-  form.addEventListener('submit', submitForm);
-function submitForm(e){
-e.preventDefault()
-new formData(form)
-console.debug(e)
+
+// creating new variant form
+function createAnEmptyVariant() {
+  const variantForm = document.getElementById('variantForm');
+  const variantsParent = document.getElementById("variantsParent");
+  let newVariant = variantForm.cloneNode(true);
+  // we remove the values of the inputs by selecting all the existing inputs
+  let allInputs = newVariant.querySelectorAll('input')
+  for(let i = 0; i < allInputs.length; i++){
+    allInputs[i].value = "";
+  }
+  variantsParent.lastElementChild.appendChild(newVariant);
+
 }
+
 
 </script>
 {% endblock %}
