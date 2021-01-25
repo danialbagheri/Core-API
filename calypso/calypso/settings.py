@@ -52,12 +52,15 @@ SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
 DRF_RECAPTCHA_SECRET_KEY = env('DRF_RECAPTCHA_SECRET_KEY')
 # DRF_RECAPTCHA_DOMAIN = "127.0.0.1:8000"
 DRF_RECAPTCHA_PROXY = env.dict("DRF_RECAPTCHA_PROXY")
+# Instagram API keys
+INSTAGRAM_INSTANT_TOKEN_API = env('INSTAGRAM_INSTANT_TOKEN_API')
+INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
 # product = shopify.Product.find( title = "Scalp protection" )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.dict("DRF_RECAPTCHA_PROXY")
+SECRET_KEY = env.dict("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
