@@ -15,4 +15,5 @@ venv
 .production-env.sh
 dist
 node_modules
-
+.env
+*.env

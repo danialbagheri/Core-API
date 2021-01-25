@@ -12,10 +12,16 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
-import os
+import environ
 
-PRODUCTION_ENVIRONMENT = os.environ['PRODUCTION_ENVIRONMENT'] == 'TRUE'
-
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
+DEBUG = env.bool('DEBUG')
+PRODUCTION_ENVIRONMENT = env.bool('PRODUCTION_ENVIRONMENT')
 if PRODUCTION_ENVIRONMENT:
     try:
         # this production_settings.py is kept off github to keep the secret key secret
@@ -29,32 +35,34 @@ else:
         from .development import *
     except ImportError:
         pass
-
+# Email configs
+EMAIL_USE_TLS = True
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'Calypso Sun <info@calypsosun.com>'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-SHOPIFY_API_KEY = os.environ.get('SHOPIFY_API_KEY', None)
-SHOPIFY_PASSWORD = os.environ.get('SHOPIFY_PASSWORD', None)
+SHOPIFY_API_KEY = env('SHOPIFY_API_KEY')
+SHOPIFY_PASSWORD = env('SHOPIFY_PASSWORD')
 API_VERSION = "2020-10"
 SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
     SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
-DRF_RECAPTCHA_SECRET_KEY = os.environ.get('DRF_RECAPTCHA_SECRET_KEY', None)
+DRF_RECAPTCHA_SECRET_KEY = env('DRF_RECAPTCHA_SECRET_KEY')
 # DRF_RECAPTCHA_DOMAIN = "127.0.0.1:8000"
-DRF_RECAPTCHA_PROXY = {
-    'http': 'http://127.0.0.1:8000',
-    'https': 'https://127.0.0.1:8000',
-    'https': 'https://34ce4fe2bd40.ngrok.io'
-}
+DRF_RECAPTCHA_PROXY = env.dict("DRF_RECAPTCHA_PROXY")
 # product = shopify.Product.find( title = "Scalp protection" )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', None)
+SECRET_KEY = env.dict("DRF_RECAPTCHA_PROXY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -104,7 +112,7 @@ ROOT_URLCONF = 'calypso.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
+        'DIRS': [ BASE_DIR / 'templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -186,24 +194,16 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_root'),
-    os.path.join(BASE_DIR, 'node/dist'),
+    BASE_DIR / "static",
+    # '/var/www/static/',
 ]
-# The full path on the system
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR / "static_root"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
-
-
-ADMINS = [
-    ('Danial', 'danial@lincocare.com'),
-]
-MANAGERS = [
-    ('Danial', 'danial@lincocare.com'),
-]
+ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
+MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
