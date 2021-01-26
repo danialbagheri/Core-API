@@ -22,7 +22,7 @@ def staff_required(login_url=None, *args, **kwargs):
     return user_passes_test(lambda u: u.is_staff, login_url=login_url)
 
 
-@staff_required(login_url="/accounts/login")
+@staff_required(login_url="/login")
 def dashboard(request):
     sku_count = ProductVariant.objects.all().count()
     context = {
@@ -31,7 +31,7 @@ def dashboard(request):
     return render(request, "dashboard/index.html", context=context)
 
 
-@staff_required(login_url="/accounts/login")
+@staff_required(login_url="/login")
 def products(request):
     product = Product.objects.all()
     top_seller = request.GET.get('top', None)
@@ -142,7 +142,7 @@ class ProductEdit(StaffRequiredMixin, View):
         return render(request, "dashboard/products/product_edit.html", context=context)
 
 
-@staff_required(login_url="/accounts/login")
+@staff_required(login_url="/login")
 def product_tags(request):
     tags = Tag.objects.all()
     context = {
@@ -224,7 +224,7 @@ class ApiEndpointView(TemplateView):
 class ShopifySyncView(TemplateView):
     template_name = "dashboard/products/shopify.html"
 
-@staff_required(login_url="/accounts/login")
+@staff_required(login_url="/login")
 def synchronise_with_shopify(request):
     products_variants = ProductVariant.objects.all() #TODO: remove after test
     result_list = []

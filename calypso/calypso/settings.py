@@ -61,8 +61,6 @@ INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -122,7 +120,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.media',
+                # 'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -140,6 +138,7 @@ WSGI_APPLICATION = 'calypso.wsgi.application'
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'user.User'
+LOGIN_REDIRECT_URL='/dashboard'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
