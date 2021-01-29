@@ -77,7 +77,7 @@ def get_the_products():
                     file = File(open(image_path, 'rb'))
                     image_instance.image = file
                     image_instance.save()
-                    if product_category.main_image == None:
-                        product_category.main_image = image_instance
+                    # if product_category.main_image == None:
+                    #     product_category.main_image = image_instance
         except Exception as e:
             print(e)

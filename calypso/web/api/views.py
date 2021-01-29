@@ -91,11 +91,16 @@ class Search(generics.ListAPIView):
     def get_queryset(self):
         queryset = []
         query = self.request.query_params.get('q', None)
-        if query is not None:
+        if query is not None and len(query) >= 2:
             try:
                 tag = Tag.objects.filter(Q(name__contains=query)).first()
                 keyword = Keyword.objects.filter(Q(name__contains=query)).first()
-                queryset = Product.objects.filter(Q(name__contains=query) | Q(sub_title__contains=query) | Q(tags=tag)| Q(keyword=keyword)).distinct()
+                if tag is not None:
+                    queryset = Product.objects.filter(Q(tags=tag)).distinct()
+                elif keyword is not None:
+                    queryset = Product.objects.filter(Q(keyword=keyword)).distinct()
+                else:
+                    queryset = Product.objects.filter(Q(name__contains=query) | Q(sub_title__contains=query)).distinct()
             except:
                 pass
         return queryset

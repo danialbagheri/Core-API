@@ -199,7 +199,6 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR / "media")
 #MEDIA_ROO#T = os.path.join(BASE_DIR, 'media')
-print(MEDIA_ROOT)
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
 CACHES = {

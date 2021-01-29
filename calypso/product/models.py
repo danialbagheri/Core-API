@@ -5,7 +5,7 @@ from base64 import b64encode
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from product.shopify import get_variant_info_by_restVariantId, get_variant_info_by_sku
-from django.dispatch import receiver
+# from django.dispatch import receiver
 import os
 import random
 # Create your models here.
@@ -186,7 +186,7 @@ class ProductVariant(models.Model):
     @property
     def image_list(self):
         image_list = []
-        for image in self.image:
+        for image in self.variant_images:
             image_list.append(image.image_type)
         return image_list
 
@@ -272,32 +272,32 @@ class Collection(models.Model):
         return self.name
 
 
-@receiver(models.signals.post_delete, sender=ProductImage)
-def auto_delete_file_on_delete(sender, instance, **kwargs):
-    """
-    Deletes file from filesystem
-    when corresponding `MediaFile` object is deleted.
-    """
-    if instance.image:
-        if os.path.isfile(instance.image.path):
-            os.remove(instance.image.path)
+# @receiver(models.signals.post_delete, sender=ProductImage)
+# def auto_delete_file_on_delete(sender, instance, **kwargs):
+#     """
+#     Deletes file from filesystem
+#     when corresponding `MediaFile` object is deleted.
+#     """
+#     if instance.image:
+#         if os.path.isfile(instance.image.path):
+#             os.remove(instance.image.path)
 
 
-@receiver(models.signals.pre_save, sender=ProductImage)
-def auto_delete_file_on_change(sender, instance, **kwargs):
-    """
-    Deletes old file from filesystem
-    when corresponding `MediaFile` object is updated
-    with new file.
-    """
-    if not instance.pk:
-        return False
-    try:
-        old_file = ProductImage.objects.get(pk=instance.pk).image
-    except ProductImage.DoesNotExist:
-        return False
+# @receiver(models.signals.pre_save, sender=ProductImage)
+# def auto_delete_file_on_change(sender, instance, **kwargs):
+#     """
+#     Deletes old file from filesystem
+#     when corresponding `MediaFile` object is updated
+#     with new file.
+#     """
+#     if not instance.pk:
+#         return False
+#     try:
+#         old_file = ProductImage.objects.get(pk=instance.pk).image
+#     except ProductImage.DoesNotExist:
+#         return False
 
-    new_file = instance.image
-    if not old_file == new_file:
-        if os.path.isfile(old_file.path):
-            os.remove(old_file.path)
+#     new_file = instance.image
+#     if not old_file == new_file:
+#         if os.path.isfile(old_file.path):
+#             os.remove(old_file.path)

@@ -13,7 +13,7 @@ environ.Env.read_env()
 CSRF_COOKIE_DOMAIN = '.calypsosun.com'
 SESSION_COOKIE_SAMESITE = None
 # Whether the session cookie should be secure (https:// only).
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 MYSQL_DB_NAME= env('MYSQL_DB_NAME')
 MYSQL_USER_NAME= env('MYSQL_USER_NAME')
 MYSQL_PASSWORD = env('MYSQL_PASSWORD')
