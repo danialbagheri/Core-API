@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'blog',
     'page',
     'review',
+    'faq',
     'dashboard',
     'django.contrib.sitemaps',
     'rest_framework',

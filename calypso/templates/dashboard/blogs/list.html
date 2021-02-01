@@ -4,29 +4,23 @@
 <div class="container-fluid">
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Reviews</h1>
+    <h1 class="h3 mb-0 text-gray-800">Blogs</h1>
     <div>
       <a
-        href="#"
+        href="{% url "dashboard:blog-create" %}"
         class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
       >
         <i class="fas fa-download fa-sm text-white-50"></i>
-        Add Product
+        Add Blog
       </a>
-      <a
-        href="{% url "dashboard:shopify-sync" %}"
-        class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
-      >
-        <i class="fas fa-sync fa-sm text-white-50"></i>
-        Synchronise with Shopify
-      </a>
+   
     </div>
   </div>
 
   <div class="card shadow mb-4">
     <div class="card-header py-3">
       <a href="{% url "dashboard:reviews" %}" style="float:left;" class="nav-link mr-4 panel-tab">
-      <h6 class="m-0 font-weight-bold text-primary">All Reviews</h6>
+      <h6 class="m-0 font-weight-bold text-primary">All Blogs</h6>
       </a>
       <a href="{% url "dashboard:products" %}?top=yes" style="float:left;" class="nav-link mr-4 panel-tab">
       <h6 class="m-0 font-weight-bold text-primary">New</h6>
@@ -42,45 +36,45 @@
         >
           <thead>
             <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Date Created</th>
-              <th scope="col">Rating</th>
-              <th scope="col">Customer Name</th>
-              <th scope="col">Location</th>
-              <th scope="col">Approved</th>
+              <th scope="col">Title</th>
+              <th scope="col">Slug</th>
+              <th scope="col">Image</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Published</th>
+              <th scope="col">Published Date</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Date Created</th>
-              <th scope="col">Rating</th>
-              <th scope="col">Customer Name</th>
-              <th scope="col">Location</th>
-              <th scope="col">Approved</th>
+              <th scope="col">Title</th>
+              <th scope="col">Slug</th>
+              <th scope="col">Image</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Published</th>
+              <th scope="col">Published Date</th>
             </tr>
           </tfoot>
           <tbody>
-            {% for review in reviews %}
+            {% for post in blogs %}
             <tr>
-              <th scope="row"><a href="{% url "dashboard:review-edit" review.pk %}">{{ review.product  }}</a></th>
-              <td>{{ review.date_created }}</td>
+              <th scope="row"><a href="{% url "dashboard:blog-edit" post.pk %}">{{ post.title  }}</a></th>
               <td>
-                {{ review.score }}
-                {%for i in  "1"|ljust:review.score|make_list %}
-                <i class="text-danger fas fa-star"></i> 
-                {% endfor %}
-                <!-- If condition -->
+                {{ post.slug }}
               </td>
-              <td>{{ review.name }}</td>
-              <td>{{ review.location }}</td>
               <td>
-                {% if review.approved %}
+                {% if post.image %}
+                  <img src="{{ post.image.url }}" width="110px" />
+                {% endif %}  
+              </td>
+              <td>{{ post.tags }}</td>
+              <td>
+                {% if post.published %}
                     <i class="text-success fas fa-check-circle"></i>
                 {% else %}
                     <i class="text-warning fas fa-times-circle"></i>
                 {% endif%}
-            </td>
+              </td>
+              <td>{{ post.published_date }}</td>
             </tr>
 
             {% endfor %}

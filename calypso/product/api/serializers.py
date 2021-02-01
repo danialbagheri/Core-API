@@ -2,7 +2,7 @@ from product.models import ProductVariant, Product, ProductImage, WhereToBuy
 from review.models import Review, Reply
 from rest_framework import serializers
 from review.serializers import ReviewSerializer
-
+from faq.serializers import FaqSerializer
 class WhereToBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = WhereToBuy
@@ -35,6 +35,7 @@ class ProductSerializer(serializers.ModelSerializer):
     main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
     # reviews = ReviewSerializer(many=True, read_only=True, source='review_set') #only enable if you need to see full review list
+    faq_list = FaqSerializer(many=True, read_only=True, source='faqs') 
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
     class Meta:
@@ -57,5 +58,5 @@ class ProductSerializer(serializers.ModelSerializer):
             average_score = score / self.get_total_review_count(obj)
             return average_score
         except ZeroDivisionError:
-             return 0
+            return 0
         

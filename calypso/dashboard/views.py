@@ -8,7 +8,9 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword
 from review.models import Review
-from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm
+from blog.models import BlogPost
+from faq.models import Faq
+from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm
 import json
 # Create your views here.
 
@@ -240,3 +242,38 @@ def synchronise_with_shopify(request):
             )
     return JsonResponse(result_list, safe=False)
 
+
+
+class FaqList(StaffRequiredMixin, ListView):
+    model = Faq
+    context_object_name = 'faqs'
+    template_name = 'dashboard/faqs/list.html'
+
+class FaqEditView(StaffRequiredMixin, UpdateView):
+    model = Faq
+    template_name = 'dashboard/faqs/edit.html'
+    form_class = FaqForm
+    success_url = reverse_lazy('dashboard:faqs')
+
+class FaqCreate(StaffRequiredMixin, CreateView):
+    model = Faq
+    form_class = FaqForm
+    template_name = 'dashboard/faqs/edit.html'
+    success_url = reverse_lazy('dashboard:faqs')
+
+class BlogList(StaffRequiredMixin, ListView):
+    model = BlogPost
+    context_object_name = 'blogs'
+    template_name = 'dashboard/blogs/list.html'
+
+class BlogEditView(StaffRequiredMixin, UpdateView):
+    model = BlogPost
+    template_name = 'dashboard/blogs/edit.html'
+    form_class = BlogForm
+    success_url = reverse_lazy('dashboard:blogs')
+
+class BlogCreate(StaffRequiredMixin, CreateView):
+    model = BlogPost
+    form_class = BlogForm
+    template_name = 'dashboard/blogs/edit.html'
+    success_url = reverse_lazy('dashboard:blogs')

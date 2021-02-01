@@ -1,7 +1,8 @@
 from django import forms
-
 from product.models import ProductVariant, Product, Collection, Tag, ProductType, Collection
 from review.models import Review, Reply
+from faq.models import Faq
+from blog.models import BlogPost
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 
@@ -11,6 +12,15 @@ class ReviewForm(forms.ModelForm):
         fields = "__all__"
         exclude = ['reply', 'user']
 
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = "__all__"
+
+class FaqForm(forms.ModelForm):
+    class Meta:
+        model = Faq
+        fields = "__all__"
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection

@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/reviews/', include('review.urls', namespace='review_api')),
     path('api/web/', include('web.api.urls', namespace='web_api')),
     path('api/page/', include('page.urls', namespace='page')),
+    path('api/faq/', include('faq.urls', namespace='faq')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('get_template/', GetTemplate.as_view(), name='dgjs_get_template'),
