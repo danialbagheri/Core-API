@@ -65,7 +65,10 @@
             <tr>
               <th scope="row"><a href="{% url "dashboard:product-edit" product.slug %}">{{ product.slug }}</a></th>
               <td>
-                <img src="{% if product.main_image %}{{product.main_imageteam}}{% endif %}" style="width: 50px" />
+                {% if product.main_image %}
+                <img src="{{product.main_image}}" style="width: 50px" />
+                {% endif %}
+                
               </td>
               <td>
                 <strong>{{ product.name }}</strong><br />

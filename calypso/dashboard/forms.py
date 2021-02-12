@@ -1,10 +1,11 @@
 from django import forms
-from product.models import ProductVariant, Product, Collection, Tag, ProductType, Collection
+from product.models import ProductVariant, Product, Collection, Tag, ProductType, Collection, ProductImage
 from review.models import Review, Reply
 from faq.models import Faq
 from blog.models import BlogPost
+from page.models import Page
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
-
+from django_grapesjs.forms import GrapesJsWidget, GrapesJsField
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -16,7 +17,15 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
         fields = "__all__"
+        widgets = {
+            'body': SummernoteWidget(),
+            'excerpt': SummernoteWidget(),
+        }
 
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = "__all__"
 class FaqForm(forms.ModelForm):
     class Meta:
         model = Faq
@@ -26,6 +35,16 @@ class CollectionForm(forms.ModelForm):
         model = Collection
         fields = "__all__"
 
+
+class PageForm(forms.ModelForm):
+
+    html = GrapesJsField()
+    class Meta:
+        model = Page
+        fields = "__all__"
+        # widgets = {
+        #     'html': GrapesJsWidget(),
+        # }
 
 class ProductForm(forms.ModelForm):
     collections = forms.ModelMultipleChoiceField(

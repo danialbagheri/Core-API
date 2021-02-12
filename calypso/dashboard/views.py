@@ -10,7 +10,9 @@ from product.models import ProductVariant, Product, ProductImage, ProductType, T
 from review.models import Review
 from blog.models import BlogPost
 from faq.models import Faq
-from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm
+from page.models import Page
+from web.models import Configuration
+from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm
 import json
 # Create your views here.
 
@@ -277,3 +279,45 @@ class BlogCreate(StaffRequiredMixin, CreateView):
     form_class = BlogForm
     template_name = 'dashboard/blogs/edit.html'
     success_url = reverse_lazy('dashboard:blogs')
+
+
+class PageList(StaffRequiredMixin, ListView):
+    model = Page
+    context_object_name = 'pages'
+    template_name = 'dashboard/pages/list.html'
+
+class PageEditView(StaffRequiredMixin, UpdateView):
+    model = Page
+    template_name = 'dashboard/pages/edit.html'
+    form_class = PageForm
+    success_url = reverse_lazy('dashboard:pages')
+
+class PageCreate(StaffRequiredMixin, CreateView):
+    model = Page
+    form_class = PageForm
+    template_name = 'dashboard/blogs/edit.html'
+    success_url = reverse_lazy('dashboard:pages')
+
+
+class ImageList(StaffRequiredMixin, ListView):
+    model = ProductImage
+    context_object_name = 'images'
+    template_name = 'dashboard/images/list.html'
+
+class ImageEditView(StaffRequiredMixin, UpdateView):
+    model = ProductImage
+    form_class = ImageForm
+    template_name = 'dashboard/images/edit.html'
+
+class ImageCreate(StaffRequiredMixin, CreateView):
+    model = ProductImage
+    form_class = ImageForm
+    template_name = 'dashboard/images/edit.html'
+
+class ConfigurationList(StaffRequiredMixin, ListView):
+    model = Configuration
+    context_object_name = 'configs'
+    template_name = 'dashboard/configs/list.html'
+    def get_queryset(self):
+        object_list = super().get_queryset()
+        return object_list

@@ -1,0 +1,56 @@
+{% extends "dashboard/admin-base.html" %} {% load static %}
+<!-- loading crispy forms -->
+{% block extra_head %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.12.17/grapes.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.12.17/css/grapes.min.css"> 
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="{% static "css/django_grapesjs/grapesjs-preset-webpage.min.css" %}" rel="stylesheet" type="text/css">
+<link href="{% static "css/django_grapesjs/grapesjs-preset-newsletter.css" %}" rel="stylesheet" type="text/css">
+<link href="{% static "css/django_grapesjs/grapesjs-plugin-filestack.css" %}" rel="stylesheet" type="text/css">
+<script src="{% static "js/django_grapesjs/feather-aviary-editor.js" %}"></script>
+
+<link href="{% static "css/django_grapesjs/grapes.min.css" %}" rel="stylesheet" type="text/css">
+
+<script src="{% static "js/django_grapesjs/grapesjs-aviary.min.js" %}"></script>
+<script src="{% static "js/django_grapesjs/grapesjs-plugin-filestack.min.js" %}"></script>
+<script src="{% static "js/django_grapesjs/grapesjs-lory-slider.min.js" %}"></script>
+
+<script src="{% static "js/django_grapesjs/grapesjs-preset-webpage.min.js" %}"></script>
+
+<script src="{% static "js/django_grapesjs/grapesjs-tabs.min.js" %}"></script>
+
+<script src="{% static "js/django_grapesjs/grapesjs-preset-newsletter.min.js" %}"></script>
+
+<script src="{% static "js/django_grapesjs/grapes.js" %}"></script>
+
+{% endblock %}
+{% load crispy_forms_tags %}
+{% load grapesjs_tags %}
+{% load static grapesjs_tags %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Page</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <form method="POST">
+          {% csrf_token %}
+          <!-- end of new table-->
+          {{ form| crispy}}
+          <!-- fields-->
+
+          <!-- fields-->
+          <button type="submit" class="btn btn-lg btn-primary">Save</button>
+        </form>
+
+        <!-- end of new table-->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

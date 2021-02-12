@@ -121,7 +121,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                # 'django.template.context_processors.media',
+                'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -198,7 +198,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(BASE_DIR / "media")
+MEDIA_ROOT = BASE_DIR / "media"
 #MEDIA_ROO#T = os.path.join(BASE_DIR, 'media')
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
@@ -207,6 +207,10 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+GRAPESJS_SAVE_CSS = True
+GRAPESJS_TEMPLATE = 'django_grapesjs/textarea.html'
+REDACTOR_CONFIG = {'base': 'django_grapesjs/redactor_config/base.html'} 
+# GRAPESJS_TEMPLATE = 'django_grapesjs/redactor_config/base.html'
 
 CORS_ORIGIN_ALLOW_ALL = True
 # TODO: to be deleted on the live server

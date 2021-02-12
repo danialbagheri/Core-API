@@ -12,7 +12,7 @@ class BlogPost(models.Model):
         return f"public/blog_images/{filename}"
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=300)
     excerpt = models.TextField(help_text="A short version of the blog post")
     body = models.TextField()
     tags = models.ManyToManyField(Tag, blank=True)
@@ -28,6 +28,3 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-
-
-    

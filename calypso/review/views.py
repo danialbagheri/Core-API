@@ -3,7 +3,9 @@ from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
+
 # Create your views here.
 
 
@@ -37,14 +39,21 @@ class CreateReview(generics.CreateAPIView):
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+    
+    @classmethod
+    def notify_the_admin(cls, data):
+        pass
 
     def perform_create(self, serializer):
         if 'slug' in self.kwargs:
             slug = self.kwargs.get('slug')
             user_source = self.request.META.get("HTTP_REFERER", "")
             user_ip = self.get_client_ip(request=self.request)
-            product_instance = get_object_or_404(Product, slug=slug)
-        return serializer.save(product=product_instance, ip_address=user_ip, source=user_source)
+            product_instance = get_object_or_404(Product, slug=slug)            
+            serializer.is_valid(raise_exception=True)
+            return serializer.save(product=product_instance, ip_address=user_ip, source=user_source)
+        else:
+            raise ValidationError()
 
 
 class RateReview(generics.UpdateAPIView):
