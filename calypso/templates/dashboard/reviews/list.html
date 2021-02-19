@@ -6,20 +6,14 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Reviews</h1>
     <div>
-      <a
+      <button
         href="#"
         class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-      >
-        <i class="fas fa-download fa-sm text-white-50"></i>
-        Add Product
-      </a>
-      <a
-        href="{% url "dashboard:shopify-sync" %}"
-        class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
-      >
-        <i class="fas fa-sync fa-sm text-white-50"></i>
-        Synchronise with Shopify
-      </a>
+        disabled
+        >
+        Add Review
+      </button>
+
     </div>
   </div>
 
@@ -28,9 +22,7 @@
       <a href="{% url "dashboard:reviews" %}" style="float:left;" class="nav-link mr-4 panel-tab">
       <h6 class="m-0 font-weight-bold text-primary">All Reviews</h6>
       </a>
-      <a href="{% url "dashboard:products" %}?top=yes" style="float:left;" class="nav-link mr-4 panel-tab">
-      <h6 class="m-0 font-weight-bold text-primary">New</h6>
-      </a>
+
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -62,7 +54,8 @@
           </tfoot>
           <tbody>
             {% for review in reviews %}
-            <tr>
+
+            <tr class="{% if review.opened == False %}bg-light{% endif %}">
               <th scope="row"><a href="{% url "dashboard:review-edit" review.pk %}">{{ review.product  }}</a></th>
               <td>{{ review.date_created }}</td>
               <td>

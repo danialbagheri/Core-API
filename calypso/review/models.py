@@ -42,6 +42,7 @@ class Review(models.Model):
     reply = models.ManyToManyField(
         Reply, related_name="review", verbose_name="Replies", blank=True)
     # media = models.FileField()
+    opened = models.BooleanField(default=False)
 
     class Meta:
         ordering = ("-date_created",)

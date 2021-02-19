@@ -1,18 +1,19 @@
+import pdb
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
+from django.contrib.messages.api import error
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
-from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword
 from review.models import Review
 from blog.models import BlogPost
 from faq.models import Faq
 from page.models import Page
-from web.models import Configuration
-from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm
+from web.models import Configuration, Setting
+from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm
 import json
 # Create your views here.
 
@@ -88,7 +89,10 @@ class ProductEdit(StaffRequiredMixin, View):
         product_instance = self.get_object()
         product_form = ProductForm(
             instance=product_instance)
-        variant_forms = self.variant_form_list()
+        if len(self.variant_form_list()) >= 1:
+            variant_forms = self.variant_form_list()
+        else:
+            variant_forms = [ProductVariantForm()]
         available_tags_list = self.get_the_tags()  # Get all the tags
         available_keyword_list = self.get_the_keywords()  # Get all the tags
         tags = self.list_of_tags(
@@ -125,8 +129,42 @@ class ProductEdit(StaffRequiredMixin, View):
                 product.keyword.add(keyword_instance)
             product.save()
 
-    def save_variants(self):
-        pass
+    def save_variants(self, product, variant_list):
+        product.variants.clear()
+        for variant in variant_list:
+            # pdb.set_trace()
+
+            if variant_list[variant]["pk"] != 'None' and variant_list[variant]["pk"] != "":
+                print("yes exist! we are updating")
+                # Here we check if the a variation exist but for example sku needs amendment, we only update it
+                try:
+                    variant_instance = ProductVariant.objects.get(pk=variant_list[variant]['pk'])         
+                except ProductVariant.DoesNotExist:
+                    messages.error(self.request, f"Product Varinat {variant['sku']} doesn't exist!")
+            else:
+                #Here first we try to see incase if the variant with this sku exist as sku's are unique and it may have been disconnected from the product
+                try:
+                    variant_instance = ProductVariant.objects.get(sku=variant_list[variant]["sku"])
+                except ProductVariant.DoesNotExist:
+                    variant_list[variant].pop('pk', None)
+                    variant_instance = ProductVariant.objects.create(sku=variant_list[variant]["sku"])
+            if variant_list[variant]["price"] == '':
+                price = 0
+            else:
+                price = float(variant_list[variant]["price"])
+            variant_instance.sku=variant_list[variant]["sku"]
+            variant_instance.name=variant_list[variant]["name"]
+            variant_instance.size=variant_list[variant]["size"]
+            variant_instance.shopify_rest_variant_id=variant_list[variant]["shopify_rest_variant_id"]
+            variant_instance.shopify_storefront_variant_id=variant_list[variant]["shopify_storefront_variant_id"]
+            variant_instance.price=price
+            variant_instance.save()
+            product.variants.add(variant_instance)
+            # import pdb
+            # pdb.set_trace()
+        else:
+            messages.info(self.request, "there was no variation created!")
+        product.save()
 
     def post(self, request, *args, **kwargs):
         product_instance = self.get_object()
@@ -137,11 +175,17 @@ class ProductEdit(StaffRequiredMixin, View):
             tags_list = json.loads(request.POST.get(
                 'tagslist').replace("'", "\""))
             self.save_tag_list(product, tags_list)
-            import pdb
-            pdb.set_trace()
+            try:
+                variants_list = json.loads(request.POST.get('variants', None).replace("'", "\""))
+                self.save_variants(product, variants_list)
+            except Exception as e:
+                messages.error(request, f"there was no variants in the request.{e}")
             messages.success(
                 request, f"{product_form.instance.name} have been updated.")
             return redirect(reverse("dashboard:products"))
+        else:
+            for e in product_form.errors:
+                messages.error(request, f"{e} : {product_form.errors[e]}")
         context['product_form'] = product_form
         return render(request, "dashboard/products/product_edit.html", context=context)
 
@@ -164,6 +208,15 @@ class ReviewEditView(StaffRequiredMixin, UpdateView):
     template_name = 'dashboard/reviews/edit.html'
     form_class = ReviewForm
     success_url = reverse_lazy('dashboard:reviews')
+    def get_queryset(self):
+        """set the review to open to indicate it's been checked"""
+        queryset= super().get_queryset()
+        review_pk = self.kwargs.get("pk")
+        instance = self.model.objects.get(pk=review_pk)
+        instance.opened = True
+        instance.save()
+        return queryset
+    
 
 class CollectionsList(StaffRequiredMixin, ListView):
     model = Collection
@@ -320,4 +373,13 @@ class ConfigurationList(StaffRequiredMixin, ListView):
     template_name = 'dashboard/configs/list.html'
     def get_queryset(self):
         object_list = super().get_queryset()
+        settings = self.request.GET.get("settings", None)
+        if settings is not None:
+            setting = get_object_or_404(Setting, slug=settings)
+            object_list.filter(setting=setting)
         return object_list
+
+class ConfigEditView(StaffRequiredMixin, UpdateView):
+    model = Configuration
+    form_class = ConfigForm
+    template_name = 'dashboard/configs/edit.html'

@@ -1,0 +1,83 @@
+{% extends "dashboard/admin-base.html" %} {% load static %}
+<!--starts here-->
+{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Configs</h1>
+    <div>
+      <a
+        href="{% url "dashboard:blog-create" %}"
+        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+      >
+        <i class="fas fa-download fa-sm text-white-50"></i>
+        Add Blog
+      </a>
+   
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <a href="{% url "dashboard:configs" %}" style="float:left;" class="nav-link mr-4 panel-tab">
+      <h6 class="m-0 font-weight-bold text-primary">All Configs</h6>
+      </a>
+      <a href="{% url "dashboard:configs" %}?settings=yes" style="float:left;" class="nav-link mr-4 panel-tab">
+      <h6 class="m-0 font-weight-bold text-primary">Website</h6>
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered table-hover"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Key</th>
+              <th scope="col">Value</th>
+              <th scope="col">Active</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Key</th>
+              <th scope="col">Value</th>
+              <th scope="col">Active</th>
+              <th scope="col">Description</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            {% for config in configs %}
+            <tr>
+              <th scope="row"><a href="{% url "dashboard:config-edit" config.pk %}">{{ config.name }}</a></th>
+              <td>
+                {{ config.key}}
+              </td>
+              <td>{{ config.value }}</td>
+              <td>
+                {% if config.active %}
+                    <i class="text-success fas fa-check-circle"></i>
+                {% else %}
+                    <i class="text-warning fas fa-times-circle"></i>
+                {% endif%}
+              </td>
+              <td>{{ config.description}}</td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- end of new table-->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

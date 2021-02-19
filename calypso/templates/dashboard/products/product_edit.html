@@ -34,7 +34,7 @@
   {% endfor %}
 {% else %}
 <!-- Bigger row -->
-<form method="post" id="productForm">
+<form method="post" id="productForm" onsubmit="submitForm()">
   <div class="row p-4">
     <!-- Longer row -->
     <div class="col-8">
@@ -43,9 +43,9 @@
         <div class="card-body">
           {% csrf_token %}
           <!-- form inputs -->
-          {{ product_form.name | as_crispy_field }}
+          {{ product_form.name | as_crispy_field }}{{ product_form.name.errors}}
           <!-- form inputs -->
-          {{ product_form.sub_title | as_crispy_field }}
+          {{ product_form.sub_title | as_crispy_field }}{{ product_form.sub_title.errors}}
 
           <!-- form inputs -->
           {{ product_form.description | as_crispy_field }}
@@ -70,8 +70,9 @@
           <!-- form inputs -->
           {% for variant in variant_forms %}
           <section id="variantsParent">
-            <div id="variantForm">
+            <div id="variantForm" class="product-variants">
             <div class="form-row">
+              <input name="pk" value="{{variant.instance.pk}}" type="hidden"/>
               <div class="col">
                   {{variant.sku | as_crispy_field}}
               </div>
@@ -90,7 +91,7 @@
             </div>
             <!-- Secondary hidden information row with dropdown -->
 
-              <div id="accordion">
+              <div id="accordion" class="mb-3">
                 <div data-toggle="collapse" data-target="#collapse{{variant.instance.pk}}" aria-expanded="true" aria-controls="collapseOne" class="separator link" style="cursor: pointer;">
                  SHOPIFY & MORE
                 </div>
@@ -109,7 +110,7 @@
                 </div>
               </div>
 
-             <hr/>
+              
              </div>
             </section>
           {% endfor %}
@@ -208,6 +209,54 @@
   </form>
 </div>
 
+
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+
+// creating new variant form
+function createAnEmptyVariant() {
+  //const variantForm = document.getElementById('variantForm');
+  const variantForm = document.getElementsByClassName("product-variants")
+  const variantsParent = document.getElementById("variantsParent");
+  let newVariant = variantForm[0].cloneNode(true);
+  // we remove the values of the inputs by selecting all the existing inputs
+  let allInputs = newVariant.querySelectorAll('input')
+  for(let i = 0; i < allInputs.length; i++){
+    allInputs[i].value = "";
+    allInputs[i].setAttribute("value", '')
+  }
+  variantsParent.appendChild(newVariant);
+
+}
+async function submitForm(){
+  var productForm = document.getElementById("productForm")
+  var productVariants = document.getElementsByClassName("product-variants")
+  //e.preventDefault()
+  let formData = new FormData(productForm)
+  var ListOfVariants = {}
+  for (let i = 0; i < productVariants.length; i++) {
+    var inputs = productVariants[i].getElementsByTagName('INPUT');
+    var myObj= {}
+    for(let a = 0; a< inputs.length; a++){
+      myObj[inputs[a].name]= inputs[a].value
+    };
+    ListOfVariants[`variant_${i}`] = myObj
+  }
+  console.log(ListOfVariants) 
+  
+  formData.append("variants" , JSON.stringify(ListOfVariants));
+  endpoint = window.location.href
+  let response = await fetch(endpoint, {
+    method: 'POST',
+    body: formData
+  });
+  let result = await response.json();
+}
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.7.3/dist/tagify.min.js"></script>
 <script>
   // Tagify code for tags
@@ -250,27 +299,5 @@
     // outputs a String
     keywords.value = e.target.value
   }
-</script>
-{% endif %}
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-
-// creating new variant form
-function createAnEmptyVariant() {
-  const variantForm = document.getElementById('variantForm');
-  const variantsParent = document.getElementById("variantsParent");
-  let newVariant = variantForm.cloneNode(true);
-  // we remove the values of the inputs by selecting all the existing inputs
-  let allInputs = newVariant.querySelectorAll('input')
-  for(let i = 0; i < allInputs.length; i++){
-    allInputs[i].value = "";
-  }
-  variantsParent.lastElementChild.appendChild(newVariant);
-
-}
-
-
 </script>
 {% endblock %}

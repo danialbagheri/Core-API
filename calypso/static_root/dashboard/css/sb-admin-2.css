@@ -6879,7 +6879,8 @@ button.bg-warning:focus {
   background-color: #f4b30d !important;
 }
 
-.bg-danger {
+.bg-danger,
+.bg-error {
   background-color: #e74a3b !important;
 }
 

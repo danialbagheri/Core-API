@@ -100,13 +100,20 @@ class Product(models.Model):
         list_of_prices = []
         for variant in self.variants.all():
             list_of_prices.append(variant.price)
-        lowest_price = min(float(sub) for sub in list_of_prices)
+        try:
+            lowest_price = min(float(sub) for sub in list_of_prices)
+        except:
+            lowest_price = None
         return lowest_price
 
     @property
     def main_image(self):
         # return self.main_image_object.image.get_absolute_image_url
-        return self.all_images.first().get_absolute_image_url
+        try:
+            main_image = self.all_images.first().get_absolute_image_url
+        except:
+            main_image = None
+        return main_image
 
     def __str__(self):
         return self.name
@@ -160,7 +167,7 @@ class ProductImage(models.Model):
 
 class ProductVariant(models.Model):
 
-    sku = models.CharField(max_length=100, blank=True)
+    sku = models.CharField(max_length=100, blank=True, unique=True)
     product = models.ForeignKey(
         "Product", null=True, on_delete=models.CASCADE, related_name="variants")
     name = models.CharField(max_length=255, null=True, blank=True, default="")

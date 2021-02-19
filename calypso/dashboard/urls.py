@@ -48,4 +48,8 @@ urlpatterns = [
          name="shopify-sync"),
     path('product/shopify-sync/api/', views.synchronise_with_shopify,
          name="shopify-sync-rest"),
+    path('configs/', views.ConfigurationList.as_view(),
+         name="configs"),
+    path('configs/edit/<int:pk>/', views.ConfigEditView.as_view(),
+         name="config-edit"),
 ]

@@ -4,6 +4,7 @@ from review.models import Review, Reply
 from faq.models import Faq
 from blog.models import BlogPost
 from page.models import Page
+from web.models import Configuration
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from django_grapesjs.forms import GrapesJsWidget, GrapesJsField
 
@@ -11,7 +12,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = "__all__"
-        exclude = ['reply', 'user']
+        exclude = ['reply', 'user','opened']
 
 class BlogForm(forms.ModelForm):
     class Meta:
@@ -22,6 +23,10 @@ class BlogForm(forms.ModelForm):
             'excerpt': SummernoteWidget(),
         }
 
+class ConfigForm(forms.ModelForm):
+    class Meta:
+        model = Configuration
+        fields = "__all__"
 class ImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
@@ -62,6 +67,7 @@ class ProductForm(forms.ModelForm):
 
 class ProductVariantForm(forms.ModelForm):
     sku = forms.CharField(required=True)
+    name = forms.CharField(required=True)
     class Meta:
         model = ProductVariant
         fields = "__all__"
