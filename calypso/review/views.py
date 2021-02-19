@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.mail import mail_managers
 from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
@@ -42,14 +43,25 @@ class CreateReview(generics.CreateAPIView):
     
     @classmethod
     def notify_the_admin(cls, data):
-        pass
+        subject = f"A new review has been submitted on {data['user_source']}"
+        message = f"""
+        Please check the latest reviews by visiting https://service.calypsosun.com
+        user ip: {data['user_ip']}
+        Product: {data['product_name']}
+        """
+        mail_managers(subject,message)
 
     def perform_create(self, serializer):
         if 'slug' in self.kwargs:
             slug = self.kwargs.get('slug')
             user_source = self.request.META.get("HTTP_REFERER", "")
             user_ip = self.get_client_ip(request=self.request)
-            product_instance = get_object_or_404(Product, slug=slug)            
+            product_instance = get_object_or_404(Product, slug=slug)
+            self.notify_the_admin(data={
+                "user_source":user_source,
+                "user_ip":user_ip,
+                "product_name":product_instance.name,
+            })           
             serializer.is_valid(raise_exception=True)
             return serializer.save(product=product_instance, ip_address=user_ip, source=user_source)
         else:

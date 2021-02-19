@@ -64,7 +64,18 @@ class ProductForm(forms.ModelForm):
             'direction_of_use': SummernoteWidget(),
         }
 
+class ProductCreateForm(forms.ModelForm):
+    collections = forms.ModelMultipleChoiceField(
+        queryset=Collection.objects.all(), required=False)
 
+    class Meta:
+        model = Product
+        fields = "__all__"
+        exclude = ['tags']
+        widgets = {
+            'description': SummernoteWidget(),
+            'direction_of_use': SummernoteWidget(),
+        }
 class ProductVariantForm(forms.ModelForm):
     sku = forms.CharField(required=True)
     name = forms.CharField(required=True)

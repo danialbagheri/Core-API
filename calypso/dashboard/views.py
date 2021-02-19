@@ -1,4 +1,3 @@
-import pdb
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
@@ -132,7 +131,6 @@ class ProductEdit(StaffRequiredMixin, View):
     def save_variants(self, product, variant_list):
         product.variants.clear()
         for variant in variant_list:
-            # pdb.set_trace()
 
             if variant_list[variant]["pk"] != 'None' and variant_list[variant]["pk"] != "":
                 print("yes exist! we are updating")
@@ -160,8 +158,7 @@ class ProductEdit(StaffRequiredMixin, View):
             variant_instance.price=price
             variant_instance.save()
             product.variants.add(variant_instance)
-            # import pdb
-            # pdb.set_trace()
+
         else:
             messages.info(self.request, "there was no variation created!")
         product.save()
@@ -189,6 +186,14 @@ class ProductEdit(StaffRequiredMixin, View):
         context['product_form'] = product_form
         return render(request, "dashboard/products/product_edit.html", context=context)
 
+class ProductCreate(StaffRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'dashboard/products/product-create.html'
+    def get_success_url(self):
+        slug=self.request.POST['slug']
+        messages.success(self.request, f"product {slug} had been created successfully.")
+        return reverse_lazy('dashboard:product-edit', kwargs={'slug': slug})
 
 @staff_required(login_url="/login")
 def product_tags(request):
