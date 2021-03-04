@@ -2,7 +2,7 @@ from product.models import Product, ProductVariant, ProductType, Collection, Pro
 # from review.models import Review, Reply
 from rest_framework import viewsets
 from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer
-
+from sorl.thumbnail import get_thumbnail
 
 
 class VariantViewSet(viewsets.ReadOnlyModelViewSet):
@@ -23,6 +23,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         count = self.request.query_params.get('count', None)
         top_seller = self.request.query_params.get('top', None)
         collection = self.request.query_params.get('collection', None)
+        # image_width = self.request.query_params.get('image_width', None)
         if product_type is not None:
             try:
                 product_type_instance = ProductType.objects.filter(

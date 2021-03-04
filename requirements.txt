@@ -44,6 +44,7 @@ PyYAML==5.3.1
 requests==2.24.0
 ShopifyAPI==8.0.2
 six==1.15.0
+sorl-thumbnail==12.7.0
 sqlparse==0.3.1
 toml==0.10.1
 traitlets==4.3.3

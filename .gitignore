@@ -1,5 +1,6 @@
 venv/
 calypso/static/
+calypso/static-root/
 calypso/media/*
 calypso/media/
 .DS_Store

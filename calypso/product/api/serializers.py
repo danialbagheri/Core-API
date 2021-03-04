@@ -3,6 +3,8 @@ from review.models import Review, Reply
 from rest_framework import serializers
 from review.serializers import ReviewSerializer
 from faq.serializers import FaqSerializer
+from sorl.thumbnail import get_thumbnail
+from django.contrib.sites.models import Site
 class WhereToBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = WhereToBuy
@@ -12,6 +14,21 @@ class WhereToBuySerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    resized = serializers.SerializerMethodField()
+
+    def get_resized(self, obj):
+        request = self.context.get("request")
+        resize_w = request.query_params.get('resize_w',None)
+        resize_h = request.query_params.get('resize_h',None)
+        domain = Site.objects.get_current().domain
+        if resize_w is None:
+            resize_w = 100
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
     class Meta:
         model = ProductImage
         fields = '__all__'

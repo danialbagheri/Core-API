@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.mail import mail_managers
+from django.core.mail import mail_managers, mail_admins
 from .models import Review
 from product.models import Product
 from rest_framework import viewsets, generics
@@ -49,7 +49,10 @@ class CreateReview(generics.CreateAPIView):
         user ip: {data['user_ip']}
         Product: {data['product_name']}
         """
-        mail_managers(subject,message)
+        try:
+            mail_managers(subject,message)
+        except Exception as e:
+            mail_admins("New Review Email notification failed", f"{e}")
 
     def perform_create(self, serializer):
         if 'slug' in self.kwargs:

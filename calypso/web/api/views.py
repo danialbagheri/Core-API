@@ -11,10 +11,12 @@ from web.models import Slider, Configuration
 from web.instagram import get_user_feed
 from product.models import Product, Tag, Keyword
 from product.api.serializers import ProductSerializer
+from sorl.thumbnail import get_thumbnail
 from PIL import Image, ImageTk
 from io import BytesIO
 import requests
 import os
+
 class ContactForm(APIView):
     # authentication_classes = [authentication.TokenAuthentication]
     def post(self, request, *args, **kwargs):
@@ -65,18 +67,15 @@ class InstagramFeed(APIView):
 
     def reduce_photo_size(self, url, id):
         current_site = Site.objects.get_current().domain
-        media_root = settings.MEDIA_ROOT
+        media_root = str(settings.MEDIA_ROOT)
         path = "/instagram/calypso/"
         full_path = media_root + path + id + ".jpg"
-        if os.path.isfile(full_path):
-            url_path = current_site + "/media"+ path + id + ".jpg"
-        else:
+        if os.path.isfile(full_path) is not True:
             r = requests.get(url)
             pilImage = Image.open(BytesIO(r.content))
-            pilImage.resize((100, 100), Image.ANTIALIAS)
             pilImage.save(f"{media_root}{path}{id}.jpg")
-            url_path = current_site + "/media" +path + id + ".jpg"
-        return url_path
+        image = get_thumbnail(full_path, '200x200', crop="center", quality=100, format="PNG").url
+        return current_site + image
 
 
 
