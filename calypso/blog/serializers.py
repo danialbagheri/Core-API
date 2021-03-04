@@ -19,7 +19,6 @@ class BlogPostSerializer(serializers.ModelSerializer):
             resize_w = "100"
         else:
             height = f"x{resize_h}"
-        print(f'{resize_w}{height}')
         if obj.image:
             return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
     class Meta:
