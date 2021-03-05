@@ -14,7 +14,6 @@ from page.models import Page
 from web.models import Configuration, Setting
 from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm
 import json
-# Create your views here.
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
@@ -133,7 +132,6 @@ class ProductEdit(StaffRequiredMixin, View):
         for variant in variant_list:
 
             if variant_list[variant]["pk"] != 'None' and variant_list[variant]["pk"] != "":
-                print("yes exist! we are updating")
                 # Here we check if the a variation exist but for example sku needs amendment, we only update it
                 try:
                     variant_instance = ProductVariant.objects.get(pk=variant_list[variant]['pk'])         
@@ -166,7 +164,10 @@ class ProductEdit(StaffRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         product_instance = self.get_object()
         context = self.get_context_data()
-        product_form = ProductForm(request.POST, instance=product_instance)
+        data = request.POST.copy()
+        product_name =data.getlist('name')[0]
+        data['name'] = product_name
+        product_form = ProductForm(data, instance=product_instance)
         if product_form.is_valid():
             product = product_form.save()
             tags_list = json.loads(request.POST.get(

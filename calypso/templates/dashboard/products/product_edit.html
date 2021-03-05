@@ -1,6 +1,8 @@
 {% extends "dashboard/admin-base.html" %}
 <!-- loading crispy forms -->
 {% load crispy_forms_tags %}
+<!-- loading sorl thumbails -->
+{% load thumbnail %}
 <!--starts here-->
 {% block content %}
 <link
@@ -156,7 +158,9 @@
           <div class="d-flex">
           {% for image in product_form.instance.all_images %}
             <a href="{% url "dashboard:image-edit" image.pk %}">
-              <img src="{{image.image.url}}" width="80px"/>
+              {% thumbnail image.image "100" format="PNG" as im %}
+                <img src="{{ im.url }}" width="80px"/>
+              {% endthumbnail %}
             </a>
             {% endfor %}
               <a style="display:block;width:80px;cursor:pointer;text-decoration:none;" class="bg-light" href="{% url "dashboard:image-create" %}">

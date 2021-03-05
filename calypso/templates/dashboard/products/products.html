@@ -1,5 +1,7 @@
 {% extends "dashboard/admin-base.html" %} {% load static %}
 <!--starts here-->
+<!-- loading sorl thumbails -->
+{% load thumbnail %}
 {% block content %}
 <div class="container-fluid">
   <!-- Page Heading -->
@@ -66,7 +68,9 @@
               <th scope="row"><a href="{% url "dashboard:product-edit" product.slug %}">{{ product.slug }}</a></th>
               <td>
                 {% if product.main_image %}
-                <img src="{{product.main_image}}" style="width: 50px" />
+                  {% thumbnail product.main_image "60" format="PNG" as im %}
+                    <img src="{{im.url}}" style="width: 50px" />
+                  {% endthumbnail %}
                 {% endif %}
                 
               </td>
