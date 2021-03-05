@@ -11,12 +11,12 @@ class BlogPostSerializer(serializers.ModelSerializer):
         resize_w = request.query_params.get('resize_w',None)
         resize_h = request.query_params.get('resize_h',None)
         domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = "100"
         if resize_w is None:
             resize_w = ""
         if resize_h is None:
             height = ""
-        if resize_h is None and resize_w is None:
-            resize_w = "100"
         else:
             height = f"x{resize_h}"
         if obj.image:

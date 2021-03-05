@@ -40,11 +40,11 @@ class SlideSerializer(serializers.ModelSerializer):
                 height = ""
             else:
                 height = f"x{resize_h}"
-            if obj.image:
-                return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100).url
+            if obj.slide.image:
+                return domain+get_thumbnail(obj.slide.image, f'{resize_w}{height}', quality=100).url
     class Meta:
         model = SliderSlidesThroughModel
-        fields = ('slide', 'order')
+        fields = ('slide', 'order', 'resized')
         depth = 2
 
 
