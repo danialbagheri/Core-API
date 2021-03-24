@@ -45,15 +45,15 @@ class SliderViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SliderSerializer
     lookup_field = 'slug'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        slug = self.request.query_params.get('slug', False)
-        mobile = self.request.query_params.get('mobile', False)
-        if slug:
-            queryset = queryset.filter(slug=slug)
-        if mobile and mobile.lower() == "true":
-            queryset = queryset.filter(mobile=True)
-        return queryset
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     slug = self.request.query_params.get('slug', False)
+    #     mobile = self.request.query_params.get('mobile', False)
+    #     if slug:
+    #         queryset = queryset.filter(slug=slug)
+    #     if mobile and mobile.lower() == "true":
+    #         queryset = queryset.filter(mobile=True)
+    #     return queryset
 
 
 class InstagramFeed(APIView):
@@ -61,8 +61,9 @@ class InstagramFeed(APIView):
         queryset = get_user_feed()
         for data in queryset:
             if data['media_type'] == "IMAGE" or data['media_type'] == "CAROUSEL_ALBUM":
-                thumbnail = self.reduce_photo_size(data['media_url'], data['id'])
+                thumbnail, webp = self.reduce_photo_size(data['media_url'], data['id'])
                 data["thumbnail"] = thumbnail
+                data["webp"] = webp
         return JsonResponse(queryset, safe=False, status=200)
 
     def reduce_photo_size(self, url, id):
@@ -74,8 +75,9 @@ class InstagramFeed(APIView):
             r = requests.get(url)
             pilImage = Image.open(BytesIO(r.content))
             pilImage.save(f"{media_root}{path}{id}.jpg")
-        image = get_thumbnail(full_path, '200x200', crop="center", quality=100, format="PNG").url
-        return current_site + image
+        image = current_site + get_thumbnail(full_path, '200x200', crop="center", quality=100, format="PNG").url
+        webp = current_site + get_thumbnail(full_path, '200x200', crop="center", quality=100, format="WEBP").url
+        return image, webp
 
 
 

@@ -9,7 +9,7 @@ class Slider(models.Model):
     slug = models.SlugField()
     slides = models.ManyToManyField(
         "web.Slide", verbose_name="slides", blank=True, related_name='slider')
-    mobile = models.BooleanField()
+    # mobile = models.BooleanField()
 
     def __str__(self):
         return self.name
@@ -17,8 +17,13 @@ class Slider(models.Model):
 
 class Slide(models.Model):
     name = models.CharField("name", max_length=150)
-    image = models.ImageField(
-        upload_to="slide/", height_field=None, width_field=None, max_length=None, blank=True)
+    desktop_image = models.ImageField(
+        upload_to="slide/desktop/", max_length=None, blank=True)
+    tablet_image = models.ImageField(
+        upload_to="slide/tablet/", max_length=None, blank=True)
+    mobile_image = models.ImageField(
+        upload_to="slide/mobile/", max_length=None, blank=True)
+    image_alt_text = models.CharField(max_length=200, blank=True)
     active = models.BooleanField(default=False)
     custom_slide = models.BooleanField(default=False)
     custom_code = models.TextField(blank=True)

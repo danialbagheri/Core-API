@@ -5,6 +5,7 @@ class Page(models.Model):
     slug = models.SlugField(unique=True, max_length=255)
     title = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
+    #TODO: convert to textfield
     html = GrapesJsHtmlField()
     published= models.BooleanField(default=True)
     class Meta:

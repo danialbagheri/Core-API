@@ -6,7 +6,7 @@ app_name = "faq"
 
 
 faq_routers = routers.DefaultRouter()
-faq_routers.register(r'all',
+faq_routers.register(r'',
                         views.FaqViewSet, basename="faqs")
 
 urlpatterns = [

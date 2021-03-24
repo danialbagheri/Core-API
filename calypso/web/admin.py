@@ -14,8 +14,8 @@ class SlidesthroughOrderedStackedInline(OrderedTabularInline):
 
 
 class SliderAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'slug', 'mobile', 'slides_count')
-    fields = ('name', 'slug', 'mobile')
+    list_display = ('name', 'slug', 'slides_count')
+    fields = ('name', 'slug')
     inlines = (SlidesthroughOrderedStackedInline,)
 
     def slides_count(self, obj, *args, **kwargs):
