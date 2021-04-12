@@ -7,7 +7,7 @@ from .serializers import REASON_CHOICES, ContactFormSerializer, SliderSerializer
 from rest_framework import authentication, viewsets, generics
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from web.models import Slider, Configuration
+from web.models import Slider, Configuration, SliderSlidesThroughModel
 from web.instagram import get_user_feed
 from product.models import Product, Tag, Keyword
 from product.api.serializers import ProductSerializer
@@ -45,15 +45,12 @@ class SliderViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SliderSerializer
     lookup_field = 'slug'
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     slug = self.request.query_params.get('slug', False)
-    #     mobile = self.request.query_params.get('mobile', False)
-    #     if slug:
-    #         queryset = queryset.filter(slug=slug)
-    #     if mobile and mobile.lower() == "true":
-    #         queryset = queryset.filter(mobile=True)
-    #     return queryset
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        slug = self.request.query_params.get('slug', False)
+        if slug:
+            queryset = queryset.filter(slug=slug)
+        return queryset
 
 
 class InstagramFeed(APIView):

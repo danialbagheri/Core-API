@@ -134,11 +134,13 @@ class ProductImage(models.Model):
 
     variant = models.ForeignKey(
         'ProductVariant', on_delete=models.CASCADE, related_name='variant_images')
-    image = models.ImageField(upload_to=image_directory_path)
+    image = models.ImageField(upload_to=image_directory_path, height_field='height', width_field='width')
     image_type = models.CharField(max_length=2, choices=IMAGE_TYPE, blank=True)
     image_angle = models.CharField(
         max_length=10, choices=IMAGE_ANGLE, blank=True)
     alternate_text = models.CharField(max_length=250)
+    height = models.IntegerField()
+    width = models.IntegerField()
 
     def image_preview(self):
         if self.image:
@@ -151,6 +153,11 @@ class ProductImage(models.Model):
 
     @property
     def get_absolute_image_url(self):
+        # url = Site.objects.first()
+        request = None
+        return "{0}{1}".format(get_current_site(request).domain, self.image.url)
+    @property
+    def get_(self):
         # url = Site.objects.first()
         request = None
         return "{0}{1}".format(get_current_site(request).domain, self.image.url)

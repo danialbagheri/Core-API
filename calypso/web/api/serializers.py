@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drf_recaptcha.fields import ReCaptchaV2Field, ReCaptchaV3Field
-from web.models import Slider, Slide, SliderSlidesThroughModel, Configuration, Setting
+from web.models import Slider, SliderSlidesThroughModel, Configuration, Setting, Slide
 from sorl.thumbnail import get_thumbnail
 from django.contrib.sites.models import Site
 
