@@ -1,4 +1,5 @@
 from django.contrib import admin
+from rest_framework.fields import ReadOnlyField
 from .models import *
 from django_summernote.admin import SummernoteModelAdmin
 # Register your models here.
@@ -41,14 +42,32 @@ class ProductImageAdmin(admin.ModelAdmin):
     ]
     search_fields = ['variant__sku', 'variant__name']
 
+class CollectionAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = [
+        "name",
+        "slug",
+    ]
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = [
+        "name",
+        "slug",
+    ]
+    ReadOnlyField = ['slug']
+class KeywordAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    
+class ProductTypeAdmin(admin.ModelAdmin):
+    search_fields = ['name']
 
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Tag)
-admin.site.register(Keyword)
-admin.site.register(ProductType)
+admin.site.register(Tag, TagAdmin)
+admin.site.register(Keyword, KeywordAdmin)
+admin.site.register(ProductType, ProductTypeAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
 admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(Stockist)
 admin.site.register(WhereToBuy)
 admin.site.register(Ingredient)
-admin.site.register(Collection)
+admin.site.register(Collection, CollectionAdmin)

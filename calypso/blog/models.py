@@ -3,7 +3,6 @@ from product.models import Tag, ProductType, Product
 from django.dispatch import receiver
 # Create your models here.
 from datetime import date
-import os
 
 
 class BlogPost(models.Model):
@@ -13,15 +12,16 @@ class BlogPost(models.Model):
 
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=300)
-    excerpt = models.TextField(help_text="A short version of the blog post")
+    excerpt = models.TextField(help_text="A short version of the blog post", blank=True)
     body = models.TextField()
     tags = models.ManyToManyField(Tag, blank=True)
     category = models.ManyToManyField(ProductType, blank=True)
     image_alt_text = models.CharField(max_length=300,blank=True)
-    related_products = models.ManyToManyField(Product)
-
+    related_products = models.ManyToManyField(Product, blank=True)
+    image_width = models.IntegerField()
+    image_height = models.IntegerField()
     image = models.ImageField(
-        upload_to=blog_image_path, blank=True)
+        upload_to=blog_image_path, blank=True, height_field='image_height', width_field='image_width')
     published = models.BooleanField(default=False, null=True)
     publish_date = models.DateField(
         default=date.today, blank=True, null=True, )

@@ -1,7 +1,7 @@
-from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, IMAGE_TYPE
+from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag, IMAGE_TYPE
 # from review.models import Review, Reply
 from rest_framework import viewsets
-from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer
+from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer
 from sorl.thumbnail import get_thumbnail
 
 
@@ -10,6 +10,9 @@ class VariantViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductVariantSerializer
     lookup_field = "sku"
 
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):

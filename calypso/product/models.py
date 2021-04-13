@@ -46,6 +46,11 @@ class ProductType(models.Model):
     def __str__(self):
         return self.name
 
+def get_slug():
+    import random
+    
+    slug_instance = random.randint(22,9991)
+    return slug_instance
 
 class Tag(models.Model):
     '''
@@ -60,6 +65,11 @@ class Tag(models.Model):
     icon = models.ImageField(
         upload_to=icons_directory_path, blank=True)
     name = models.CharField(_('name'), max_length=200, blank=True)
+    slug = models.SlugField(_("slug"), unique=True, default=get_slug())
+
+    # def get_slug(self):
+    #     slug_instance = self.name.replace(' ', '-')
+    #     return slug_instance
 
     def __str__(self):
         return self.name

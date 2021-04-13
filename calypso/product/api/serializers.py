@@ -1,4 +1,4 @@
-from product.models import ProductVariant, Product, ProductImage, WhereToBuy
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag
 from review.models import Review, Reply
 from rest_framework import serializers
 from review.serializers import ReviewSerializer
@@ -11,6 +11,11 @@ class WhereToBuySerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'stockist')
         depth = 2
         # lookup_field = 'product'
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('__all__')
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
