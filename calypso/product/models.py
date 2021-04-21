@@ -98,6 +98,11 @@ class Product(models.Model):
     top_seller = models.BooleanField(default=False)
 
     @property
+    def related_products(self):
+        related_products = Product.objects.filter(tags__in=self.tags.all()).exclude(id=self.id)
+        return related_products
+        
+    @property
     def all_images(self):
         return ProductImage.objects.filter(variant__product=self)
 

@@ -55,6 +55,7 @@ class TagAdmin(admin.ModelAdmin):
         "slug",
     ]
     ReadOnlyField = ['slug']
+    
 class KeywordAdmin(admin.ModelAdmin):
     search_fields = ['name']
     

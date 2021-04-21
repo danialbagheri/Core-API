@@ -5,6 +5,8 @@ from review.serializers import ReviewSerializer
 from faq.serializers import FaqSerializer
 from sorl.thumbnail import get_thumbnail
 from django.contrib.sites.models import Site
+from django.core.serializers import json
+
 class WhereToBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = WhereToBuy
@@ -76,7 +78,6 @@ class ProductSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True, read_only=True)
     main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
-    # reviews = ReviewSerializer(many=True, read_only=True, source='review_set') #only enable if you need to see full review list
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs') 
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
@@ -120,17 +121,49 @@ class ProductSerializer(serializers.ModelSerializer):
             return domain+get_thumbnail(obj.main_image, f'{resize_w}{height}', quality=100, format="WEBP").url
     
     def get_total_review_count(self, obj):
-        review_count = obj.review_set.count()
+        review_count = obj.review_set.filter(approved=True).count()
         return review_count
     
     def get_review_average_score(self, obj):
         score = 0
         for review in obj.review_set.all():
             score += review.score
-        # import pdb; pdb.set_trace()
         try:
             average_score = score / self.get_total_review_count(obj)
             return average_score
         except ZeroDivisionError:
             return 0
-        
+
+class RelatedProducts(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+class SingleProductSerializer(ProductSerializer):
+    '''
+    Similar to ProductSerializer but with more info such as reviews and related_products, 
+    seperated for faster performance
+    '''
+    reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
+    related_products = serializers.SerializerMethodField()
+    # related_products = serializers.ReadOnlyField()
+    class Meta:
+        model = Product
+        fields = '__all__'
+        lookup_field = "slug"
+        depth = 3
+        extra__kwargs = {'url': {'lookup_field': 'slug'}}
+    
+    def get_related_products(self, obj):
+        related_products_filter = Product.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
+        # related_products_fields = related_products_filter.values('name', 'slug', 'sub_title')
+        related_products = []
+        for product in related_products_filter:
+            related_products.append({
+                "name": product.name,
+                "slug": product.slug,
+                "sub_title": product.sub_title,
+                "main_image": product.main_image,
+                "starting_price": product.lowest_variant_price
+            })
+        return related_products

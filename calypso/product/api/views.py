@@ -1,9 +1,8 @@
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag, IMAGE_TYPE
 # from review.models import Review, Reply
 from rest_framework import viewsets
-from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer
+from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer
 from sorl.thumbnail import get_thumbnail
-
 
 class VariantViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductVariant.objects.all()
@@ -45,6 +44,10 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset[: int(count)]
         return queryset
 
+class SingleProductViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = SingleProductSerializer
+    lookup_field="slug"
 
 class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductImage.objects.all()

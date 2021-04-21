@@ -6,4 +6,4 @@ from .models import Faq
 class FaqSerializer(serializers.ModelSerializer):
     class Meta:
         model = Faq
-        fields = '__all__'
+        fields = ['id', 'question', 'answer', 'public']

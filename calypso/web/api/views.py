@@ -79,10 +79,12 @@ class InstagramFeed(APIView):
 
 
 class ConfigurationView(viewsets.ReadOnlyModelViewSet):
-    queryset = Configuration
+    queryset = Configuration.objects.all()
     serializer_class = ConfigurationSerializer
     lookup_field = 'key'
 
+# class HomePageView(viewsets.ReadOnlyModelViewSet):
+#     serializer_class=HomePageSerializer
 
 class Search(generics.ListAPIView):
     serializer_class = ProductSerializer
