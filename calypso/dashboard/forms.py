@@ -35,6 +35,9 @@ class FaqForm(forms.ModelForm):
     class Meta:
         model = Faq
         fields = "__all__"
+        widgets = {
+            'answer': SummernoteWidget(),
+        }
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
@@ -43,13 +46,17 @@ class CollectionForm(forms.ModelForm):
 
 class PageForm(forms.ModelForm):
 
-    html = GrapesJsField()
+
     class Meta:
         model = Page
         fields = "__all__"
-        # widgets = {
-        #     'html': GrapesJsWidget(),
-        # }
+        widgets = {
+            'html': SummernoteWidget(),
+            'section_1': SummernoteWidget(),
+            'section_2': SummernoteWidget(),
+            'section_3': SummernoteWidget(),
+            'section_4': SummernoteWidget(),
+        }
 
 class ProductForm(forms.ModelForm):
     collections = forms.ModelMultipleChoiceField(

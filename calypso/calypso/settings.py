@@ -244,6 +244,8 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
+        'fontNames': ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
+        'spellCheck':True,
         'width': '100%',
         'height': '400px',
         'prettifyHtml': True,
@@ -257,8 +259,18 @@ SUMMERNOTE_CONFIG = {
             ['color', ['forecolor', 'backcolor', 'color']],
             ['misc', ['link', 'picture', 'print', 'help', ]],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['view', ['fullscreen', 'codeview']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+            ['height', ['height']],
             ['cleaner', ['cleaner']],
+        ],
+        'image': [
+            ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+            ['float', ['floatLeft', 'floatRight', 'floatNone']],
+            ['remove', ['removeMedia']]
+        ],
+        'link': [
+            ['link', ['linkDialogShow', 'unlink']],
         ],
         'codemirror': {  # codemirror options
             'mode': 'htmlmixed',

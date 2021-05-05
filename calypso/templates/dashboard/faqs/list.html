@@ -48,7 +48,7 @@
             {% for faq in faqs %}
             <tr>
               <th scope="row"><a href="{% url "dashboard:faq-edit" faq.pk %}">{{ faq.question  }}</a></th>
-              <td>{{ faq.answer  }}</td>
+              <td>{{ faq.answer |truncatewords:8   }}</td>
            
               <td>
                 {% if faq.public %}
