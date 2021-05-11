@@ -12,7 +12,7 @@ from blog.models import BlogPost
 from faq.models import Faq
 from page.models import Page
 from web.models import Configuration, Setting
-from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm
+from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm, ProductTagForm
 import json
 
 
@@ -170,14 +170,14 @@ class ProductEdit(StaffRequiredMixin, View):
         product_form = ProductForm(data, instance=product_instance)
         if product_form.is_valid():
             product = product_form.save()
-            tags_list = json.loads(request.POST.get(
-                'tagslist').replace("'", "\""))
-            self.save_tag_list(product, tags_list)
-            try:
-                variants_list = json.loads(request.POST.get('variants', None).replace("'", "\""))
+            taglist = request.POST.get('tagslist', None)
+            variants = request.POST.get('variants', None)
+            if taglist:
+                tags_list = json.loads(taglist.replace("'", "\""))
+                self.save_tag_list(product, tags_list)
+            if variants:
+                variants_list = json.loads(variants.replace("'", "\""))
                 self.save_variants(product, variants_list)
-            except Exception as e:
-                messages.error(request, f"there was no variants in the request.{e}")
             messages.success(
                 request, f"{product_form.instance.name} have been updated.")
             return redirect(reverse("dashboard:products"))
@@ -265,6 +265,11 @@ class ProductTagUpdate(StaffRequiredMixin, UpdateView):
     success_url = reverse_lazy('dashboard:tags')
     fields = ['name', 'icon']
 
+class ProductTagCreate(StaffRequiredMixin, CreateView):
+    model = Tag
+    form_class = ProductTagForm
+    template_name = 'dashboard/products/tags/tag_edit.html'
+    success_url = reverse_lazy('dashboard:tags')
 
 class ProductTagDelete(StaffRequiredMixin, DeleteView):
     model = Tag

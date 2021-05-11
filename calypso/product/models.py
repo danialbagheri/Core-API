@@ -5,6 +5,7 @@ from base64 import b64encode
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from product.shopify import get_variant_info_by_restVariantId, get_variant_info_by_sku
+from django.core.files.images import get_image_dimensions
 # from django.dispatch import receiver
 import os
 import random
@@ -154,8 +155,8 @@ class ProductImage(models.Model):
     image_angle = models.CharField(
         max_length=10, choices=IMAGE_ANGLE, blank=True)
     alternate_text = models.CharField(max_length=250)
-    height = models.IntegerField()
-    width = models.IntegerField()
+    height = models.IntegerField(blank=True)
+    width = models.IntegerField(blank=True)
 
     def image_preview(self):
         if self.image:
@@ -186,6 +187,15 @@ class ProductImage(models.Model):
     def __str__(self):
         return "{} - {}".format(self.variant.product.name, self.variant)
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            width, height = get_image_dimensions(self.image.file)
+            self.width = width
+            self.height = height
+        else:
+            self.width = 0
+            self.height = 0
+        super(ProductImage, self).save(*args, **kwargs)
 
 class ProductVariant(models.Model):
 

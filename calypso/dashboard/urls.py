@@ -18,6 +18,7 @@ urlpatterns = [
     path('images/upload/', views.ImageUploadView.as_view(), name="image-upload"),
     path('tags/', views.product_tags, name="tags"),
     path('tags/<int:pk>/', views.ProductTagUpdate.as_view(), name="tag-edit"),
+    path('tags/add/', views.ProductTagCreate.as_view(), name="tag-create"),
     path('tags/<int:pk>/delete/', views.ProductTagDelete.as_view(), name="tag-delete"),
     path('product/collection/', views.CollectionsList.as_view(), name="collections"),
     path('blogs/', views.BlogList.as_view(), name="blogs"),

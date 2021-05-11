@@ -12,6 +12,7 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = BlogPost.objects.all()
         tag_q = self.request.query_params.get('tag', None)
+        count = self.request.query_params.get('count', None)
         if tag_q:
             try:
                 # import pdb
@@ -20,4 +21,6 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(tags=tag_instance)
             except:
                 pass
+        if count:
+            queryset = queryset[: int(count)]
         return queryset

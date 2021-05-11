@@ -17,12 +17,18 @@ class ReviewForm(forms.ModelForm):
 class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
+        exclude = ['image_width', 'image_height',]
         fields = "__all__"
         widgets = {
             'body': SummernoteWidget(),
             'excerpt': SummernoteWidget(),
         }
 
+class ProductTagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = "__all__"
+        
 class ConfigForm(forms.ModelForm):
     class Meta:
         model = Configuration

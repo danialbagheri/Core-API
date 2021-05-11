@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <form method="POST">
+        <form action="" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <!-- end of new table-->
           {{ form.name | as_crispy_field }}

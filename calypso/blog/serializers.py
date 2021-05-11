@@ -5,7 +5,7 @@ from sorl.thumbnail import get_thumbnail
 
 class BlogPostSerializer(serializers.ModelSerializer):
     resized = serializers.SerializerMethodField()
-
+    read_time = serializers.ReadOnlyField()
     def get_resized(self, obj):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w',None)
