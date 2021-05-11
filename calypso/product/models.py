@@ -189,7 +189,7 @@ class ProductImage(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            width, height = get_image_dimensions(self.image.file)
+            width, height = get_image_dimensions(self.image.open().file, close=True)
             self.width = width
             self.height = height
         else:

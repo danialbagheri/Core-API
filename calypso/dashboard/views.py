@@ -377,6 +377,7 @@ class ImageCreate(StaffRequiredMixin, CreateView):
     model = ProductImage
     form_class = ImageForm
     template_name = 'dashboard/images/edit.html'
+    success_url = reverse_lazy('dashboard:images')
 
 class ConfigurationList(StaffRequiredMixin, ListView):
     model = Configuration
