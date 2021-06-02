@@ -1,4 +1,5 @@
 venv/
+.pro-env
 calypso/static/
 calypso/static-root/*
 static_root/*
@@ -19,7 +20,8 @@ dist
 node_modules
 .env
 *.env
-
+calypso/static_root/
+calypso/static_root/*
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
