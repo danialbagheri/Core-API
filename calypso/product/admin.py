@@ -2,6 +2,7 @@ from django.contrib import admin
 from rest_framework.fields import ReadOnlyField
 from .models import *
 from django_summernote.admin import SummernoteModelAdmin
+from ordered_model.admin import OrderedTabularInline, OrderedStackedInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
 # Register your models here.
 
 
@@ -42,12 +43,7 @@ class ProductImageAdmin(admin.ModelAdmin):
     ]
     search_fields = ['variant__sku', 'variant__name']
 
-class CollectionAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = [
-        "name",
-        "slug",
-    ]
+
 class TagAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = [
@@ -62,6 +58,31 @@ class KeywordAdmin(admin.ModelAdmin):
 class ProductTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+class CollectionItemsthroughOrderedStackedInline(OrderedTabularInline):
+    model = CollectionItem
+    fields = ("item", "order", 'move_up_down_links',)
+    readonly_fields = ('order', 'move_up_down_links',)
+    extra = 1
+    ordering = ("order", )
+
+class CollectionAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = [
+        "name",
+        "slug",
+        "collection_count"
+    ]
+    inlines = (CollectionItemsthroughOrderedStackedInline,)
+
+    def collection_count(self, obj, *args, **kwargs):
+        return obj.items.count()
+
+
+class CollectionItemAdmin(OrderedModelAdmin):
+    list_display = ("item", 'collection_name',
+                    'move_up_down_links')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Keyword, KeywordAdmin)
@@ -72,3 +93,4 @@ admin.site.register(Stockist)
 admin.site.register(WhereToBuy)
 admin.site.register(Ingredient)
 admin.site.register(Collection, CollectionAdmin)
+admin.site.register(CollectionItem, CollectionItemAdmin)

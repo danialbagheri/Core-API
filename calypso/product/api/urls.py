@@ -14,6 +14,8 @@ product_routers.register(r'image',
                          views.ProductImageViewSet, basename="image")
 product_routers.register(r'tags',
                          views.TagViewSet, basename="tags")
+product_routers.register(r'collections',
+                         views.CollectionViewSet, basename="collections")
 
 urlpatterns = [
     path('', include(product_routers.urls)),

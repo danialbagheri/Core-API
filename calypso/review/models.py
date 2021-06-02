@@ -52,7 +52,7 @@ class Review(models.Model):
         """
         Returns the stored user name.
         """
-        if self.user is not None:
+        if self.user is not None and self.user.get_full_name() != "":
             return self.user.get_full_name()
         elif self.customer_name is None:
             return "Anonymous"

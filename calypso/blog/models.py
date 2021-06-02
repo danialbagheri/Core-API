@@ -44,7 +44,7 @@ class BlogPost(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            width, height = get_image_dimensions(self.image.open().file, close=True)
+            width, height = get_image_dimensions(self.image.open().file, close=False)
             self.image_width = width
             self.image_height = height
         else:

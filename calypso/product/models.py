@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.expressions import OrderBy
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 from base64 import b64encode
@@ -6,6 +7,8 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from product.shopify import get_variant_info_by_restVariantId, get_variant_info_by_sku
 from django.core.files.images import get_image_dimensions
+from django.db import models, transaction
+from ordered_model.models import OrderedModel
 # from django.dispatch import receiver
 import os
 import random
@@ -189,13 +192,16 @@ class ProductImage(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            width, height = get_image_dimensions(self.image.open().file, close=True)
+            width, height = get_image_dimensions(self.image.open().file, close=False)
             self.width = width
             self.height = height
         else:
             self.width = 0
             self.height = 0
         super(ProductImage, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['image_type']
 
 class ProductVariant(models.Model):
 
@@ -298,10 +304,9 @@ class WhereToBuy(models.Model):
 class Collection(models.Model):
     name = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
-    products = models.ManyToManyField(
-        'Product',
+    items = models.ManyToManyField(
+        'CollectionItem',
         blank=True,
-        related_name="collections",
     )
 
     background_image_alt = models.CharField(max_length=128, blank=True)
@@ -310,6 +315,27 @@ class Collection(models.Model):
     def __str__(self):
         return self.name
 
+            
+class CollectionItem(OrderedModel):
+    item = models.ForeignKey(
+        'Product',
+        blank=True,
+        related_name="collected_items",
+        on_delete=models.CASCADE
+    )
+    collection_name =models.ForeignKey(
+        'Collection',
+        blank=True,
+        related_name="collection_items",
+        on_delete=models.CASCADE
+    )
+    order_with_respect_to = 'collection_name'
+
+    class Meta:
+        index_together = ('item', 'order')
+
+    def __str__(self):
+        return f"{self.item.name}"
 
 # @receiver(models.signals.post_delete, sender=ProductImage)
 # def auto_delete_file_on_delete(sender, instance, **kwargs):

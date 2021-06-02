@@ -1,5 +1,5 @@
 from django import forms
-from product.models import ProductVariant, Product, Collection, Tag, ProductType, Collection, ProductImage
+from product.models import ProductVariant, Product, Collection, Tag, ProductType, CollectionItem, ProductImage
 from review.models import Review, Reply
 from faq.models import Faq
 from blog.models import BlogPost
@@ -47,7 +47,13 @@ class FaqForm(forms.ModelForm):
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
+        fields = ['name', 'slug', 'items','background_image_alt', 'description']
+
+class CollectionItemForm(forms.ModelForm):
+    class Meta:
+        model = CollectionItem
         fields = "__all__"
+    
 
 
 class PageForm(forms.ModelForm):

@@ -6,13 +6,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
 from django.urls import reverse_lazy
-from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword
+from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword,CollectionItem
 from review.models import Review
 from blog.models import BlogPost
 from faq.models import Faq
 from page.models import Page
 from web.models import Configuration, Setting
-from .forms import ProductForm, ProductVariantForm, CollectionForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm, ProductTagForm
+from .forms import ProductForm, ProductVariantForm, CollectionForm,CollectionItemForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm, ProductTagForm
 import json
 
 
@@ -252,6 +252,24 @@ class CollectionCreate(StaffRequiredMixin, CreateView):
     success_url = reverse_lazy('dashboard:collections')
     fields = ['name', 'slug']
 
+class CollectionItemEditView(StaffRequiredMixin, UpdateView):
+    model = CollectionItem
+    template_name = 'dashboard/products/collection/collection_edit.html'
+    form_class = CollectionItemForm
+    success_url = reverse_lazy('dashboard:collections')
+
+class CollectionItemCreate(StaffRequiredMixin, CreateView):
+    model = CollectionItem
+    template_name = 'dashboard/products/collection/collectionitem-create.html'
+    # success_url = reverse_lazy('dashboard:collection-edit')
+    fields = ("__all__")
+    
+    def get_success_url(self, **kwargs):
+        if 'pk' in self.kwargs:
+            pk = self.kwargs['pk']
+            return reverse_lazy('dashboard:collection-edit', kwargs={'pk': pk})
+        else:
+            return reverse_lazy('dashboard:collections')
 
 class CollectionDelete(StaffRequiredMixin, DeleteView):
     model = Collection
@@ -368,10 +386,24 @@ class ImageList(StaffRequiredMixin, ListView):
     context_object_name = 'images'
     template_name = 'dashboard/images/list.html'
 
+class MediaList(StaffRequiredMixin, ListView):
+    queryset = ProductImage.objects.all()
+    context_object_name = 'media'
+    template_name = 'dashboard/media/list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MediaList, self).get_context_data(**kwargs)
+        context['blogs'] = BlogPost.objects.all()
+        # context['venue_list'] = Venue.objects.all()
+        # context['festival_list'] = Festival.objects.all()
+        # And so on for more models
+        return context
+
 class ImageEditView(StaffRequiredMixin, UpdateView):
     model = ProductImage
     form_class = ImageForm
     template_name = 'dashboard/images/edit.html'
+    success_url = reverse_lazy('dashboard:images')
 
 class ImageCreate(StaffRequiredMixin, CreateView):
     model = ProductImage

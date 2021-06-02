@@ -1,4 +1,4 @@
-from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
 from review.models import Review, Reply
 from rest_framework import serializers
 from review.serializers import ReviewSerializer
@@ -6,6 +6,8 @@ from faq.serializers import FaqSerializer
 from sorl.thumbnail import get_thumbnail
 from django.contrib.sites.models import Site
 from django.core.serializers import json
+from django.db.models import Avg
+
 
 class WhereToBuySerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,6 +83,7 @@ class ProductSerializer(serializers.ModelSerializer):
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs') 
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
+    
     class Meta:
         model = Product
         fields = '__all__'
@@ -125,12 +128,9 @@ class ProductSerializer(serializers.ModelSerializer):
         return review_count
     
     def get_review_average_score(self, obj):
-        score = 0
-        for review in obj.review_set.all():
-            score += review.score
         try:
-            average_score = score / self.get_total_review_count(obj)
-            return average_score
+            average_score = obj.review_set.filter(approved=True).aggregate(Avg('score'))['score__avg']
+            return f"{average_score:.1f}"
         except ZeroDivisionError:
             return 0
 
@@ -139,13 +139,16 @@ class RelatedProducts(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
+
+
 class SingleProductSerializer(ProductSerializer):
     '''
     Similar to ProductSerializer but with more info such as reviews and related_products, 
     seperated for faster performance
     '''
-    reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
+    reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
+    # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
     # related_products = serializers.ReadOnlyField()
     class Meta:
         model = Product
@@ -167,3 +170,22 @@ class SingleProductSerializer(ProductSerializer):
                 "starting_price": product.lowest_variant_price
             })
         return related_products
+
+    def get_reviews(self, obj):
+        review_instance = Review.objects.filter(product=obj, approved=True)
+        serializer = ReviewSerializer(many=True, read_only=True, instance=review_instance)
+        return serializer.data
+
+class CollectionItemSerializer(serializers.ModelSerializer):
+    item = SingleProductSerializer( read_only=True) 
+    class Meta:
+        model = CollectionItem
+        fields = '__all__'
+        depth = 4
+
+class CollectionSerializer(serializers.ModelSerializer):
+    items = CollectionItemSerializer(many=True, read_only=True) 
+    class Meta:
+        model = Collection
+        fields = '__all__'
+        depth = 4
