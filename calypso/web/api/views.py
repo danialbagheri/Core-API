@@ -24,9 +24,18 @@ class ContactForm(APIView):
             data=request.data, context={"request": request})
         if contact_serializer.is_valid():
             data = contact_serializer.validated_data
-            email_from = data.get('email')
+            email_from = "admin@calypsosun.com"
+            customer_email = data.get('email')
             subject = data.get('reason')
-            message = data.get('message')
+            query = data.get('message')
+            message = f'''
+
+From: {customer_email}
+
+
+{query}
+            '''
+
             try:
                 if subject in REASON_CHOICES[:3]:
                     send_mail(subject, message, email_from, [

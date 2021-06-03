@@ -201,7 +201,7 @@ class ProductImage(models.Model):
         super(ProductImage, self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ['image_type']
+        ordering = ['-image_type']
 
 class ProductVariant(models.Model):
 
