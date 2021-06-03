@@ -24,7 +24,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         product_type = self.request.query_params.get('type', None)
         count = self.request.query_params.get('count', None)
         top_seller = self.request.query_params.get('top', None)
-        collection = self.request.query_params.get('collection', None)
+
         # image_width = self.request.query_params.get('image_width', None)
         if product_type is not None:
             try:
@@ -33,10 +33,6 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(types=product_type_instance)
             except:
                 pass
-        if collection is not None:
-            collection_instance = Collection.objects.filter(
-                name__icontains=collection).first()
-            queryset = queryset.filter(collections=collection_instance)
         if top_seller and top_seller.lower() == "yes":
             queryset = queryset.filter(top_seller=True)
         # slide should happen after filtering

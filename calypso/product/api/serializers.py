@@ -128,11 +128,13 @@ class ProductSerializer(serializers.ModelSerializer):
         return review_count
     
     def get_review_average_score(self, obj):
-        try:
-            average_score = obj.review_set.filter(approved=True).aggregate(Avg('score'))['score__avg']
+
+        average_score = obj.review_set.filter(approved=True).aggregate(Avg('score'))['score__avg']
+        if average_score != None:
             return f"{average_score:.1f}"
-        except ZeroDivisionError:
+        else:
             return 0
+
 
 class RelatedProducts(serializers.ModelSerializer):
     class Meta:
