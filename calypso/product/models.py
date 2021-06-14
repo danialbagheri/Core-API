@@ -3,12 +3,13 @@ from django.db.models.expressions import OrderBy
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 from base64 import b64encode
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from product.shopify import get_variant_info_by_restVariantId, get_variant_info_by_sku
 from django.core.files.images import get_image_dimensions
 from django.db import models, transaction
 from ordered_model.models import OrderedModel
+from django.db.models import Avg
 # from django.dispatch import receiver
 import os
 import random
@@ -112,7 +113,11 @@ class Product(models.Model):
 
     @property
     def main_image_object(self):
-        return self.all_images.first()
+        main_image = self.all_images.filter(main=True)
+        if len(main_image) >= 1:
+            return self.all_images.filter(main=True).first()
+        else:
+            return self.all_images.first()
 
     @property
     def lowest_variant_price(self):
@@ -129,14 +134,27 @@ class Product(models.Model):
     def main_image(self):
         # return self.main_image_object.image.get_absolute_image_url
         try:
-            main_image = self.all_images.first().get_absolute_image_url
+            main_image_object = self.main_image_object
+            main_image = main_image_object.get_absolute_image_url
         except:
             main_image = None
         return main_image
 
+    @property
+    def get_total_review_count(self):
+        review_count = self.review_set.filter(approved=True).count()
+        return review_count
+
+    @property
+    def get_review_average_score(self):
+        average_score = self.review_set.filter(approved=True).aggregate(Avg('score'))['score__avg']
+        if average_score != None:
+            return f"{average_score:.1f}"
+        else:
+            return 0
+
     def __str__(self):
         return self.name
-
 
 class ProductImage(models.Model):
     '''
@@ -160,7 +178,7 @@ class ProductImage(models.Model):
     alternate_text = models.CharField(max_length=250)
     height = models.IntegerField(blank=True)
     width = models.IntegerField(blank=True)
-
+    main=models.BooleanField(default=False)
     def image_preview(self):
         if self.image:
             return mark_safe('<img src="{}" width="50" />'.format(self.image.url))
@@ -198,6 +216,11 @@ class ProductImage(models.Model):
         else:
             self.width = 0
             self.height = 0
+        if self.main:
+            try:
+                ProductImage.objects.filter(variant__product=self.variant.product).exclude(pk=self.pk).update(main=False)
+            except:
+                pass
         super(ProductImage, self).save(*args, **kwargs)
 
     class Meta:

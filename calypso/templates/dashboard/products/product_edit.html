@@ -158,9 +158,11 @@
           <div class="d-flex">
           {% for image in product_form.instance.all_images %}
             <a href="{% url "dashboard:image-edit" image.pk %}">
+              <div style="{% if image.main %}border:1px solid red;{% endif %}">
               {% thumbnail image.image "100" format="PNG" as im %}
                 <img src="{{ im.url }}" width="80px"/>
-              {% endthumbnail %}
+                {% endthumbnail %}
+              </div>
             </a>
             {% endfor %}
               <a style="display:block;width:80px;cursor:pointer;text-decoration:none;" class="bg-light" href="{% url "dashboard:image-create" %}">

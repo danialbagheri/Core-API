@@ -164,11 +164,17 @@ class SingleProductSerializer(ProductSerializer):
         # related_products_fields = related_products_filter.values('name', 'slug', 'sub_title')
         related_products = []
         for product in related_products_filter:
+            # import pdb
+            # pdb.set_trace()
             related_products.append({
                 "name": product.name,
                 "slug": product.slug,
                 "sub_title": product.sub_title,
                 "main_image": product.main_image,
+                "img_height": f"{product.main_image_object.height if product.main_image_object else 0}",
+                "img_width": f"{product.main_image_object.width if product.main_image_object else 0}",
+                "total_review_count": product.get_total_review_count,
+                "review_average_score": product.get_review_average_score,
                 "starting_price": product.lowest_variant_price
             })
         return related_products
