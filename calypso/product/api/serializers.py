@@ -26,7 +26,6 @@ class WhereToBuySerializer(serializers.ModelSerializer):
         model = WhereToBuy
         fields = ('id', 'url', 'stockist')
         depth = 2
-        # lookup_field = 'product'
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -41,7 +40,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
     def get_resized(self, obj):
         request = self.context.get("request")
-        resize_w, resize_h = check_request_image_size_params(self.request)
+        resize_w, resize_h = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = RESIZE_W
@@ -56,7 +55,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
     def get_webp(self, obj):
         request = self.context.get("request")
-        resize_w, resize_h = check_request_image_size_params(self.request)
+        resize_w, resize_h = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = "100"
