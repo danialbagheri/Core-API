@@ -8,35 +8,43 @@ from web.models import Configuration
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from django_grapesjs.forms import GrapesJsWidget, GrapesJsField
 
+
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = "__all__"
-        exclude = ['reply', 'user','opened']
+        exclude = ['reply', 'user', 'opened']
+
 
 class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        exclude = ['image_width', 'image_height',]
+        exclude = ['image_width', 'image_height', ]
         fields = "__all__"
         widgets = {
             'body': SummernoteWidget(),
             'excerpt': SummernoteWidget(),
         }
 
+
 class ProductTagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = "__all__"
-        
+
+
 class ConfigForm(forms.ModelForm):
     class Meta:
         model = Configuration
         fields = "__all__"
+
+
 class ImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
         fields = "__all__"
+
+
 class FaqForm(forms.ModelForm):
     class Meta:
         model = Faq
@@ -44,20 +52,21 @@ class FaqForm(forms.ModelForm):
         widgets = {
             'answer': SummernoteWidget(),
         }
+
+
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
-        fields = ['name', 'slug', 'items','background_image_alt', 'description']
+        fields = ['name', 'slug', 'background_image_alt', 'description']
+
 
 class CollectionItemForm(forms.ModelForm):
     class Meta:
         model = CollectionItem
         fields = "__all__"
-    
 
 
 class PageForm(forms.ModelForm):
-
 
     class Meta:
         model = Page
@@ -69,6 +78,7 @@ class PageForm(forms.ModelForm):
             'section_3': SummernoteWidget(),
             'section_4': SummernoteWidget(),
         }
+
 
 class ProductForm(forms.ModelForm):
     collections = forms.ModelMultipleChoiceField(
@@ -83,6 +93,7 @@ class ProductForm(forms.ModelForm):
             'direction_of_use': SummernoteWidget(),
         }
 
+
 class ProductCreateForm(forms.ModelForm):
     collections = forms.ModelMultipleChoiceField(
         queryset=Collection.objects.all(), required=False)
@@ -95,10 +106,12 @@ class ProductCreateForm(forms.ModelForm):
             'description': SummernoteWidget(),
             'direction_of_use': SummernoteWidget(),
         }
+
+
 class ProductVariantForm(forms.ModelForm):
     sku = forms.CharField(required=True)
     name = forms.CharField(required=True)
+
     class Meta:
         model = ProductVariant
         fields = "__all__"
-        

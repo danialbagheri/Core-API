@@ -143,6 +143,7 @@
             value="{{ tags }}"
           />
           <input type="hidden" name="tagslist" id="tags" />
+          <input type="hidden" name="keywordlist" id="keywords" />
           {{ product_form.collections | as_crispy_field }}
           <a href="{% url "dashboard:collection-add" %}" class="btn btn-sm btn-light text-primary">ADD COLLECTION</a>
         </div>

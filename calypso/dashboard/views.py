@@ -6,13 +6,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import View, UpdateView, DetailView, ListView, DeleteView, CreateView, TemplateView
 from django.urls import reverse_lazy
-from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword,CollectionItem
+from product.models import ProductVariant, Product, ProductImage, ProductType, Tag, Collection, Keyword, CollectionItem
 from review.models import Review
 from blog.models import BlogPost
 from faq.models import Faq
 from page.models import Page
 from web.models import Configuration, Setting
-from .forms import ProductForm, ProductVariantForm, CollectionForm,CollectionItemForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm, ProductTagForm
+from .forms import ProductForm, ProductVariantForm, CollectionForm, CollectionItemForm, ReviewForm, FaqForm, BlogForm, PageForm, ImageForm, ConfigForm, ProductTagForm
 import json
 
 
@@ -56,6 +56,13 @@ class ProductEdit(StaffRequiredMixin, View):
             tag_string += ","
         return tag_string
 
+    def list_of_keywords(self, keywords):
+        keyword_string = ""
+        for keyword in keywords:
+            keyword_string += keyword.name
+            keyword_string += ","
+        return keyword_string
+
     def get_object(self):
         product_instance = Product.objects.filter(
             slug=self.kwargs['slug']).first()
@@ -95,10 +102,13 @@ class ProductEdit(StaffRequiredMixin, View):
         available_keyword_list = self.get_the_keywords()  # Get all the tags
         tags = self.list_of_tags(
             product_instance.tags.all())  # Get the instance tags
-
+        keywords = self.list_of_keywords(
+            product_instance.keyword.all()
+        )
         context = {
             "product_form": product_form,
             "tags": tags,
+            "keywords": keywords,
             "available_tags": available_tags_list,
             "available_keywords": available_keyword_list,
             "variant_forms": variant_forms
@@ -134,26 +144,32 @@ class ProductEdit(StaffRequiredMixin, View):
             if variant_list[variant]["pk"] != 'None' and variant_list[variant]["pk"] != "":
                 # Here we check if the a variation exist but for example sku needs amendment, we only update it
                 try:
-                    variant_instance = ProductVariant.objects.get(pk=variant_list[variant]['pk'])         
+                    variant_instance = ProductVariant.objects.get(
+                        pk=variant_list[variant]['pk'])
                 except ProductVariant.DoesNotExist:
-                    messages.error(self.request, f"Product Varinat {variant['sku']} doesn't exist!")
+                    messages.error(
+                        self.request, f"Product Varinat {variant['sku']} doesn't exist!")
             else:
-                #Here first we try to see incase if the variant with this sku exist as sku's are unique and it may have been disconnected from the product
+                # Here first we try to see incase if the variant with this sku exist as sku's are unique and it may have been disconnected from the product
                 try:
-                    variant_instance = ProductVariant.objects.get(sku=variant_list[variant]["sku"])
+                    variant_instance = ProductVariant.objects.get(
+                        sku=variant_list[variant]["sku"])
                 except ProductVariant.DoesNotExist:
                     variant_list[variant].pop('pk', None)
-                    variant_instance = ProductVariant.objects.create(sku=variant_list[variant]["sku"])
+                    variant_instance = ProductVariant.objects.create(
+                        sku=variant_list[variant]["sku"])
             if variant_list[variant]["price"] == '':
                 price = 0
             else:
                 price = float(variant_list[variant]["price"])
-            variant_instance.sku=variant_list[variant]["sku"]
-            variant_instance.name=variant_list[variant]["name"]
-            variant_instance.size=variant_list[variant]["size"]
-            variant_instance.shopify_rest_variant_id=variant_list[variant]["shopify_rest_variant_id"]
-            variant_instance.shopify_storefront_variant_id=variant_list[variant]["shopify_storefront_variant_id"]
-            variant_instance.price=price
+            variant_instance.sku = variant_list[variant]["sku"]
+            variant_instance.name = variant_list[variant]["name"]
+            variant_instance.size = variant_list[variant]["size"]
+            variant_instance.shopify_rest_variant_id = variant_list[
+                variant]["shopify_rest_variant_id"]
+            variant_instance.shopify_storefront_variant_id = variant_list[
+                variant]["shopify_storefront_variant_id"]
+            variant_instance.price = price
             variant_instance.save()
             product.variants.add(variant_instance)
 
@@ -165,16 +181,20 @@ class ProductEdit(StaffRequiredMixin, View):
         product_instance = self.get_object()
         context = self.get_context_data()
         data = request.POST.copy()
-        product_name =data.getlist('name')[0]
+        product_name = data.getlist('name')[0]
         data['name'] = product_name
         product_form = ProductForm(data, instance=product_instance)
         if product_form.is_valid():
             product = product_form.save()
             taglist = request.POST.get('tagslist', None)
+            keywords = request.POST.get('keywordlist', None)
             variants = request.POST.get('variants', None)
             if taglist:
                 tags_list = json.loads(taglist.replace("'", "\""))
                 self.save_tag_list(product, tags_list)
+            if keywords:
+                keywords_list = json.loads(keywords.replace("'", "\""))
+                self.save_keyword_list(product, keywords_list)
             if variants:
                 variants_list = json.loads(variants.replace("'", "\""))
                 self.save_variants(product, variants_list)
@@ -187,14 +207,18 @@ class ProductEdit(StaffRequiredMixin, View):
         context['product_form'] = product_form
         return render(request, "dashboard/products/product_edit.html", context=context)
 
+
 class ProductCreate(StaffRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'dashboard/products/product-create.html'
+
     def get_success_url(self):
-        slug=self.request.POST['slug']
-        messages.success(self.request, f"product {slug} had been created successfully.")
+        slug = self.request.POST['slug']
+        messages.success(
+            self.request, f"product {slug} had been created successfully.")
         return reverse_lazy('dashboard:product-edit', kwargs={'slug': slug})
+
 
 @staff_required(login_url="/login")
 def product_tags(request):
@@ -204,25 +228,28 @@ def product_tags(request):
     }
     return render(request, "dashboard/products/tags/tags.html", context=context)
 
+
 class ReviewList(StaffRequiredMixin, ListView):
     model = Review
     context_object_name = 'reviews'
     template_name = 'dashboard/reviews/list.html'
+
 
 class ReviewEditView(StaffRequiredMixin, UpdateView):
     model = Review
     template_name = 'dashboard/reviews/edit.html'
     form_class = ReviewForm
     success_url = reverse_lazy('dashboard:reviews')
+
     def get_queryset(self):
         """set the review to open to indicate it's been checked"""
-        queryset= super().get_queryset()
+        queryset = super().get_queryset()
         review_pk = self.kwargs.get("pk")
         instance = self.model.objects.get(pk=review_pk)
         instance.opened = True
         instance.save()
         return queryset
-    
+
 
 class CollectionsList(StaffRequiredMixin, ListView):
     model = Collection
@@ -252,24 +279,27 @@ class CollectionCreate(StaffRequiredMixin, CreateView):
     success_url = reverse_lazy('dashboard:collections')
     fields = ['name', 'slug']
 
+
 class CollectionItemEditView(StaffRequiredMixin, UpdateView):
     model = CollectionItem
     template_name = 'dashboard/products/collection/collection_edit.html'
     form_class = CollectionItemForm
     success_url = reverse_lazy('dashboard:collections')
 
+
 class CollectionItemCreate(StaffRequiredMixin, CreateView):
     model = CollectionItem
     template_name = 'dashboard/products/collection/collectionitem-create.html'
     # success_url = reverse_lazy('dashboard:collection-edit')
     fields = ("__all__")
-    
+
     def get_success_url(self, **kwargs):
         if 'pk' in self.kwargs:
             pk = self.kwargs['pk']
             return reverse_lazy('dashboard:collection-edit', kwargs={'pk': pk})
         else:
             return reverse_lazy('dashboard:collections')
+
 
 class CollectionDelete(StaffRequiredMixin, DeleteView):
     model = Collection
@@ -283,11 +313,13 @@ class ProductTagUpdate(StaffRequiredMixin, UpdateView):
     success_url = reverse_lazy('dashboard:tags')
     fields = ['name', 'icon']
 
+
 class ProductTagCreate(StaffRequiredMixin, CreateView):
     model = Tag
     form_class = ProductTagForm
     template_name = 'dashboard/products/tags/tag_edit.html'
     success_url = reverse_lazy('dashboard:tags')
+
 
 class ProductTagDelete(StaffRequiredMixin, DeleteView):
     model = Tag
@@ -307,12 +339,14 @@ class ImageUploadView(TemplateView):
 class ApiEndpointView(TemplateView):
     template_name = "dashboard/api-endpoint.html"
 
+
 class ShopifySyncView(TemplateView):
     template_name = "dashboard/products/shopify.html"
 
+
 @staff_required(login_url="/login")
 def synchronise_with_shopify(request):
-    products_variants = ProductVariant.objects.all() #TODO: remove after test
+    products_variants = ProductVariant.objects.all()  # TODO: remove after test
     result_list = []
     for variant in products_variants:
         synch = variant.synchronise_with_shopify
@@ -327,11 +361,11 @@ def synchronise_with_shopify(request):
     return JsonResponse(result_list, safe=False)
 
 
-
 class FaqList(StaffRequiredMixin, ListView):
     model = Faq
     context_object_name = 'faqs'
     template_name = 'dashboard/faqs/list.html'
+
 
 class FaqEditView(StaffRequiredMixin, UpdateView):
     model = Faq
@@ -339,22 +373,26 @@ class FaqEditView(StaffRequiredMixin, UpdateView):
     form_class = FaqForm
     success_url = reverse_lazy('dashboard:faqs')
 
+
 class FaqCreate(StaffRequiredMixin, CreateView):
     model = Faq
     form_class = FaqForm
     template_name = 'dashboard/faqs/edit.html'
     success_url = reverse_lazy('dashboard:faqs')
 
+
 class BlogList(StaffRequiredMixin, ListView):
     model = BlogPost
     context_object_name = 'blogs'
     template_name = 'dashboard/blogs/list.html'
+
 
 class BlogEditView(StaffRequiredMixin, UpdateView):
     model = BlogPost
     template_name = 'dashboard/blogs/edit.html'
     form_class = BlogForm
     success_url = reverse_lazy('dashboard:blogs')
+
 
 class BlogCreate(StaffRequiredMixin, CreateView):
     model = BlogPost
@@ -368,11 +406,13 @@ class PageList(StaffRequiredMixin, ListView):
     context_object_name = 'pages'
     template_name = 'dashboard/pages/list.html'
 
+
 class PageEditView(StaffRequiredMixin, UpdateView):
     model = Page
     template_name = 'dashboard/pages/edit.html'
     form_class = PageForm
     success_url = reverse_lazy('dashboard:pages')
+
 
 class PageCreate(StaffRequiredMixin, CreateView):
     model = Page
@@ -385,6 +425,7 @@ class ImageList(StaffRequiredMixin, ListView):
     model = ProductImage
     context_object_name = 'images'
     template_name = 'dashboard/images/list.html'
+
 
 class MediaList(StaffRequiredMixin, ListView):
     queryset = ProductImage.objects.all()
@@ -399,11 +440,13 @@ class MediaList(StaffRequiredMixin, ListView):
         # And so on for more models
         return context
 
+
 class ImageEditView(StaffRequiredMixin, UpdateView):
     model = ProductImage
     form_class = ImageForm
     template_name = 'dashboard/images/edit.html'
     success_url = reverse_lazy('dashboard:images')
+
 
 class ImageCreate(StaffRequiredMixin, CreateView):
     model = ProductImage
@@ -411,10 +454,12 @@ class ImageCreate(StaffRequiredMixin, CreateView):
     template_name = 'dashboard/images/edit.html'
     success_url = reverse_lazy('dashboard:images')
 
+
 class ConfigurationList(StaffRequiredMixin, ListView):
     model = Configuration
     context_object_name = 'configs'
     template_name = 'dashboard/configs/list.html'
+
     def get_queryset(self):
         object_list = super().get_queryset()
         settings = self.request.GET.get("settings", None)
@@ -422,6 +467,7 @@ class ConfigurationList(StaffRequiredMixin, ListView):
             setting = get_object_or_404(Setting, slug=settings)
             object_list.filter(setting=setting)
         return object_list
+
 
 class ConfigEditView(StaffRequiredMixin, UpdateView):
     model = Configuration

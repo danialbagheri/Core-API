@@ -51,11 +51,13 @@ class ProductType(models.Model):
     def __str__(self):
         return self.name
 
+
 def get_slug():
     import random
-    
-    slug_instance = random.randint(22,9991)
+
+    slug_instance = random.randint(22, 9991)
     return slug_instance
+
 
 class Tag(models.Model):
     '''
@@ -79,6 +81,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 class Keyword(models.Model):
     '''
     keywords to be used for tagging products with different keywords more suitable for search
@@ -90,6 +93,7 @@ class Keyword(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(models.Model):
     name = models.CharField(_('name'), max_length=300)
     sub_title = models.CharField(_('sub title'), max_length=300)
@@ -97,16 +101,18 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     direction_of_use = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField("Tag", verbose_name=_("tags"), blank=True)
-    keyword = models.ManyToManyField("Keyword", verbose_name=_("keywords"), blank=True)
+    keyword = models.ManyToManyField(
+        "Keyword", verbose_name=_("keywords"), blank=True)
     types = models.ManyToManyField(
         "ProductType", verbose_name=_("types"), blank=True)
     top_seller = models.BooleanField(default=False)
 
     @property
     def related_products(self):
-        related_products = Product.objects.filter(tags__in=self.tags.all()).exclude(id=self.id)
+        related_products = Product.objects.filter(
+            tags__in=self.tags.all()).exclude(id=self.id)
         return related_products
-        
+
     @property
     def all_images(self):
         return ProductImage.objects.filter(variant__product=self)
@@ -147,7 +153,8 @@ class Product(models.Model):
 
     @property
     def get_review_average_score(self):
-        average_score = self.review_set.filter(approved=True).aggregate(Avg('score'))['score__avg']
+        average_score = self.review_set.filter(
+            approved=True).aggregate(Avg('score'))['score__avg']
         if average_score != None:
             return f"{average_score:.1f}"
         else:
@@ -155,6 +162,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class ProductImage(models.Model):
     '''
@@ -171,14 +179,16 @@ class ProductImage(models.Model):
 
     variant = models.ForeignKey(
         'ProductVariant', on_delete=models.CASCADE, related_name='variant_images')
-    image = models.ImageField(upload_to=image_directory_path, height_field='height', width_field='width')
+    image = models.ImageField(
+        upload_to=image_directory_path, height_field='height', width_field='width')
     image_type = models.CharField(max_length=2, choices=IMAGE_TYPE, blank=True)
     image_angle = models.CharField(
         max_length=10, choices=IMAGE_ANGLE, blank=True)
     alternate_text = models.CharField(max_length=250)
     height = models.IntegerField(blank=True)
     width = models.IntegerField(blank=True)
-    main=models.BooleanField(default=False)
+    main = models.BooleanField(default=False)
+
     def image_preview(self):
         if self.image:
             return mark_safe('<img src="{}" width="50" />'.format(self.image.url))
@@ -193,6 +203,7 @@ class ProductImage(models.Model):
         # url = Site.objects.first()
         request = None
         return "{0}{1}".format(get_current_site(request).domain, self.image.url)
+
     @property
     def get_(self):
         # url = Site.objects.first()
@@ -210,7 +221,8 @@ class ProductImage(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            width, height = get_image_dimensions(self.image.open().file, close=False)
+            width, height = get_image_dimensions(
+                self.image.open().file, close=False)
             self.width = width
             self.height = height
         else:
@@ -218,13 +230,15 @@ class ProductImage(models.Model):
             self.height = 0
         if self.main:
             try:
-                ProductImage.objects.filter(variant__product=self.variant.product).exclude(pk=self.pk).update(main=False)
+                ProductImage.objects.filter(variant__product=self.variant.product).exclude(
+                    pk=self.pk).update(main=False)
             except:
                 pass
         super(ProductImage, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-image_type']
+
 
 class ProductVariant(models.Model):
 
@@ -327,10 +341,10 @@ class WhereToBuy(models.Model):
 class Collection(models.Model):
     name = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
-    items = models.ManyToManyField(
-        'CollectionItem',
-        blank=True,
-    )
+    # items = models.ManyToManyField(
+    #     'CollectionItem',
+    #     blank=True,
+    # )
 
     background_image_alt = models.CharField(max_length=128, blank=True)
     description = models.TextField(blank=True)
@@ -338,7 +352,7 @@ class Collection(models.Model):
     def __str__(self):
         return self.name
 
-            
+
 class CollectionItem(OrderedModel):
     item = models.ForeignKey(
         'Product',
@@ -346,7 +360,7 @@ class CollectionItem(OrderedModel):
         related_name="collected_items",
         on_delete=models.CASCADE
     )
-    collection_name =models.ForeignKey(
+    collection_name = models.ForeignKey(
         'Collection',
         blank=True,
         related_name="collection_items",

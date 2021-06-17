@@ -51,12 +51,15 @@ class TagAdmin(admin.ModelAdmin):
         "slug",
     ]
     ReadOnlyField = ['slug']
-    
+
+
 class KeywordAdmin(admin.ModelAdmin):
     search_fields = ['name']
-    
+
+
 class ProductTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
+
 
 class CollectionItemsthroughOrderedStackedInline(OrderedTabularInline):
     model = CollectionItem
@@ -64,6 +67,7 @@ class CollectionItemsthroughOrderedStackedInline(OrderedTabularInline):
     readonly_fields = ('order', 'move_up_down_links',)
     extra = 1
     ordering = ("order", )
+
 
 class CollectionAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
     search_fields = ['name']
@@ -75,7 +79,7 @@ class CollectionAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
     inlines = (CollectionItemsthroughOrderedStackedInline,)
 
     def collection_count(self, obj, *args, **kwargs):
-        return obj.items.count()
+        return obj.collection_items.count()
 
 
 class CollectionItemAdmin(OrderedModelAdmin):
