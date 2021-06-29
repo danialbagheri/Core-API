@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import BlogPost
+from .models import BlogPost, BlogCollection
 from django.db.models import Q
-from .serializers import BlogPostSerializer
+from .serializers import BlogPostSerializer, BlogCollectionSerializer
 from rest_framework import viewsets
 from product.models import Tag
 # Create your views here.
@@ -15,8 +15,6 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
         count = self.request.query_params.get('count', None)
         if tag_q:
             try:
-                # import pdb
-                # pdb.set_trace()
                 tag_instance = Tag.objects.get(Q(slug__icontains=tag_q))
                 queryset = queryset.filter(tags=tag_instance)
             except:
@@ -24,3 +22,10 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
         if count:
             queryset = queryset[: int(count)]
         return queryset
+
+
+
+class CollectionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = BlogCollection.objects.all()
+    serializer_class = BlogCollectionSerializer
+    lookup_field="slug"

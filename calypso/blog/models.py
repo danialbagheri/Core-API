@@ -2,6 +2,7 @@ from django.db import models
 from product.models import Tag, ProductType, Product
 from django.utils.html import strip_tags
 from django.core.files.images import get_image_dimensions
+from ordered_model.models import OrderedModel
 # Create your models here.
 from datetime import date
 
@@ -30,6 +31,9 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-publish_date']
+        
     @property
     def word_count(self):
         a = strip_tags(self.body)
@@ -52,3 +56,37 @@ class BlogPost(models.Model):
             self.image_height = 0
 
         super(BlogPost, self).save(*args, **kwargs)
+
+
+
+class BlogCollection(models.Model):
+    name = models.CharField(max_length=250, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
+
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class BlogCollectionItem(OrderedModel):
+    item = models.ForeignKey(
+        'BlogPost',
+        blank=True,
+        related_name="collected_item",
+        on_delete=models.CASCADE
+    )
+    collection_name = models.ForeignKey(
+        'BlogCollection',
+        blank=True,
+        related_name="blogcollectionitem",
+        on_delete=models.CASCADE
+    )
+    order_with_respect_to = 'collection_name'
+
+    class Meta:
+        index_together = ('item', 'order')
+        ordering=['order']
+        
+    def __str__(self):
+        return f"{self.item.title}"

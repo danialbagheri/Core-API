@@ -27,6 +27,8 @@ urlpatterns = [
     path('blogs/create/', views.BlogCreate.as_view(),
          name="blog-create"),
     path('reviews/', views.ReviewList.as_view(), name="reviews"),
+    path('reviews/create/', views.ReviewCreate.as_view(),
+         name="review-create"),
     path('reviews/<int:pk>/', views.ReviewEditView.as_view(),
          name="review-edit"),
     path('faqs/', views.FaqList.as_view(), name="faqs"),

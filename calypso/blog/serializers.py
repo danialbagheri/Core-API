@@ -1,11 +1,14 @@
 from django.contrib.sites.models import Site
 from rest_framework import serializers
-from .models import BlogPost
+from .models import BlogPost, BlogCollection, BlogCollectionItem
 from sorl.thumbnail import get_thumbnail
+from product.api.views import ProductSerializer
+
 
 class BlogPostSerializer(serializers.ModelSerializer):
     resized = serializers.SerializerMethodField()
     read_time = serializers.ReadOnlyField()
+    related_products = ProductSerializer(many=True)
     def get_resized(self, obj):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w',None)
@@ -24,4 +27,32 @@ class BlogPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
         fields = '__all__'
-        # depth = 2
+        # exclude = ('related_products',)
+        depth = 2
+
+
+class CollectionItemSerializer(serializers.ModelSerializer):
+    item = BlogPostSerializer(read_only=True)
+
+    class Meta:
+        model = BlogCollectionItem
+        fields = ('item',)
+        depth = 4
+
+class BlogCollectionSerializer(serializers.ModelSerializer):
+    # items = serializers.SerializerMethodField()
+    items = CollectionItemSerializer(many=True, source="blogcollectionitem")
+    counts = serializers.SerializerMethodField()
+
+    # def get_items(self, obj):
+    #     items = [n.item for n in obj.blogcollectionitem.order_by("order")]
+    #     request = self.context.get("request")
+    #     return BlogPostSerializer(context={'request': request}, instance=items, many=True).data
+
+    def get_counts(self, obj):
+        return obj.blogcollectionitem.count()
+
+    class Meta:
+        model = BlogCollection
+        fields = '__all__'
+        depth = 4

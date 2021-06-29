@@ -88,7 +88,7 @@ class Keyword(models.Model):
     example: paraben-free, sensitive lotion , atti-bac, spf20, etc
     '''
 
-    name = models.CharField(_('name'), max_length=200, blank=True)
+    name = models.CharField(_('name'), max_length=200, blank=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -257,7 +257,7 @@ class ProductVariant(models.Model):
         auto_now=True, null=True, blank=True)
     claims = models.TextField(blank=True, null=True)
     ingredients = models.ManyToManyField(
-        "Ingredient", verbose_name=_("ingredients"))
+        "Ingredient", verbose_name=_("ingredients"), blank=True)
     discontinued = models.BooleanField(default=False)
     size = models.CharField(max_length=200, null=True, blank=True)
     rrp = models.FloatField(blank=True, null=True)
@@ -370,6 +370,7 @@ class CollectionItem(OrderedModel):
 
     class Meta:
         index_together = ('item', 'order')
+        ordering=['order']
 
     def __str__(self):
         return f"{self.item.name}"

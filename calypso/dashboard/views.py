@@ -133,7 +133,7 @@ class ProductEdit(StaffRequiredMixin, View):
             product.keyword.clear()
             for keyword in keyword_list:
                 keyword_instance, created = Keyword.objects.get_or_create(
-                    name=keyword['value'])
+                    name=keyword['value'].lower())
                 product.keyword.add(keyword_instance)
             product.save()
 
@@ -250,6 +250,12 @@ class ReviewEditView(StaffRequiredMixin, UpdateView):
         instance.save()
         return queryset
 
+class ReviewCreate(StaffRequiredMixin, CreateView):
+    model = Review
+    template_name = 'dashboard/reviews/edit.html'
+    form_class = ReviewForm
+    success_url = reverse_lazy('dashboard:reviews')
+    # fields = ['name', 'slug']
 
 class CollectionsList(StaffRequiredMixin, ListView):
     model = Collection
@@ -385,6 +391,7 @@ class BlogList(StaffRequiredMixin, ListView):
     model = BlogPost
     context_object_name = 'blogs'
     template_name = 'dashboard/blogs/list.html'
+    ordering = ['-publish_date']
 
 
 class BlogEditView(StaffRequiredMixin, UpdateView):

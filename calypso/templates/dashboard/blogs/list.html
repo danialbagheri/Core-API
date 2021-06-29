@@ -30,7 +30,7 @@
       <div class="table-responsive">
         <table
           class="table table-bordered table-hover"
-          id="dataTable"
+          id="blogTable"
           width="100%"
           cellspacing="0"
         >
@@ -88,3 +88,12 @@
 </div>
 
 {% endblock %}
+{% block extra_scripts %}
+<script>
+  $(document).ready(function () {
+    $("#blogTable").DataTable({
+      "order": false
+    });
+  });
+</script>
+{% endblock extra_scripts %}

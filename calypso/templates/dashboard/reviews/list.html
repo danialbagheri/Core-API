@@ -6,14 +6,13 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Reviews</h1>
     <div>
-      <button
-        href="#"
-        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-        disabled
-        >
-        Add Review
-      </button>
-
+      <a href="{% url "dashboard:review-create" %}" >
+        <button
+          class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+          >
+          Add Review
+        </button>
+      </a>
     </div>
   </div>
 

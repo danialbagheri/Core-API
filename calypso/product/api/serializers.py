@@ -216,10 +216,10 @@ class CollectionSerializer(serializers.ModelSerializer):
     items = CollectionItemSerializer(many=True, source="collection_items")
     counts = serializers.SerializerMethodField()
 
-    def get_items(self, obj):
-        items = [n.item for n in obj.collection_items.all()]
-        request = self.context.get("request")
-        return ProductSerializer(context={'request': request}, instance=items, many=True).data
+    # def get_items(self, obj):
+    #     items = [n.item for n in obj.collection_items.order_by("order")]
+    #     request = self.context.get("request")
+    #     return ProductSerializer(context={'request': request}, instance=items, many=True).data
 
     def get_counts(self, obj):
         return obj.collection_items.count()
