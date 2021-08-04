@@ -65,12 +65,22 @@ class SliderViewSet(viewsets.ReadOnlyModelViewSet):
 class InstagramFeed(APIView):
     def get(self, request, *args, **kwargs):
         queryset = get_user_feed()
+        feed = []
         for data in queryset:
+            single_post = {}
             if data['media_type'] == "IMAGE" or data['media_type'] == "CAROUSEL_ALBUM":
                 thumbnail, webp = self.reduce_photo_size(data['media_url'], data['id'])
-                data["thumbnail"] = thumbnail
-                data["webp"] = webp
-        return JsonResponse(queryset, safe=False, status=200)
+                single_post["thumbnail"] = thumbnail
+                single_post["webp"] = webp
+                single_post["caption"] = data["caption"]
+                single_post["permalink"] = data["permalink"]
+                single_post["id"] = data["id"]
+                single_post["media_url"] = data["media_url"]
+                single_post["media_type"] = data["media_type"]
+                feed.append(single_post)
+            else:
+                pass
+        return JsonResponse(feed, safe=False, status=200)
 
     def reduce_photo_size(self, url, id):
         current_site = Site.objects.get_current().domain

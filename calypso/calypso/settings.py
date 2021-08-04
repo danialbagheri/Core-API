@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import environ
+import os 
 
 env = environ.Env(
     # set casting, default value
@@ -244,7 +245,7 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
-        'fontNames': ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
+        'fontNames': ['proxima-nova','Courier New', 'Roboto','proxima-nova','sans-serif'],
         'spellCheck':True,
         'width': '100%',
         'height': '400px',
@@ -300,8 +301,9 @@ SUMMERNOTE_CONFIG = {
     },
     'css': (
         '//cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/theme/monokai.min.css',
+        '//use.typekit.net/kls3ash.css',
     ),
-    # 'js_for_code_highlight': (  # Also for SummernoteInplaceWidget
-    #     os.path.join(STATIC_URL, '/summernote/summernote-ext-highlight.js'),
-    # ),
+    'js': (
+        os.path.join(STATIC_URL, '/static/summernote/summernote-cleaner.js'),
+    ),
 }

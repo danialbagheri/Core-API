@@ -131,7 +131,7 @@ class Product(models.Model):
         for variant in self.variants.all():
             list_of_prices.append(variant.price)
         try:
-            lowest_price = min(float(sub) for sub in list_of_prices)
+            lowest_price = min(("%.2f" % sub) for sub in list_of_prices)
         except:
             lowest_price = None
         return lowest_price
