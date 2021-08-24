@@ -4,7 +4,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DRF_RECAPTCHA_TESTING = True
 DATABASES = {
     'default': {

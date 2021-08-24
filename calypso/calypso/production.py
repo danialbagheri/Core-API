@@ -17,7 +17,7 @@ SESSION_COOKIE_SECURE = False
 MYSQL_DB_NAME= env('MYSQL_DB_NAME')
 MYSQL_USER_NAME= env('MYSQL_USER_NAME')
 MYSQL_PASSWORD = env('MYSQL_PASSWORD')
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
