@@ -17,6 +17,7 @@ class ReviewAdmin(admin.ModelAdmin):
         "like",
         "dislike",
         'approved',
+        'date_created',
     ]
     search_fields = ['name']
 

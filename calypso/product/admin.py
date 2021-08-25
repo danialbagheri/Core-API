@@ -87,14 +87,31 @@ class CollectionItemAdmin(OrderedModelAdmin):
                     'move_up_down_links')
 
 
+
+class StockistAdmin(admin.ModelAdmin):
+    search_fields = ['name',]
+    list_display = [
+        "name",
+        "logo",
+    ]
+
+class WhereToBuyAdmin(admin.ModelAdmin):
+    list_display = [
+        "variant",
+        "stockist",
+        "url",
+    ]
+    search_fields = ['variant__sku', 'variant__name', 'stockist__name']
+    list_filter = ["stockist",]
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
 admin.site.register(ProductImage, ProductImageAdmin)
-admin.site.register(Stockist)
-admin.site.register(WhereToBuy)
+admin.site.register(Stockist,StockistAdmin)
+admin.site.register(WhereToBuy, WhereToBuyAdmin)
 admin.site.register(Ingredient)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(CollectionItem, CollectionItemAdmin)
