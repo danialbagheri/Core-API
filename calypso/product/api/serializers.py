@@ -5,6 +5,7 @@ from sorl.thumbnail import get_thumbnail
 
 from faq.serializers import FaqSerializer
 from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
+from product.utils import get_ml_number
 from review.models import Review
 from review.serializers import ReviewSerializer
 
@@ -78,12 +79,19 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         many=True, read_only=True, source='variant_images')
     where_to_buy = WhereToBuySerializer(
         many=True, read_only=True, source='wheretobuy')
+    price_per_100ml = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductVariant
         fields = '__all__'
         lookup_field = "sku"
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
+
+    def get_price_per_100ml(self, variant: ProductVariant):
+        if not variant.size:
+            return None
+        ml_number = get_ml_number(variant.size)
+        return 100 * (variant.price / ml_number)
 
 
 class ProductSerializer(serializers.ModelSerializer):
