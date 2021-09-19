@@ -1,12 +1,12 @@
-from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
-from review.models import Review, Reply
-from rest_framework import serializers
-from review.serializers import ReviewSerializer
-from faq.serializers import FaqSerializer
-from sorl.thumbnail import get_thumbnail
 from django.contrib.sites.models import Site
-from django.core.serializers import json
 from django.db.models import Avg, Count
+from rest_framework import serializers
+from sorl.thumbnail import get_thumbnail
+
+from faq.serializers import FaqSerializer
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
+from review.models import Review
+from review.serializers import ReviewSerializer
 
 RESIZE_W = 100
 RESIZE_H = 100
@@ -31,7 +31,7 @@ class WhereToBuySerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -154,10 +154,10 @@ class RelatedProducts(serializers.ModelSerializer):
 
 
 class SingleProductSerializer(ProductSerializer):
-    '''
-    Similar to ProductSerializer but with more info such as reviews and related_products, 
+    """
+    Similar to ProductSerializer but with more info such as reviews and related_products,
     seperated for faster performance
-    '''
+    """
     reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
     # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
