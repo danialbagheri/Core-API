@@ -91,7 +91,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         if not variant.size:
             return None
         ml_number = get_ml_number(variant.size)
-        return 100 * (variant.price / ml_number)
+        return '%.2f' % (100 * (variant.price / ml_number))
 
 
 class ProductSerializer(serializers.ModelSerializer):
