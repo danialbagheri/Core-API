@@ -1,15 +1,13 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from user.models import User
+
 from product.models import Product
-# Create your models here.
+from user.models import User
 
 
 class Reply(models.Model):
-    '''
+    """
     This models keeps all the replies to the reviews.
-    '''
+    """
     user_name = models.CharField(
         max_length=200, blank=True, null=True, default="Linco Care")
     user_email = models.EmailField(
@@ -18,10 +16,10 @@ class Reply(models.Model):
 
 
 class Review(models.Model):
-    '''
+    """
     if the user is authenticated we save the user otherwise the name and the
     email.
-    '''
+    """
     product = models.ForeignKey(
         Product, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, verbose_name="user",
@@ -83,3 +81,18 @@ class Review(models.Model):
         if self.score > 5:
             self.score = 5
         super(Review, self).save(*args, **kwargs)
+
+
+class ReviewRate(models.Model):
+    review = models.ForeignKey(
+        to=Review,
+        on_delete=models.CASCADE,
+    )
+
+    rate_type = models.CharField(
+        max_length=64,
+    )
+
+    user_cookie = models.CharField(
+        max_length=64,
+    )

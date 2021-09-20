@@ -1,15 +1,14 @@
 from django.contrib import admin
-from rest_framework.fields import ReadOnlyField
-from .models import *
 from django_summernote.admin import SummernoteModelAdmin
-from ordered_model.admin import OrderedTabularInline, OrderedStackedInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
-# Register your models here.
+from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
+
+from .models import *
 
 
 class ProductAdmin(SummernoteModelAdmin):
 
     # filter_horizontal = ('tags', 'product_types')
-    summernote_fields = ('__all__')
+    summernote_fields = '__all__'
     list_filter = ('types',)
     list_display = [
         "name",
@@ -87,13 +86,13 @@ class CollectionItemAdmin(OrderedModelAdmin):
                     'move_up_down_links')
 
 
-
 class StockistAdmin(admin.ModelAdmin):
     search_fields = ['name',]
     list_display = [
         "name",
         "logo",
     ]
+
 
 class WhereToBuyAdmin(admin.ModelAdmin):
     list_display = [
@@ -102,7 +101,8 @@ class WhereToBuyAdmin(admin.ModelAdmin):
         "url",
     ]
     search_fields = ['variant__sku', 'variant__name', 'stockist__name']
-    list_filter = ["stockist",]
+    list_filter = ["stockist"]
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag, TagAdmin)

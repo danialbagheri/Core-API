@@ -3,6 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import product.models
+from product.utils import icons_directory_path
 
 
 class Migration(migrations.Migration):
@@ -71,7 +72,7 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('icon', models.ImageField(blank=True, upload_to=product.models.Tag.icons_directory_path)),
+                ('icon', models.ImageField(blank=True, upload_to=icons_directory_path)),
                 ('name', models.CharField(blank=True, max_length=200, verbose_name='name')),
             ],
         ),

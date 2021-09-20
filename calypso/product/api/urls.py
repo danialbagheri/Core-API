@@ -5,19 +5,42 @@ from . import views
 app_name = "products_api"
 
 product_routers = routers.DefaultRouter()
-product_routers.register(r'variant', views.VariantViewSet, basename="variant")
-product_routers.register(r'product',
-                         views.ProductViewSet, basename="product")
-product_routers.register(r'single',
-                         views.SingleProductViewSet, basename="single-product")
-product_routers.register(r'image',
-                         views.ProductImageViewSet, basename="image")
-product_routers.register(r'tags',
-                         views.TagViewSet, basename="tags")
-product_routers.register(r'collections',
-                         views.CollectionViewSet, basename="collections")
+product_routers.register(
+    prefix=r'variant',
+    viewset=views.VariantViewSet,
+    basename="variant",
+)
+
+product_routers.register(
+    prefix=r'product',
+    viewset=views.ProductViewSet,
+    basename="product",
+)
+
+product_routers.register(
+    prefix=r'single',
+    viewset=views.SingleProductViewSet,
+    basename="single-product",
+)
+
+product_routers.register(
+    prefix=r'image',
+    viewset=views.ProductImageViewSet,
+    basename="image",
+)
+
+product_routers.register(
+    prefix=r'tags',
+    viewset=views.TagViewSet,
+    basename="tags",
+)
+
+product_routers.register(
+    prefix=r'collections',
+    viewset=views.CollectionViewSet,
+    basename="collections",
+)
 
 urlpatterns = [
     path('', include(product_routers.urls)),
-    # path('', views.HomePage.as_view(), name="home")
 ]

@@ -1,13 +1,17 @@
-from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag, IMAGE_TYPE
-# from review.models import Review, Reply
 from rest_framework import viewsets
-from .serializers import ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer, CollectionSerializer
-from sorl.thumbnail import get_thumbnail
+
+from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag
+from .serializers import (
+    ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer,
+    CollectionSerializer
+)
+
 
 class VariantViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductVariant.objects.all()
     serializer_class = ProductVariantSerializer
     lookup_field = "sku"
+
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
@@ -40,15 +44,18 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset[: int(count)]
         return queryset
 
+
 class SingleProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
     serializer_class = SingleProductSerializer
-    lookup_field="slug"
+    lookup_field = "slug"
+
 
 class CollectionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
-    lookup_field="slug"
+    lookup_field = "slug"
+
 
 class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductImage.objects.all()
@@ -72,12 +79,11 @@ class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
             except:
                 pass
         return queryset
-    
-    
+
     def get_product_image_type_tuple_search(self, query):
-        count=0
-        for i in IMAGE_TYPE:
+        count = 0
+        for i in ProductImage.IMAGE_TYPE:
             if str(query).lower() in i[1].lower():
-                return IMAGE_TYPE[count][0]
+                return ProductImage.IMAGE_TYPE[count][0]
             count += 1
-        return None
+        return
