@@ -19,7 +19,7 @@ class ReviewAdmin(admin.ModelAdmin):
         'approved',
         'date_created',
     ]
-    search_fields = ['name']
+    search_fields = ['customer_name']
 
 
 admin.site.register(Review, ReviewAdmin)

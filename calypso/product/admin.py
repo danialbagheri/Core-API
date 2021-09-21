@@ -16,7 +16,7 @@ class ProductAdmin(SummernoteModelAdmin):
         "slug",
     ]
     search_fields = ['name']
-
+    save_as = True
 
 class ProductVariantAdmin(admin.ModelAdmin):
 
@@ -29,7 +29,7 @@ class ProductVariantAdmin(admin.ModelAdmin):
         "size",
     ]
     search_fields = ['sku', ]
-
+    save_as = True
 
 class ProductImageAdmin(admin.ModelAdmin):
 
@@ -85,7 +85,7 @@ class CollectionAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
 class CollectionItemAdmin(OrderedModelAdmin):
     list_display = ("item", 'collection_name',
                     'move_up_down_links')
-
+    save_as = True
 
 
 class StockistAdmin(admin.ModelAdmin):
@@ -103,6 +103,13 @@ class WhereToBuyAdmin(admin.ModelAdmin):
     ]
     search_fields = ['variant__sku', 'variant__name', 'stockist__name']
     list_filter = ["stockist",]
+    actions = ['check_urls']
+    save_as = True
+
+    def check_urls(self, request, queryset):
+        for obj in queryset:
+            print(obj.url)
+        pass
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Tag, TagAdmin)
