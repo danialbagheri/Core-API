@@ -7,16 +7,17 @@ app_name = "review_api"
 
 
 review_routers = routers.DefaultRouter()
-review_routers.register(r'product',
-                        views.ReviewViewSet, basename="reviews")
+review_routers.register(
+    prefix=r'product',
+    viewset=views.ReviewViewSet,
+    basename="reviews",
+)
 
 # review_routers.register(r'product/<slug:slug>/add/',
 #                         views.CreateReview, basename="create-review")
 
 urlpatterns = [
     path('', include(review_routers.urls)),
-    path('product/<slug:slug>/add/',
-         views.CreateReview.as_view(), name="create-review"),
-    path('rate/<int:pk>/',
-         views.RateReview.as_view(), name="rate-review"),
+    path('product/<slug:slug>/add/', views.CreateReview.as_view(), name="create-review"),
+    path('rate/<int:pk>/', views.RateReview.as_view(), name="rate-review"),
 ]

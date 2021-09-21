@@ -7,7 +7,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
     # filter_horizontal = ('tags', 'product_types')
     # summernote_fields = ('__all__')
-    list_filter = ('score', 'product')
+    list_filter = ('score', 'approved','product',)
     list_display = [
         "name",
         "title",
