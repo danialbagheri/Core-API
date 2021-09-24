@@ -11,13 +11,26 @@ def icons_directory_path(filename):
     return "tags-icon/{0}".format(filename)
 
 
-def get_ml_number(ml_string):
-    ml_number = ""
+def extract_number(number_str):
+    number = ""
     number_started = False
-    for ml_char in ml_string:
-        if ml_char.isdigit():
-            ml_number += ml_char
+    for c in number_str:
+        if c.isdigit():
+            number += c
             number_started = True
         elif number_started:
-            return int(ml_number)
-    return int(ml_number)
+            return int(number)
+    return int(number)
+
+
+def get_ml_number(ml_string):
+    quantity_number = 1
+    ml_string = ml_string.lower()
+    if 'x' in ml_string.lower():
+        index = ml_string.index('x')
+        quantity_number = ml_string[:index]
+        quantity_number = extract_number(quantity_number)
+        ml_string = ml_string[index:]
+
+    ml_number = extract_number(ml_string)
+    return ml_number * quantity_number
