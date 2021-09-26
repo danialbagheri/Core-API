@@ -1,8 +1,12 @@
-from rest_framework import serializers
-from drf_recaptcha.fields import ReCaptchaV2Field, ReCaptchaV3Field
-from web.models import Slider, SliderSlidesThroughModel, Configuration, Setting, Slide
-from sorl.thumbnail import get_thumbnail
+import requests
+from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
+from ipware import get_client_ip
+from rest_framework import serializers
+from sorl.thumbnail import get_thumbnail
+
+from web.models import Slider, SliderSlidesThroughModel, Configuration
 
 REASON_CHOICES = [
     'Urgent: Change Order detail or Address',
@@ -21,7 +25,23 @@ class ContactFormSerializer(serializers.Serializer):
     subject = serializers.CharField(max_length=200, required=False)
     reason = serializers.ChoiceField(choices=REASON_CHOICES,)
     message = serializers.CharField()
-    recaptcha = ReCaptchaV2Field()
+
+    def to_internal_value(self, data):
+        if 'recaptcha' not in data:
+            raise ValidationError('Recaptcha data not sent.')
+        ip, _ = get_client_ip(self.context['request'])
+        response = requests.post(
+            url=f'https://www.google.com/recaptcha/api/siteverify?'
+                f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={data["recaptcha"]}&remoteip=127.0.0.1',
+            json={
+                'secret': settings.DRF_RECAPTCHA_SECRET_KEY,
+                'response': data['recaptcha'],
+                'remoteip': ip,
+            }
+        )
+        if response.status_code != 200 or not response.json().get('success', False):
+            raise ValidationError('Recaptcha validation failed')
+        return super().to_internal_value(data)
 
 
 class SlideSerializer(serializers.ModelSerializer):
