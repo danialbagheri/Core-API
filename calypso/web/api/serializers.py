@@ -32,12 +32,7 @@ class ContactFormSerializer(serializers.Serializer):
         ip, _ = get_client_ip(self.context['request'])
         response = requests.post(
             url=f'https://www.google.com/recaptcha/api/siteverify?'
-                f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={data["recaptcha"]}&remoteip=127.0.0.1',
-            json={
-                'secret': settings.DRF_RECAPTCHA_SECRET_KEY,
-                'response': data['recaptcha'],
-                'remoteip': ip,
-            }
+                f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={data["recaptcha"]}&remoteip={ip}',
         )
         if response.status_code != 200 or not response.json().get('success', False):
             raise ValidationError('Recaptcha validation failed')

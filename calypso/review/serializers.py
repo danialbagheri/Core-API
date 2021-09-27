@@ -198,7 +198,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def notify_the_admin(review, product_name):
         subject = f"A new review has been submitted on {review.source}"
         message = f"""
-            Please check the latest review by visiting https://service.calypsosun.com/dashboard/reviews/{review.id}/
+            Please check and approve the latest review by visiting https://service.calypsosun.com/dashboard/reviews/{review.id}/
             user ip: {review.ip_address}
             Product: {product_name}
             Subject: {review.title}
