@@ -4,10 +4,13 @@ from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import CreateAPIView
 
 from .filters import ReviewFilter
 from .models import Review
-from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
+from .serializers import (
+    ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer, ReviewImageSerializer
+)
 
 
 class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
@@ -53,3 +56,7 @@ class RateReview(generics.UpdateAPIView):
             response.set_cookie('calypsosun_token', self._cookie)
             return response
         return super().patch(request, *args, **kwargs)
+
+
+class ReviewImageAPIView(CreateAPIView):
+    serializer_class = ReviewImageSerializer

@@ -1,9 +1,12 @@
+import base64
+
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.mail import mail_managers, mail_admins
 from django.shortcuts import get_object_or_404
 
 from product.models import Product
-from .models import Review, Reply, ReviewRate
+from .models import Review, Reply, ReviewRate, ReviewImage
 from rest_framework import serializers, pagination
 from rest_framework.response import Response
 
@@ -39,11 +42,36 @@ class ReplySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ReviewImageSerializer(serializers.ModelSerializer):
+    image_base64 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = ReviewImage
+        fields = (
+            'id',
+            'image',
+            'image_base64',
+        )
+        read_only_fields = (
+            'id',
+            'image',
+        )
+
+    def create(self, validated_data):
+        image_base64 = validated_data.pop('image_base64')
+        image_format, image_str = image_base64.split(';base64,')
+        extension = image_format.split('/')[-1]
+        image = ContentFile(base64.b64decode(image_str), name='temp.' + extension)
+        validated_data['image'] = image
+        return super().create(validated_data)
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
     helpful = serializers.ReadOnlyField()
+    images = ReviewImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Review
@@ -96,6 +124,8 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
+    image_ids = serializers.ListField(write_only=True)
+    images = ReviewImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Review
@@ -130,6 +160,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             mail_admins("New Review Email notification failed", f"{e}")
 
     def create(self, validated_data):
+        image_ids = validated_data.pop('image_ids', [])
         request = self.context['request']
         product_slug = self.context['slug']
         product_instance = get_object_or_404(Product, slug=product_slug)
@@ -141,6 +172,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             'source': user_source,
         })
         review = super().create(validated_data)
+        ReviewImage.objects.filter(
+            id__in=image_ids,
+        ).update(review=review)
         self.notify_the_admin(
             review=review,
             product_name=product_instance.name,
