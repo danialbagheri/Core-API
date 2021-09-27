@@ -1,15 +1,12 @@
 import uuid
 
-from django.core.mail import mail_managers, mail_admins
 from django.db.models import F
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
 
 from .filters import ReviewFilter
-from .models import Review, Product, ReviewRate
+from .models import Review
 from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
 
 
