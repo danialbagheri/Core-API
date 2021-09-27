@@ -22,5 +22,16 @@ class Collection(models.Model):
         blank=True,
     )
 
+    public = models.BooleanField(
+        default=True,
+    )
+
+    image = models.ImageField(
+        upload_to='collections/',
+        null=True,
+        blank=True,
+        max_length=None,
+    )
+
     def __str__(self):
         return self.name
