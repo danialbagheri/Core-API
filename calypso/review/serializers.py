@@ -1,14 +1,29 @@
 import base64
 
+from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.mail import mail_managers, mail_admins
 from django.shortcuts import get_object_or_404
+from sorl.thumbnail import get_thumbnail
 
 from product.models import Product
 from .models import Review, Reply, ReviewRate, ReviewImage
 from rest_framework import serializers, pagination
 from rest_framework.response import Response
+
+
+RESIZE_W = 100
+RESIZE_H = 100
+
+
+def check_request_image_size_params(request):
+    if request and request.query_params:
+        resize_w = request.query_params.get('resize_w', None)
+        resize_h = request.query_params.get('resize_h', None)
+        return resize_w, resize_h
+    else:
+        return None, None
 
 
 class ReviewPagination(pagination.PageNumberPagination):
@@ -44,6 +59,8 @@ class ReplySerializer(serializers.ModelSerializer):
 
 class ReviewImageSerializer(serializers.ModelSerializer):
     image_base64 = serializers.CharField(write_only=True)
+    resized = serializers.SerializerMethodField()
+    webp = serializers.SerializerMethodField()
 
     class Meta:
         model = ReviewImage
@@ -51,11 +68,45 @@ class ReviewImageSerializer(serializers.ModelSerializer):
             'id',
             'image',
             'image_base64',
+            'resized',
+            'webp',
         )
         read_only_fields = (
             'id',
             'image',
+            'resized',
+            'webp',
         )
+
+    def get_resized(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = RESIZE_W
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+
+    def get_webp(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = "100"
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
 
     def create(self, validated_data):
         image_base64 = validated_data.pop('image_base64')

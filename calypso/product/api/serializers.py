@@ -231,16 +231,49 @@ class CollectionSerializer(serializers.ModelSerializer):
     # items = serializers.SerializerMethodField()
     items = CollectionItemSerializer(many=True, source="collection_items")
     counts = serializers.SerializerMethodField()
+    resized = serializers.SerializerMethodField()
+    webp = serializers.SerializerMethodField()
 
     # def get_items(self, obj):
     #     items = [n.item for n in obj.collection_items.order_by("order")]
     #     request = self.context.get("request")
     #     return ProductSerializer(context={'request': request}, instance=items, many=True).data
 
-    def get_counts(self, obj):
-        return obj.collection_items.count()
-
     class Meta:
         model = Collection
         fields = '__all__'
         depth = 4
+
+    @staticmethod
+    def get_counts(obj):
+        return obj.collection_items.count()
+
+    def get_resized(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = RESIZE_W
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+
+    def get_webp(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = "100"
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
