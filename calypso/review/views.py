@@ -1,16 +1,16 @@
 import uuid
 
-from django.core.mail import mail_managers, mail_admins
 from django.db.models import F
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import CreateAPIView
 
 from .filters import ReviewFilter
-from .models import Review, Product, ReviewRate
-from .serializers import ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer
+from .models import Review
+from .serializers import (
+    ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer, ReviewImageSerializer
+)
 
 
 class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
@@ -27,46 +27,12 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CreateReview(generics.CreateAPIView):
-    queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
 
-    @classmethod
-    def get_client_ip(cls, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
-    @classmethod
-    def notify_the_admin(cls, data):
-        subject = f"A new review has been submitted on {data['user_source']}"
-        message = f"""
-        Please check the latest reviews by visiting https://service.calypsosun.com
-        user ip: {data['user_ip']}
-        Product: {data['product_name']}
-        """
-        try:
-            mail_managers(subject,message)
-        except Exception as e:
-            mail_admins("New Review Email notification failed", f"{e}")
-
-    def perform_create(self, serializer):
-        if 'slug' in self.kwargs:
-            slug = self.kwargs.get('slug')
-            user_source = self.request.META.get("HTTP_REFERER", "")
-            user_ip = self.get_client_ip(request=self.request)
-            product_instance = get_object_or_404(Product, slug=slug)
-            self.notify_the_admin(data={
-                "user_source":user_source,
-                "user_ip":user_ip,
-                "product_name":product_instance.name,
-            })           
-            serializer.is_valid(raise_exception=True)
-            return serializer.save(product=product_instance, ip_address=user_ip, source=user_source)
-        else:
-            raise ValidationError()
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['slug'] = self.kwargs.get('slug', None)
+        return context
 
 
 class RateReview(generics.UpdateAPIView):
@@ -90,3 +56,7 @@ class RateReview(generics.UpdateAPIView):
             response.set_cookie('calypsosun_token', self._cookie)
             return response
         return super().patch(request, *args, **kwargs)
+
+
+class ReviewImageAPIView(CreateAPIView):
+    serializer_class = ReviewImageSerializer

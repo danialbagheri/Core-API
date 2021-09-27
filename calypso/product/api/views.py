@@ -52,7 +52,7 @@ class SingleProductViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CollectionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.filter(public=True)
     serializer_class = CollectionSerializer
     lookup_field = "slug"
 

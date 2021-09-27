@@ -103,6 +103,7 @@ class ProductSerializer(serializers.ModelSerializer):
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs')
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
+    collection_names = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -141,18 +142,25 @@ class ProductSerializer(serializers.ModelSerializer):
         if obj.main_image:
             return domain+get_thumbnail(obj.main_image, f'{resize_w}{height}', quality=100, format="WEBP").url
 
-    def get_total_review_count(self, obj):
+    @staticmethod
+    def get_total_review_count(obj):
         review_count = obj.review_set.filter(approved=True).count()
         return review_count
 
-    def get_review_average_score(self, obj):
-
+    @staticmethod
+    def get_review_average_score(obj):
         average_score = obj.review_set.filter(
             approved=True).aggregate(Avg('score'))['score__avg']
-        if average_score != None:
+        if average_score is not None:
             return f"{average_score:.1f}"
-        else:
-            return 0
+        return 0
+
+    @staticmethod
+    def get_collection_names(product: Product):
+        return CollectionItem.objects.filter(
+            collection_name__public=True,
+            item=product,
+        ).values_list('collection_name__name', flat=True)
 
 
 class RelatedProducts(serializers.ModelSerializer):
@@ -223,16 +231,49 @@ class CollectionSerializer(serializers.ModelSerializer):
     # items = serializers.SerializerMethodField()
     items = CollectionItemSerializer(many=True, source="collection_items")
     counts = serializers.SerializerMethodField()
+    resized = serializers.SerializerMethodField()
+    webp = serializers.SerializerMethodField()
 
     # def get_items(self, obj):
     #     items = [n.item for n in obj.collection_items.order_by("order")]
     #     request = self.context.get("request")
     #     return ProductSerializer(context={'request': request}, instance=items, many=True).data
 
-    def get_counts(self, obj):
-        return obj.collection_items.count()
-
     class Meta:
         model = Collection
         fields = '__all__'
         depth = 4
+
+    @staticmethod
+    def get_counts(obj):
+        return obj.collection_items.count()
+
+    def get_resized(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = RESIZE_W
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+
+    def get_webp(self, obj):
+        request = self.context.get("request")
+        resize_w, resize_h = check_request_image_size_params(request)
+        domain = Site.objects.get_current().domain
+        if resize_h is None and resize_w is None:
+            resize_w = "100"
+        if resize_w is None:
+            resize_w = ""
+        if resize_h is None:
+            height = ""
+        else:
+            height = f"x{resize_h}"
+        if obj.image:
+            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
