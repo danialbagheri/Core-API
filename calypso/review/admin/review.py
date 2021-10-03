@@ -1,12 +1,10 @@
 from django.contrib import admin
 
-from .models import *
+from review.models import Review
 
 
+@admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-
-    # filter_horizontal = ('tags', 'product_types')
-    # summernote_fields = ('__all__')
     list_filter = ('score', 'product')
     list_display = [
         "name",
@@ -20,7 +18,3 @@ class ReviewAdmin(admin.ModelAdmin):
         'date_created',
     ]
     search_fields = ['name']
-
-
-admin.site.register(Review, ReviewAdmin)
-admin.site.register(Reply)
