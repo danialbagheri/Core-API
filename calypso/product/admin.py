@@ -8,6 +8,7 @@ from .models import *
 
 class ReviewQuestionInlineAdmin(admin.StackedInline):
     model = ReviewQuestion
+    extra = 0
 
 
 class ProductAdmin(SummernoteModelAdmin):
