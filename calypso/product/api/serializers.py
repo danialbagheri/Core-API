@@ -7,7 +7,7 @@ from faq.serializers import FaqSerializer
 from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
 from product.utils import get_ml_number
 from review.models import Review
-from review.serializers import ReviewSerializer
+from review.api.serializers import ReviewSerializer
 
 RESIZE_W = 100
 RESIZE_H = 100
