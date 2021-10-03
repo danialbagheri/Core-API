@@ -8,9 +8,10 @@ from rest_framework.generics import CreateAPIView
 
 from .filters import ReviewFilter
 from .models import Review
-from .serializers import (
-    ReviewSerializer, ReviewCreateSerializer, ReviewPagination, ReviewRateSerializer, ReviewImageSerializer
+from review.api.serializers import (
+    ReviewSerializer, ReviewCreateSerializer, ReviewRateSerializer, ReviewImageSerializer
 )
+from review.api.paginations import ReviewPagination
 
 
 class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
