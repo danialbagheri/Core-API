@@ -101,6 +101,7 @@ class ProductSerializer(serializers.ModelSerializer):
     main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs')
+    types = serializers.SerializerMethodField()
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
     collection_names = serializers.SerializerMethodField()
@@ -161,6 +162,10 @@ class ProductSerializer(serializers.ModelSerializer):
             collection_name__public=True,
             item=product,
         ).values_list('collection_name__name', flat=True)
+
+    @staticmethod
+    def get_types(product: Product):
+        return list(product.types.all().values_list('name', flat=True))
 
 
 class RelatedProducts(serializers.ModelSerializer):

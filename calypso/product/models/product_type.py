@@ -12,5 +12,11 @@ class ProductType(models.Model):
         verbose_name=_('name'),
     )
 
+    slug = models.SlugField(
+        max_length=256,
+        unique=True,
+        allow_unicode=True,
+    )
+
     def __str__(self):
         return self.name
