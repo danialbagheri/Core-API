@@ -3,11 +3,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
 
-from review.api.paginations import ReviewPagination
-from review.api.serializers import (
-    ReviewSerializer
-)
-from ...filters import ReviewFilter
+from ..filters import ReviewFilter
+from ..paginations import ReviewPagination
+from ..serializers import ReviewSerializer
 from ...models import Review
 
 

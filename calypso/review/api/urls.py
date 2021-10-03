@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import views
+from review.api import views
 
 
 app_name = "review_api"
