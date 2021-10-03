@@ -14,7 +14,7 @@ class ProductType(models.Model):
 
     slug = models.SlugField(
         max_length=256,
-        unique=True,
+        null=True,
         allow_unicode=True,
     )
 
