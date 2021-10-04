@@ -6,6 +6,7 @@ from django import forms
 from django.shortcuts import redirect, render
 from django.urls import path
 
+from product.admin.actions import check_locations
 from product.models import WhereToBuy, ProductVariant, Stockist
 
 
@@ -23,6 +24,21 @@ class WhereToBuyAdmin(admin.ModelAdmin):
     )
     search_fields = ('variant__sku', 'variant__name', 'stockist__name')
     list_filter = ('stockist',)
+    actions = (check_locations,)
+
+    def changelist_view(self, request, extra_context=None):
+        try:
+            action = self.get_actions(request)[request.POST['action']][0]
+            is_dependant = action.dependant_action
+        except (KeyError, AttributeError):
+            is_dependant = False
+
+        if is_dependant:
+            post = request.POST.copy()
+            post.setlist(admin.helpers.ACTION_CHECKBOX_NAME, self.model.objects.values_list('id', flat=True))
+            request.POST = post
+
+        return admin.ModelAdmin.changelist_view(self, request, extra_context)
 
     @staticmethod
     def update_locations(csv_file):
