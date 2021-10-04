@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from product.models import Product
 from . import ReplySerializer, ReviewImageSerializer
-from ...models import Review, ReviewImage
+from ...models import Review, ReviewImage, ReviewAnswer
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
@@ -47,8 +47,18 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         except Exception as e:
             mail_admins("New Review Email notification failed", f"{e}")
 
+    @staticmethod
+    def create_review_answers(answers, review):
+        for answer in answers:
+            ReviewAnswer.objects.create(
+                question_id=answer['question_id'],
+                review=review,
+                text=answer['answer'],
+            )
+
     def create(self, validated_data):
         image_ids = validated_data.pop('image_ids', [])
+        answers = validated_data.pop('answers', [])
         request = self.context['request']
         product_slug = self.context['slug']
         product_instance = get_object_or_404(Product, slug=product_slug)
@@ -67,4 +77,5 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             review=review,
             product_name=product_instance.name,
         )
+        self.create_review_answers(answers, review)
         return review
