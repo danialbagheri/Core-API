@@ -2,12 +2,11 @@ from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
 
-from review.models import ReviewQuestion
 from .models import *
 
 
 class ReviewQuestionInlineAdmin(admin.StackedInline):
-    model = ReviewQuestion
+    model = ProductReviewQuestion
     extra = 0
 
 

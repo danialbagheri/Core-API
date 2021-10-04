@@ -4,7 +4,8 @@ from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
 from faq.serializers import FaqSerializer
-from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem, \
+    ProductReviewQuestion
 from product.utils import get_ml_number
 from review.models import Review
 from review.api.serializers import ReviewSerializer
@@ -94,6 +95,19 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         return '%.2f' % (100 * (variant.price / ml_number))
 
 
+class ProductReviewQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductReviewQuestion
+        fields = (
+            'id',
+            'text',
+        )
+        read_only_fields = (
+            'id',
+            'text',
+        )
+
+
 class ProductSerializer(serializers.ModelSerializer):
     main_image_resized = serializers.SerializerMethodField()
     main_image_webp = serializers.SerializerMethodField()
@@ -181,6 +195,7 @@ class SingleProductSerializer(ProductSerializer):
     """
     reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
+    questions = ProductReviewQuestionSerializer(many=True, read_only=True)
     # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
     # related_products = serializers.ReadOnlyField()
 

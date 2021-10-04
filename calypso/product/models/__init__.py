@@ -9,3 +9,4 @@ from .stocklist import Stockist
 from .where_to_buy import WhereToBuy
 from .collection import Collection
 from .collection_item import CollectionItem
+from .product_review_question import ProductReviewQuestion

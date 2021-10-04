@@ -1,9 +1,9 @@
 from django.db import models
 
-from product.models import Product
+from . import Product
 
 
-class ReviewQuestion(models.Model):
+class ProductReviewQuestion(models.Model):
     product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
