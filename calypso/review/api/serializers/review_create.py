@@ -13,6 +13,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
     image_ids = serializers.ListField(write_only=True)
+    answers = serializers.ListField(write_only=True)
     images = ReviewImageSerializer(many=True, read_only=True)
 
     class Meta:

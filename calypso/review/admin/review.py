@@ -39,3 +39,4 @@ class ReviewAdmin(admin.ModelAdmin):
         'date_created',
     ]
     search_fields = ['name']
+    inlines = (ReviewAnswerInlineAdmin,)

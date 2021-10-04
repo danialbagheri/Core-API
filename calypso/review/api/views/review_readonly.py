@@ -20,4 +20,3 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
         return Review.objects.filter(
             approved=True
         ).annotate(helpfulness=F('like') - F('dislike'))
-
