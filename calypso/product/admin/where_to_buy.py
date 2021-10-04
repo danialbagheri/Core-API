@@ -1,6 +1,8 @@
 import csv
+import os
 from io import StringIO
 
+import openpyxl
 from django.contrib import admin
 from django import forms
 from django.shortcuts import redirect, render
@@ -41,9 +43,29 @@ class WhereToBuyAdmin(admin.ModelAdmin):
         return admin.ModelAdmin.changelist_view(self, request, extra_context)
 
     @staticmethod
-    def update_locations(csv_file):
-        reader = csv.reader(csv_file, delimiter=',')
+    def update_locations_with_csv(locations_file):
+        reader = csv.reader(locations_file, delimiter=',')
         for row in reader:
+            if row[0] == 'variant':
+                continue
+            sku = row[0].split(',')[0]
+            variant = ProductVariant.objects.filter(sku=sku).first()
+            stockist = Stockist.objects.filter(name=row[1]).first()
+            if not variant or not stockist:
+                continue
+            WhereToBuy.objects.update_or_create(
+                variant=variant,
+                stockist=stockist,
+                defaults={
+                    'url': row[2],
+                }
+            )
+
+    @staticmethod
+    def update_locations_with_xlsx(locations_file):
+        locations_workbook = openpyxl.load_workbook(locations_file.file)
+        locations_data = locations_workbook.active
+        for row in locations_data.iter_rows(values_only=True):
             if row[0] == 'variant':
                 continue
             sku = row[0].split(',')[0]
@@ -61,10 +83,14 @@ class WhereToBuyAdmin(admin.ModelAdmin):
 
     def import_csv(self, request):
         if request.method == 'POST':
-            csv_bytes_file = request.FILES['csv_file']
-            csv_file = StringIO(csv_bytes_file.read().decode())
-            self.update_locations(csv_file)
-            self.message_user(request, 'Your csv file has been imported.')
+            file = request.FILES['csv_file']
+            _, extension = os.path.splitext(file.name)
+            if extension == '.csv':
+                csv_file = StringIO(file.read().decode())
+                self.update_locations_with_csv(csv_file)
+            elif extension == '.xlsx':
+                self.update_locations_with_xlsx(file)
+            self.message_user(request, 'Your file has been imported.')
             return redirect('..')
         form = CsvImportForm()
         context = {'form': form}
