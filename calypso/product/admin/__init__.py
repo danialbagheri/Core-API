@@ -9,3 +9,4 @@ from .collection_item import CollectionItemAdmin
 from .stocklist import StockistAdmin
 from .where_to_buy import WhereToBuyAdmin
 from .ingredient import IngredientAdmin
+from .review_question import ReviewQuestionAdmin

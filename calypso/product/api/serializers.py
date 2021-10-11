@@ -5,7 +5,7 @@ from sorl.thumbnail import get_thumbnail
 
 from faq.serializers import FaqSerializer
 from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem, \
-    ProductReviewQuestion
+    ReviewQuestion
 from product.utils import get_ml_number
 from review.models import Review
 from review.api.serializers import ReviewSerializer
@@ -97,7 +97,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
 class ProductReviewQuestionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductReviewQuestion
+        model = ReviewQuestion
         fields = (
             'id',
             'text',

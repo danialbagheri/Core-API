@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
-from product.models import ProductReviewQuestion, Product
+from product.models import Product
 
 
 class ReviewQuestionInlineAdmin(admin.StackedInline):
-    model = ProductReviewQuestion
+    model = Product.questions.through
     extra = 0
 
 

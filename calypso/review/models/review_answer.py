@@ -1,6 +1,6 @@
 from django.db import models
 
-from product.models import ProductReviewQuestion
+from product.models import ReviewQuestion
 from review.models import Review
 
 
@@ -12,7 +12,7 @@ class ReviewAnswer(models.Model):
     )
 
     question = models.ForeignKey(
-        to=ProductReviewQuestion,
+        to=ReviewQuestion,
         on_delete=models.CASCADE,
     )
 
