@@ -1,4 +1,5 @@
 import requests
+from django.contrib import messages
 
 from product.models import WhereToBuy
 
@@ -25,6 +26,11 @@ def check_locations(modeladmin, request, queryset):
             kwargs['headers'] = amazon_headers
         resp = requests.get(location.url, **kwargs)
         if resp.status_code == 404 or 'Sorry about that...' in resp.text:
+            modeladmin.message_user(
+                message=f'{location.stockist.name} URL for variant {location.variant.sku} was removed.',
+                request=request,
+                level=messages.ERROR,
+            )
             location.url = ''
             location.save()
 

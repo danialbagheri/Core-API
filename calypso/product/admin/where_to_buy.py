@@ -3,7 +3,7 @@ import os
 from io import StringIO
 
 import openpyxl
-from django.contrib import admin
+from django.contrib import admin, messages
 from django import forms
 from django.shortcuts import redirect, render
 from django.urls import path
@@ -42,44 +42,78 @@ class WhereToBuyAdmin(admin.ModelAdmin):
 
         return admin.ModelAdmin.changelist_view(self, request, extra_context)
 
-    @staticmethod
-    def update_locations_with_csv(locations_file):
+    def is_valid_data(self, variant, stockist, request, row_num):
+        if variant and stockist:
+            return True
+        if not variant:
+            self.message_user(
+                message=f'Invalid variant at row {row_num}',
+                request=request,
+                level=messages.ERROR,
+            )
+        if not stockist:
+            self.message_user(
+                message=f'Invalid stockist at row {row_num}',
+                request=request,
+                level=messages.ERROR,
+            )
+        return False
+
+    def update_locations_with_csv(self, locations_file, request):
         reader = csv.reader(locations_file, delimiter=',')
+        count = 0
+        to_create_data = []
+        is_valid = True
         for row in reader:
+            count += 1
             if row[0] == 'variant':
                 continue
             sku = row[0].split(',')[0]
             variant = ProductVariant.objects.filter(sku=sku).first()
             stockist = Stockist.objects.filter(name=row[1]).first()
-            if not variant or not stockist:
+            if not self.is_valid_data(variant, stockist, request, count):
+                is_valid = False
                 continue
-            WhereToBuy.objects.update_or_create(
+            to_create_data.append(dict(
                 variant=variant,
                 stockist=stockist,
                 defaults={
                     'url': row[2],
                 }
-            )
+            ))
+        if not is_valid:
+            return is_valid
+        for location_data in to_create_data:
+            WhereToBuy.objects.update_or_create(**location_data)
+        return is_valid
 
-    @staticmethod
-    def update_locations_with_xlsx(locations_file):
+    def update_locations_with_xlsx(self, locations_file, request):
         locations_workbook = openpyxl.load_workbook(locations_file.file)
         locations_data = locations_workbook.active
+        count = 0
+        to_create_data = []
+        is_valid = True
         for row in locations_data.iter_rows(values_only=True):
             if row[0] == 'variant':
                 continue
             sku = row[0].split(',')[0]
             variant = ProductVariant.objects.filter(sku=sku).first()
             stockist = Stockist.objects.filter(name=row[1]).first()
-            if not variant or not stockist:
+            if not self.is_valid_data(variant, stockist, request, count):
+                is_valid = False
                 continue
-            WhereToBuy.objects.update_or_create(
+            to_create_data.append(dict(
                 variant=variant,
                 stockist=stockist,
                 defaults={
                     'url': row[2],
                 }
-            )
+            ))
+        if not is_valid:
+            return is_valid
+        for location_data in to_create_data:
+            WhereToBuy.objects.update_or_create(**location_data)
+        return is_valid
 
     def import_csv(self, request):
         if request.method == 'POST':
@@ -87,10 +121,14 @@ class WhereToBuyAdmin(admin.ModelAdmin):
             _, extension = os.path.splitext(file.name)
             if extension == '.csv':
                 csv_file = StringIO(file.read().decode())
-                self.update_locations_with_csv(csv_file)
+                imported = self.update_locations_with_csv(csv_file, request)
             elif extension == '.xlsx':
-                self.update_locations_with_xlsx(file)
-            self.message_user(request, 'Your file has been imported.')
+                imported = self.update_locations_with_xlsx(file, request)
+            else:
+                self.message_user(request, 'Invalid file extension.', level=messages.ERROR)
+                return redirect('..')
+            if imported:
+                self.message_user(request, 'Your file has been imported.')
             return redirect('..')
         form = CsvImportForm()
         context = {'form': form}
