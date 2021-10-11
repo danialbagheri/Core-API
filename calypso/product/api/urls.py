@@ -43,5 +43,5 @@ product_routers.register(
 
 urlpatterns = [
     path('', include(product_routers.urls)),
-    path('product-types/', views.ProductTypeListAPIView.as_view(), 'product-types'),
+    path('types/', views.ProductTypeListAPIView.as_view(), name='product-types'),
 ]
