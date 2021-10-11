@@ -33,6 +33,7 @@ def get_variant_info_by_sku(sku):
     edges {
       node {
         price
+        compareAtPrice
         availableForSale
         barcode
         updatedAt
@@ -40,6 +41,18 @@ def get_variant_info_by_sku(sku):
         displayName
         legacyResourceId
         inventoryQuantity
+        presentmentPrices(first:1, presentmentCurrencies:[EUR]) {
+          edges {
+            node {
+              price {
+                amount
+              }
+              compareAtPrice {
+                amount
+              }
+            }
+          }
+        }
       }
     }
   }

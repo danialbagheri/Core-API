@@ -84,6 +84,21 @@ class ProductVariant(models.Model):
         default=0,
     )
 
+    compare_at_price = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
+    euro_price = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
+    euro_compare_at_price = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
     inventory_quantity = models.IntegerField(
         blank=True,
         null=True,
@@ -124,9 +139,18 @@ class ProductVariant(models.Model):
         try:
             info = get_variant_info_by_sku(self.sku)
             self.price = info['price']
+            self.compare_at_price = info['compareAtPrice']
             self.shopify_rest_variant_id = info['legacyResourceId']
             self.shopify_storefront_variant_id = info['storefrontId']
             self.inventory_quantity = info['inventoryQuantity']
+            presentment_prices = info['presentmentPrices']['edges']
+            if not presentment_prices:
+                self.save()
+                return True
+            euro_info = presentment_prices[0]['node']
+            self.euro_price = euro_info['price']['amount']
+            if euro_info['compareAtPrice']:
+                self.euro_compare_at_price = euro_info['compareAtPrice']['amount']
             self.save()
             return True
         except:
