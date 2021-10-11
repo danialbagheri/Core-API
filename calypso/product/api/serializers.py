@@ -5,7 +5,7 @@ from sorl.thumbnail import get_thumbnail
 
 from faq.serializers import FaqSerializer
 from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem, \
-    ReviewQuestion
+    ReviewQuestion, ProductType
 from product.utils import get_ml_number
 from review.models import Review
 from review.api.serializers import ReviewSerializer
@@ -303,3 +303,16 @@ class CollectionSerializer(serializers.ModelSerializer):
             height = f"x{resize_h}"
         if obj.image:
             return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
+
+
+class ProductTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductType
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = (
+            'id',
+            'name',
+        )
