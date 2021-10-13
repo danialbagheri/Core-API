@@ -23,7 +23,7 @@ from django_grapesjs.views import GetTemplate
 urlpatterns = [
     path('', include('web.urls', namespace='web')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
-    path('api/reviews/', include('review.urls', namespace='review_api')),
+    path('api/reviews/', include('review.api.urls', namespace='review_api')),
     path('api/web/', include('web.api.urls', namespace='web_api')),
     path('api/page/', include('page.urls', namespace='page')),
     path('api/faq/', include('faq.urls', namespace='faq')),

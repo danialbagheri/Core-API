@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from . import views
+from review.api import views
 
 
 app_name = "review_api"
@@ -12,9 +12,6 @@ review_routers.register(
     viewset=views.ReviewViewSet,
     basename="reviews",
 )
-
-# review_routers.register(r'product/<slug:slug>/add/',
-#                         views.CreateReview, basename="create-review")
 
 urlpatterns = [
     path('', include(review_routers.urls)),

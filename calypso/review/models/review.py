@@ -1,6 +1,6 @@
 from django.db import models
 
-from product.models import Product
+from product.models import Product, ProductVariant
 from review.models import Reply
 from user.models import User
 
@@ -12,6 +12,12 @@ class Review(models.Model):
     """
     product = models.ForeignKey(
         to=Product,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    variant = models.ForeignKey(
+        to=ProductVariant,
         on_delete=models.SET_NULL,
         null=True,
     )

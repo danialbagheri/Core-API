@@ -43,17 +43,21 @@ This email is sent via Calypsosun.com contact us page.
             '''
 
             try:
+                reason_config = Configuration.objects.filter(key=subject).first()
+                if reason_config:
+                    send_mail(subject, message, email_from, reason_config.value.split(','))
+                    return JsonResponse({"success": "Success"}, status=200)
                 customer_service_emails, created = Configuration.objects.get_or_create(key="customer_service_emails")
                 if created:
-                    customer_service_emails.name="Customer Service emails"
-                    customer_service_emails.value="info@calypsosun.com"
+                    customer_service_emails.name = "Customer Service emails"
+                    customer_service_emails.value = "info@calypsosun.com"
                     customer_service_emails.save()
                 marketing_emails, marketing_created = Configuration.objects.get_or_create(key="marketing_emails")
                 if marketing_created:
-                    marketing_emails.name= "Marketing Emails"
+                    marketing_emails.name = "Marketing Emails"
                     marketing_emails.value = "pr@lincocare.com"
                     marketing_emails.save()
-                
+
                 if subject in REASON_CHOICES[:3]:
                     send_mail(subject, message, email_from, marketing_emails.value.split(','),)
                 else:
@@ -112,7 +116,6 @@ class InstagramFeed(APIView):
         return image, webp
 
 
-
 class ConfigurationView(viewsets.ReadOnlyModelViewSet):
     queryset = Configuration.objects.all()
     serializer_class = ConfigurationSerializer
@@ -121,8 +124,10 @@ class ConfigurationView(viewsets.ReadOnlyModelViewSet):
 # class HomePageView(viewsets.ReadOnlyModelViewSet):
 #     serializer_class=HomePageSerializer
 
+
 class Search(generics.ListAPIView):
     serializer_class = ProductSerializer
+
     def get_queryset(self):
         queryset = []
         query = self.request.query_params.get('q', None)

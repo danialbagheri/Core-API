@@ -4,10 +4,11 @@ from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
 from faq.serializers import FaqSerializer
-from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem
+from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Tag, Collection, CollectionItem, \
+    ReviewQuestion, ProductType
 from product.utils import get_ml_number
 from review.models import Review
-from review.serializers import ReviewSerializer
+from review.api.serializers import ReviewSerializer
 
 RESIZE_W = 100
 RESIZE_H = 100
@@ -94,6 +95,25 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         return '%.2f' % (100 * (variant.price / ml_number))
 
 
+class ProductReviewQuestionSerializer(serializers.ModelSerializer):
+    answer_choices = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = ReviewQuestion
+        fields = (
+            'id',
+            'text',
+            'is_multiple_choice_question',
+            'answer_choices',
+        )
+        read_only_fields = (
+            'id',
+            'text',
+            'is_multiple_choice_question',
+            'answer_choices',
+        )
+
+
 class ProductSerializer(serializers.ModelSerializer):
     main_image_resized = serializers.SerializerMethodField()
     main_image_webp = serializers.SerializerMethodField()
@@ -101,6 +121,7 @@ class ProductSerializer(serializers.ModelSerializer):
     main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs')
+    types = serializers.SerializerMethodField()
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
     collection_names = serializers.SerializerMethodField()
@@ -162,6 +183,10 @@ class ProductSerializer(serializers.ModelSerializer):
             item=product,
         ).values_list('collection_name__name', flat=True)
 
+    @staticmethod
+    def get_types(product: Product):
+        return list(product.types.all().values_list('name', flat=True))
+
 
 class RelatedProducts(serializers.ModelSerializer):
     class Meta:
@@ -176,6 +201,7 @@ class SingleProductSerializer(ProductSerializer):
     """
     reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
+    questions = ProductReviewQuestionSerializer(many=True, read_only=True)
     # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
     # related_products = serializers.ReadOnlyField()
 
@@ -277,3 +303,16 @@ class CollectionSerializer(serializers.ModelSerializer):
             height = f"x{resize_h}"
         if obj.image:
             return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
+
+
+class ProductTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductType
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = (
+            'id',
+            'name',
+        )

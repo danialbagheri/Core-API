@@ -1,9 +1,10 @@
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag
 from .serializers import (
     ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer,
-    CollectionSerializer
+    CollectionSerializer, ProductTypeSerializer
 )
 
 
@@ -87,3 +88,9 @@ class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
                 return ProductImage.IMAGE_TYPE[count][0]
             count += 1
         return
+
+
+class ProductTypeListAPIView(ListAPIView):
+    serializer_class = ProductTypeSerializer
+    queryset = ProductType.objects.all()
+    pagination_class = None
