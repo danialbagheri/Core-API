@@ -6,7 +6,7 @@ def get_slug():
     return slug_instance
 
 
-def icons_directory_path(filename):
+def icons_directory_path(instance, filename):
     # file will upload to media root "product_images/bandName/product_code/Image_type/fileName"
     return "tags-icon/{0}".format(filename)
 
