@@ -11,3 +11,4 @@ class CollectionItemAdmin(OrderedModelAdmin):
         'collection_name',
         'move_up_down_links',
     )
+    save_as = True

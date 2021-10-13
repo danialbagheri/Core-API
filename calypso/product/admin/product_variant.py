@@ -13,3 +13,4 @@ class ProductVariantAdmin(admin.ModelAdmin):
         "size",
     ]
     search_fields = ('sku', )
+    save_as = True

@@ -10,3 +10,4 @@ class StockistAdmin(admin.ModelAdmin):
         'name',
         'logo',
     )
+    save_as = True

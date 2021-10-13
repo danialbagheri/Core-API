@@ -19,3 +19,4 @@ class ProductAdmin(SummernoteModelAdmin):
     ]
     search_fields = ['name']
     inlines = (ReviewQuestionInlineAdmin,)
+    save_as = True
