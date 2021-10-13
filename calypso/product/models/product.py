@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Min
 from django.utils.translation import gettext as _
 
 from product.models import Tag, Keyword, ProductType
@@ -74,14 +74,10 @@ class Product(models.Model):
 
     @property
     def lowest_variant_price(self):
-        list_of_prices = []
-        for variant in self.variants.all():
-            list_of_prices.append(variant.price)
-        try:
-            lowest_price = min(("%.2f" % sub) for sub in list_of_prices)
-        except:
-            lowest_price = None
-        return lowest_price
+        lowest_price = self.variants.all().aggregate(
+            min_price=Min('price'),
+        ).get('min_price', None)
+        return '%.2f' % lowest_price
 
     @property
     def main_image(self):
