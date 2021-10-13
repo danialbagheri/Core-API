@@ -24,6 +24,7 @@ def extract_number(number_str):
 
 
 def get_ml_number(ml_string):
+    litre_const = 1
     quantity_number = 1
     ml_string = ml_string.lower()
     if 'x' in ml_string.lower():
@@ -32,5 +33,8 @@ def get_ml_number(ml_string):
         quantity_number = extract_number(quantity_number)
         ml_string = ml_string[index:]
 
+    if 'litre' in ml_string or ('ml' not in ml_string and 'l' in ml_string):
+        litre_const = 1000
     ml_number = extract_number(ml_string)
-    return ml_number * quantity_number
+
+    return ml_number * quantity_number * litre_const
