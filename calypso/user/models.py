@@ -3,6 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
 
+from blog.models import BlogPost
+from product.models import Product
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -39,12 +42,29 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    username = None
-    email = models.EmailField(_('email_address'), unique=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-    # mobile_number
+
+    username = None
+
+    email = models.EmailField(
+        unique=True,
+        verbose_name=_('email_address'),
+    )
+
+    date_joined = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    favorite_products = models.ManyToManyField(
+        to=Product,
+        blank=True,
+    )
+
+    bookmarked_blogposts = models.ManyToManyField(
+        to=BlogPost,
+        blank=True,
+    )
 
     objects = UserManager()
 
