@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'dashboard',
     'django.contrib.sitemaps',
     'rest_framework',
+    'djoser',
     'drf_recaptcha',
     'ordered_model',
     'sorl.thumbnail',
