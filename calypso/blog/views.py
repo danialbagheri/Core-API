@@ -11,6 +11,7 @@ from .serializers import BlogPostSerializer, BlogCollectionSerializer
 
 
 class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = (JWTAuthentication,)
     serializer_class = BlogPostSerializer
     lookup_field = "slug"
 
