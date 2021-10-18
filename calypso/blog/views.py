@@ -1,10 +1,14 @@
-from django.shortcuts import render
-from .models import BlogPost, BlogCollection
 from django.db.models import Q
-from .serializers import BlogPostSerializer, BlogCollectionSerializer
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from product.models import Tag
-# Create your views here.
+from .models import BlogPost, BlogCollection
+from .serializers import BlogPostSerializer, BlogCollectionSerializer
+
+
 class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BlogPostSerializer
     lookup_field = "slug"
@@ -24,8 +28,16 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-
 class CollectionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BlogCollection.objects.all()
     serializer_class = BlogCollectionSerializer
-    lookup_field="slug"
+    lookup_field = "slug"
+
+
+class BookmarkedBlogPostAPIView(ListAPIView):
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = BlogPostSerializer
+
+    def get_queryset(self):
+        return self.request.user.bookmarked_blogposts.all()
