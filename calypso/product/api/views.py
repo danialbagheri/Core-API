@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag
 from .serializers import (
@@ -94,3 +96,12 @@ class ProductTypeListAPIView(ListAPIView):
     serializer_class = ProductTypeSerializer
     queryset = ProductType.objects.all()
     pagination_class = None
+
+
+class FavoriteProductListAPIView(ListAPIView):
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return self.request.user.favorite_products.all()
