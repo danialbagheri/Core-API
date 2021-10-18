@@ -45,4 +45,5 @@ urlpatterns = [
     path('', include(product_routers.urls)),
     path('types/', views.ProductTypeListAPIView.as_view(), name='product-types'),
     path('favorites/', views.FavoriteProductListAPIView.as_view(), name='user-favorites'),
+    path('favorites/<slug:slug>/', views.FavoriteProductUpdateAPIView.as_view(), name='set-favorite'),
 ]
