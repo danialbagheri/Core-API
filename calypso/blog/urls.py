@@ -10,5 +10,6 @@ blog_router.register(r'collections', views.CollectionViewSet, basename="collecti
 
 urlpatterns = [
     path('', include(blog_router.urls)),
-    path('bookmarks/', views.BookmarkedBlogPostAPIView.as_view(), name='user-bookmarks')
+    path('bookmarks/', views.BookmarkedBlogPostAPIView.as_view(), name='user-bookmarks'),
+    path('bookmarks/<slug:slug>/', views.UpdateBookmarkAPIView.as_view(), name='set-bookmark'),
 ]
