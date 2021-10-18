@@ -16,7 +16,7 @@ class OrderAPIView(APIView):
         email = self.request.user.email
         cursor_filter = f'after: "{cursor}"' if cursor else ''
         return '''
-        {
+{
   orders(
     first: 10
     query: "email:%s"

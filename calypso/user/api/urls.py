@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.UserCreateAPIView.as_view(), name='user-create'),
     path('', include('djoser.urls')),
     path('orders', views.OrderAPIView.as_view(), name='user-orders'),
+    path('addresses', views.AddressAPIView.as_view(), name='user-addresses'),
 ]
