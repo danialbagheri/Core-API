@@ -27,7 +27,39 @@ class OrderAPIView(APIView):
     edges {
       node {
         createdAt
+        refundable
+        displayFinancialStatus
         totalPriceSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        totalShippingPriceSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        totalTaxSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        totalDiscountsSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        totalRefundedSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        totalRefundedShippingSet {
           shopMoney {
             amount
             currencyCode
@@ -44,6 +76,12 @@ class OrderAPIView(APIView):
               name
               title
               quantity
+              discountedTotalSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
             }
           }
         }
@@ -59,7 +97,13 @@ class OrderAPIView(APIView):
         ''' % (email, cursor_filter)
 
     @staticmethod
-    def _get_response_data(response):
+    def _extract_money_data(node, key):
+        return {
+            'amount': node[key]['shopMoney']['amount'],
+            'currency': node[key]['shopMoney']['currencyCode'],
+        }
+
+    def _get_response_data(self, response):
         data = {'orders': []}
         orders_list = response['edges']
         data['has_next_page'] = response['pageInfo']['hasNextPage']
@@ -68,8 +112,12 @@ class OrderAPIView(APIView):
             order_node = order['node']
             order_data = {
                 'created_at': order_node['createdAt'],
-                'price': order_node['totalPriceSet']['shopMoney']['amount'],
-                'currency': order_node['totalPriceSet']['shopMoney']['currencyCode'],
+                'total_price': self._extract_money_data(order_node, 'totalPriceSet'),
+                'total_shipping_price': self._extract_money_data(order_node, 'totalShippingPriceSet'),
+                'total_tax': self._extract_money_data(order_node, 'totalTaxSet'),
+                'total_discount': self._extract_money_data(order_node, 'totalDiscountsSet'),
+                'total_refunded': self._extract_money_data(order_node, 'totalRefundedSet'),
+                'total_refunded_shipping': self._extract_money_data(order_node, 'totalRefundedShippingSet'),
             }
             response_items = order_node['lineItems']['edges']
             items_data = []
@@ -82,6 +130,7 @@ class OrderAPIView(APIView):
                     'name': item_node['name'],
                     'title': item_node['title'],
                     'quantity': item_node['quantity'],
+                    'total_price': self._extract_money_data(item_node, 'discountedTotalSet')
                 }
                 items_data.append(item_data)
             order_data['items'] = items_data
@@ -94,7 +143,7 @@ class OrderAPIView(APIView):
         while True:
             query = self._get_orders_query(cursor)
             response = requests.post(
-                url='https://lincocare.myshopify.com/admin/api/2020-07/graphql.json',
+                url='https://lincocare.myshopify.com/admin/api/2021-10/graphql.json',
                 json={
                     'query': query,
                 },

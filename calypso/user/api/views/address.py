@@ -28,6 +28,10 @@ class AddressAPIView(APIView):
           formatted
         }
       }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
     }
   }
 }
@@ -36,6 +40,7 @@ class AddressAPIView(APIView):
     @staticmethod
     def _get_response_data(response):
         data = {'addresses': []}
+        addresses_set = set()
         customers_list = response['edges']
         data['has_next_page'] = response['pageInfo']['hasNextPage']
         data['cursor'] = customers_list[-1]['cursor'] if customers_list else None
@@ -43,7 +48,11 @@ class AddressAPIView(APIView):
             customer_node = customer['node']
             addresses = customer_node['addresses']
             for address in addresses:
-                data['addresses'].append({'address': address['formatted']})
+                address = address['formatted']
+                if str(address).lower() in addresses_set:
+                    continue
+                data['addresses'].append({'address': address})
+                addresses_set.add(str(address).lower())
         return data
 
     def get(self, *args, **kwargs):

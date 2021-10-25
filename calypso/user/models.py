@@ -43,13 +43,16 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [
+        'first_name',
+        'last_name',
+    ]
 
     username = None
 
     email = models.EmailField(
         unique=True,
-        verbose_name=_('email_address'),
+        verbose_name=_('email address'),
     )
 
     date_joined = models.DateTimeField(
