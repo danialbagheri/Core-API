@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
+    'rest_framework_simplejwt',
     'drf_recaptcha',
     'ordered_model',
     'sorl.thumbnail',
