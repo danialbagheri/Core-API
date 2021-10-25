@@ -178,6 +178,16 @@ REST_FRAMEWORK = {
     }
 }
 
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': 'https://calypsosun.com/password-reset/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'https://calypsosun.com/username-reset/{uid}/{token}',
+    'ACTIVATION_URL': 'https://calypsosun.com/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
