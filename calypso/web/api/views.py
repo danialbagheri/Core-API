@@ -132,7 +132,7 @@ class Search(generics.ListAPIView):
     @staticmethod
     def _update_search_query(query):
         with transaction.atomic():
-            search_query = SearchQuery.objects.get_or_create(text=query.lower())
+            search_query, _ = SearchQuery.objects.get_or_create(text=query.lower())
             search_query.count += 1
             search_query.save()
 
