@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from product.models import ProductVariant
+
 
 class OrderAPIView(APIView):
     authentication_classes = (JWTAuthentication,)
@@ -76,6 +78,7 @@ class OrderAPIView(APIView):
               name
               title
               quantity
+              sku
               discountedTotalSet {
                 shopMoney {
                   amount
@@ -112,6 +115,8 @@ class OrderAPIView(APIView):
             order_node = order['node']
             order_data = {
                 'created_at': order_node['createdAt'],
+                'refundable': order_node['refundable'],
+                'financial_status': order_node['displayFinancialStatus'],
                 'total_price': self._extract_money_data(order_node, 'totalPriceSet'),
                 'total_shipping_price': self._extract_money_data(order_node, 'totalShippingPriceSet'),
                 'total_tax': self._extract_money_data(order_node, 'totalTaxSet'),
@@ -123,6 +128,11 @@ class OrderAPIView(APIView):
             items_data = []
             for item in response_items:
                 item_node = item['node']
+                sku = item_node['sku']
+                variant = ProductVariant.objects.filter(sku=sku).first()
+                product = None
+                if variant:
+                    product = variant.product
                 image = item_node['image']
                 item_data = {
                     'image_original_source': image['originalSrc'] if image else None,
@@ -130,7 +140,9 @@ class OrderAPIView(APIView):
                     'name': item_node['name'],
                     'title': item_node['title'],
                     'quantity': item_node['quantity'],
-                    'total_price': self._extract_money_data(item_node, 'discountedTotalSet')
+                    'product-slug': product.slug if product else None,
+                    'sku': sku,
+                    'total_price': self._extract_money_data(item_node, 'discountedTotalSet'),
                 }
                 items_data.append(item_data)
             order_data['items'] = items_data
