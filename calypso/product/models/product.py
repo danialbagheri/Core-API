@@ -77,7 +77,7 @@ class Product(models.Model):
         lowest_price = self.variants.all().aggregate(
             min_price=Min('price'),
         ).get('min_price', None)
-        return '%.2f' % lowest_price
+        return '%.2f' % lowest_price if lowest_price else '0.00'
 
     @property
     def main_image(self):
