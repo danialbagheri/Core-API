@@ -87,6 +87,7 @@ class Configuration(models.Model):
 class SearchQuery(models.Model):
     text = models.CharField(
         max_length=256,
+        unique=True,
     )
 
     count = models.PositiveIntegerField(
