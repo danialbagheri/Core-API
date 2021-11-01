@@ -82,3 +82,13 @@ class Configuration(models.Model):
 
     def __str__(self):
         return "{} = {}".format(self.key, self.value)
+
+
+class SearchQuery(models.Model):
+    text = models.CharField(
+        max_length=256,
+    )
+
+    count = models.PositiveIntegerField(
+        default=0,
+    )
