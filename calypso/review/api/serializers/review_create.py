@@ -12,8 +12,8 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
-    image_ids = serializers.ListField(write_only=True)
-    answers = serializers.ListField(write_only=True)
+    image_ids = serializers.ListField(write_only=True, required=False)
+    answers = serializers.ListField(write_only=True, required=False)
     images = ReviewImageSerializer(many=True, read_only=True)
 
     class Meta:

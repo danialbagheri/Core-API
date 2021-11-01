@@ -64,7 +64,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-
+WEBSITE_ADDRESS = env('WEBSITE_ADDRESS')
 
 # Application definition
 
@@ -174,14 +174,14 @@ REST_FRAMEWORK = {
         'anon': '10000/day',
         'user': '1000000/day',
         # 'post_anon':'3/minute',
-        'put_anon':'2/minute',
+        'put_anon': '2/minute',
     }
 }
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': 'https://calypsosun.com/password-reset/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'https://calypsosun.com/username-reset/{uid}/{token}',
-    'ACTIVATION_URL': 'https://calypsosun.com/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/password-reset/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/username-reset/{uid}/{token}',
+    'ACTIVATION_URL': WEBSITE_ADDRESS + '/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
