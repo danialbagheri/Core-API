@@ -20,7 +20,7 @@ def check_locations(modeladmin, request, queryset):
         'sec-fetch-dest': 'document',
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
     }
-    for location in WhereToBuy.objects.filter(url__isnull=False).exclude(url='').all():
+    for location in queryset:
         kwargs = {}
         if location.stockist.name == 'Amazon':
             kwargs['headers'] = amazon_headers
@@ -36,4 +36,3 @@ def check_locations(modeladmin, request, queryset):
 
 
 check_locations.short_description = 'Check buying urls'
-check_locations.dependant_action = True
