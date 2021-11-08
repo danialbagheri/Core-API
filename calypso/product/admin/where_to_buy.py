@@ -80,6 +80,7 @@ class WhereToBuyAdmin(admin.ModelAdmin):
         to_create_data = []
         is_valid = True
         for row in locations_data.iter_rows(values_only=True):
+            count += 1
             if row[0] == 'variant':
                 continue
             sku = row[0].split(',')[0]
