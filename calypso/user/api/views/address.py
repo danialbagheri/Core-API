@@ -24,7 +24,20 @@ class AddressAPIView(APIView):
   ) {
     edges {
       node {
-        addresses(first: 10) {
+        addresses {
+          address1
+          address2
+          city
+          company
+          country
+          countryCodeV2
+          firstName
+          id
+          lastName
+          phone
+          province
+          provinceCode
+          zip
           formatted
         }
       }
@@ -48,11 +61,26 @@ class AddressAPIView(APIView):
             customer_node = customer['node']
             addresses = customer_node['addresses']
             for address in addresses:
-                address = address['formatted']
-                if str(address).lower() in addresses_set:
+                formatted = address['formatted']
+                if str(formatted).lower() in addresses_set:
                     continue
-                data['addresses'].append({'address': address})
-                addresses_set.add(str(address).lower())
+                data['addresses'].append({
+                    'id': address['id'],
+                    'address1': address['address1'],
+                    'address2': address['address2'],
+                    'city': address['city'],
+                    'company': address['company'],
+                    'country': address['country'],
+                    'country_code': address['countryCodeV2'],
+                    'first_name': address['firstName'],
+                    'last_name': address['lastName'],
+                    'phone': address['phone'],
+                    'province': address['province'],
+                    'province_code': address['provinceCode'],
+                    'zip': address['zip'],
+                    'formatted': formatted,
+                })
+                addresses_set.add(str(formatted).lower())
         return data
 
     def get(self, *args, **kwargs):
