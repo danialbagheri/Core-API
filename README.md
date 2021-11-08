@@ -24,4 +24,5 @@ All passwords are saved in environment.sh type files. It is not in the repositor
 
 - Install redis on server by following instructions of this link https://redis.io/topics/quickstart
 - Requirements file updated
+- Website address added to environment
 - New model SearchQuery added
