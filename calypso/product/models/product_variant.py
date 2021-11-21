@@ -39,6 +39,12 @@ class ProductVariant(models.Model):
         null=True,
     )
 
+    barcode = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+    )
+
     date_first_available = models.DateField(
         auto_now=False,
         auto_now_add=False,
@@ -143,6 +149,7 @@ class ProductVariant(models.Model):
             self.shopify_rest_variant_id = info['legacyResourceId']
             self.shopify_storefront_variant_id = info['storefrontId']
             self.inventory_quantity = info['inventoryQuantity']
+            self.barcode = info['barcode']
             presentment_prices = info['presentmentPrices']['edges']
             if not presentment_prices:
                 self.save()
