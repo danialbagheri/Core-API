@@ -6,6 +6,8 @@ from PIL import Image
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
 from sorl.thumbnail import get_thumbnail
 
@@ -14,6 +16,7 @@ from web.instagram import get_user_feed
 
 class InstagramFeed(APIView):
 
+    @method_decorator(cache_page(60 * 60))
     def get(self, request, *args, **kwargs):
         queryset = get_user_feed()
         feed = []
