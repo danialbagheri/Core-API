@@ -1,7 +1,8 @@
 from django.contrib import admin
+from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
+
 from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration, SearchQuery
-from ordered_model.admin import OrderedTabularInline, OrderedStackedInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
-# Register your models here.
+
 admin.site.site_header = 'Calypso'
 
 
