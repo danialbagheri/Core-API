@@ -1,7 +1,7 @@
 from django.contrib import admin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
 
-from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration, SearchQuery
+from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration, SearchQuery, ContactForm
 
 admin.site.site_header = 'Calypso'
 
@@ -39,6 +39,12 @@ class SearchQueryAdmin(admin.ModelAdmin):
     list_display = ('text', 'count')
     ordering = ('count',)
     search_fields = ('text',)
+
+
+@admin.register(ContactForm)
+class ContactFormAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email', 'reason', 'email_sent')
+    list_filter = ('email_sent',)
 
 
 admin.site.register(Slider, SliderAdmin)
