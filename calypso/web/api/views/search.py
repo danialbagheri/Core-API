@@ -18,14 +18,14 @@ class Search(generics.ListAPIView):
             search_query.save()
 
     @staticmethod
-    def _affect_query(queryset, query):
+    def _affect_query(query):
         tag = Tag.objects.filter(Q(name__icontains=query)).first()
         keyword = Keyword.objects.filter(Q(name__icontains=query)).first()
         if tag is not None:
-            return queryset.filter(Q(tags=tag))
+            return Q(tags=tag)
         elif keyword is not None:
-            return queryset.filter(Q(keyword=keyword))
-        return queryset.filter(
+            return Q(keyword=keyword)
+        return (
             Q(name__icontains=query) |
             Q(sub_title__icontains=query) |
             Q(variants__sku__icontains=query)
@@ -36,11 +36,12 @@ class Search(generics.ListAPIView):
         queryset = Product.objects.all()
         full_query = self.request.query_params.get('q', '')
         query_parts = full_query.split(' ')
+        db_query = Q()
         for query in query_parts:
             if query is not None and len(query) >= 2:
                 is_valid_query = True
                 self._update_search_query(query)
-                self._affect_query(queryset, query)
+                db_query |= self._affect_query(query)
         if not is_valid_query:
             return []
-        return queryset.distinct()
+        return queryset.filter(db_query).distinct()
