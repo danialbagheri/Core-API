@@ -1,8 +1,11 @@
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from ipware import get_client_ip
 from rest_framework import serializers
+
+from web.models import ContactForm, Configuration
 
 REASON_CHOICES = [
     'Urgent: Change Order detail or Address',
@@ -14,13 +17,19 @@ REASON_CHOICES = [
 ]
 
 
-class ContactFormSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    name = serializers.CharField(max_length=200)
-    address = serializers.CharField(max_length=200)
-    subject = serializers.CharField(max_length=200, required=False)
-    reason = serializers.ChoiceField(choices=REASON_CHOICES,)
-    message = serializers.CharField()
+class ContactFormSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContactForm
+        fields = (
+            'id',
+            'email',
+            'name',
+            'address',
+            'subject',
+            'reason',
+            'message',
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,8 +52,47 @@ class ContactFormSerializer(serializers.Serializer):
             raise ValidationError('Recaptcha validation failed.')
         return attrs
 
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
-
     def create(self, validated_data):
-        return super().create(validated_data)
+        contact_form = super().create(validated_data)
+        email_from = "admin@calypsosun.com"
+        message = f'''
+
+        From: {contact_form.email}
+        Address: {contact_form.address}
+        Subject: {contact_form.reason}
+
+        {contact_form.message}
+        ________
+        This email is sent via Calypsosun.com contact us page.
+
+                    '''
+
+        try:
+            reason_config = Configuration.objects.filter(key=contact_form.reason).first()
+            if reason_config:
+                send_mail(contact_form.reason, message, email_from, reason_config.value.split(','))
+                contact_form.email_sent = True
+                contact_form.save()
+                return contact_form
+            customer_service_emails, created = Configuration.objects.get_or_create(key='customer_service_emails')
+            if created:
+                customer_service_emails.name = "Customer Service emails"
+                customer_service_emails.value = "info@calypsosun.com"
+                customer_service_emails.save()
+            marketing_emails, marketing_created = Configuration.objects.get_or_create(key="marketing_emails")
+            if marketing_created:
+                marketing_emails.name = "Marketing Emails"
+                marketing_emails.value = "pr@lincocare.com"
+                marketing_emails.save()
+
+            if contact_form.reason in REASON_CHOICES[:3]:
+                send_mail(contact_form.reason, message, email_from, marketing_emails.value.split(','), )
+            else:
+                send_mail(
+                    contact_form.reason, message, email_from, customer_service_emails.value.split(',')
+                )
+            contact_form.email_sent = True
+            contact_form.save()
+        except:
+            pass
+        return contact_form

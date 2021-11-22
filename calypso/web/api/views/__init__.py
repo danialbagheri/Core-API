@@ -1,4 +1,4 @@
-from .contact_us import ContactForm
+from .contact_us import ContactFormAPIView
 from .slider import SliderViewSet
 from .instagram_feed import InstagramFeed
 from .configuration import ConfigurationView
