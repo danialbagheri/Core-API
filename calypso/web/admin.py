@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration
-from ordered_model.admin import OrderedTabularInline, OrderedStackedInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
-# Register your models here.
+from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin, OrderedModelAdmin
+
+from .models import Slide, Slider, SliderSlidesThroughModel, Setting, Configuration, SearchQuery, ContactForm
+
 admin.site.site_header = 'Calypso'
 
 
@@ -24,13 +25,27 @@ class SliderAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
 
 
 class SlideAdmin(OrderedModelAdmin):
-    list_display = ("name", 'active', 'custom_slide',
-                    'link', 'move_up_down_links')
-
+    list_display = (
+        'name', 'active', 'custom_slide', 'link', 'move_up_down_links',
+    )
 
 
 class ConfigurationAdmin(admin.ModelAdmin):
     list_display = ('name', 'key', 'value')
+
+
+@admin.register(SearchQuery)
+class SearchQueryAdmin(admin.ModelAdmin):
+    list_display = ('text', 'count')
+    ordering = ('count',)
+    search_fields = ('text',)
+
+
+@admin.register(ContactForm)
+class ContactFormAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email', 'reason', 'email_sent')
+    list_filter = ('email_sent',)
+
 
 admin.site.register(Slider, SliderAdmin)
 admin.site.register(Slide, SlideAdmin)

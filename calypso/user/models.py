@@ -2,8 +2,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils import timezone
-# Create your models here.
 
+from blog.models import BlogPost
+from product.models import Product
 
 
 class UserManager(BaseUserManager):
@@ -40,15 +41,33 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-
-
 class User(AbstractUser):
-    username = None
-    email = models.EmailField(_('email_address'), unique=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-    # mobile_number
+    REQUIRED_FIELDS = [
+        'first_name',
+        'last_name',
+    ]
+
+    username = None
+
+    email = models.EmailField(
+        unique=True,
+        verbose_name=_('email address'),
+    )
+
+    date_joined = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    favorite_products = models.ManyToManyField(
+        to=Product,
+        blank=True,
+    )
+
+    bookmarked_blogposts = models.ManyToManyField(
+        to=BlogPost,
+        blank=True,
+    )
 
     objects = UserManager()
 

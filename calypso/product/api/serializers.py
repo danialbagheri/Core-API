@@ -125,6 +125,7 @@ class ProductSerializer(serializers.ModelSerializer):
     total_review_count = serializers.SerializerMethodField()
     review_average_score = serializers.SerializerMethodField()
     collection_names = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -186,6 +187,12 @@ class ProductSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_types(product: Product):
         return list(product.types.all().values_list('name', flat=True))
+
+    def get_is_favorite(self, product: Product):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return user.favorite_products.all().filter(id=product.id).exists()
 
 
 class RelatedProducts(serializers.ModelSerializer):

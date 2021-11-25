@@ -28,20 +28,6 @@ class WhereToBuyAdmin(admin.ModelAdmin):
     list_filter = ('stockist',)
     actions = (check_locations,)
 
-    def changelist_view(self, request, extra_context=None):
-        try:
-            action = self.get_actions(request)[request.POST['action']][0]
-            is_dependant = action.dependant_action
-        except (KeyError, AttributeError):
-            is_dependant = False
-
-        if is_dependant:
-            post = request.POST.copy()
-            post.setlist(admin.helpers.ACTION_CHECKBOX_NAME, self.model.objects.values_list('id', flat=True))
-            request.POST = post
-
-        return admin.ModelAdmin.changelist_view(self, request, extra_context)
-
     def is_valid_data(self, variant, stockist, request, row_num):
         if variant and stockist:
             return True
@@ -94,6 +80,7 @@ class WhereToBuyAdmin(admin.ModelAdmin):
         to_create_data = []
         is_valid = True
         for row in locations_data.iter_rows(values_only=True):
+            count += 1
             if row[0] == 'variant':
                 continue
             sku = row[0].split(',')[0]

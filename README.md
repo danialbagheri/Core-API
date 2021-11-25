@@ -19,3 +19,10 @@ All passwords are saved in environment.sh type files. It is not in the repositor
 - Prettify the code editor in the front end for easier edit of the code
 - changed how name of product models to products and variants, a lot easier to read. variant option_name and option_value are also changed to one field called (variant) name.
 - product type filtering is now look ups the product within the category with less sensitivity with regards to the type name (\_\_icontains)
+
+### Beta 0.2
+
+- Install redis on server by following instructions of this link https://redis.io/topics/quickstart
+- Requirements file updated
+- Website address added to environment
+- New model SearchQuery added

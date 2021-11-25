@@ -64,7 +64,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-
+WEBSITE_ADDRESS = env('WEBSITE_ADDRESS')
 
 # Application definition
 
@@ -90,6 +90,8 @@ INSTALLED_APPS = [
     'dashboard',
     'django.contrib.sitemaps',
     'rest_framework',
+    'djoser',
+    'rest_framework_simplejwt',
     'drf_recaptcha',
     'ordered_model',
     'sorl.thumbnail',
@@ -98,7 +100,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,7 +109,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'calypso.urls'
@@ -172,8 +172,18 @@ REST_FRAMEWORK = {
         'anon': '10000/day',
         'user': '1000000/day',
         # 'post_anon':'3/minute',
-        'put_anon':'2/minute',
+        'put_anon': '2/minute',
     }
+}
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/password-reset/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/username-reset/{uid}/{token}',
+    'ACTIVATION_URL': WEBSITE_ADDRESS + '/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
 }
 
 # Internationalization
@@ -201,12 +211,16 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
-#MEDIA_ROO#T = os.path.join(BASE_DIR, 'media')
+
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
     }
 }
 GRAPESJS_SAVE_CSS = True

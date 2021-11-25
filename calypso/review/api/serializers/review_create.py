@@ -58,6 +58,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             )
 
     def create(self, validated_data):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            validated_data['user'] = user
         image_ids = validated_data.pop('image_ids', [])
         answers = validated_data.pop('answers', [])
         request = self.context['request']

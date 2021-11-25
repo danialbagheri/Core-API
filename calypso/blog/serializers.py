@@ -9,6 +9,8 @@ class BlogPostSerializer(serializers.ModelSerializer):
     resized = serializers.SerializerMethodField()
     read_time = serializers.ReadOnlyField()
     related_products = ProductSerializer(many=True)
+    is_bookmarked = serializers.SerializerMethodField()
+
     def get_resized(self, obj):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w',None)
@@ -24,11 +26,17 @@ class BlogPostSerializer(serializers.ModelSerializer):
             height = f"x{resize_h}"
         if obj.image:
             return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+
     class Meta:
         model = BlogPost
         fields = '__all__'
-        # exclude = ('related_products',)
         depth = 2
+
+    def get_is_bookmarked(self, blog_post: BlogPost):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return user.bookmarked_blogposts.all().filter(id=blog_post.id).exists()
 
 
 class CollectionItemSerializer(serializers.ModelSerializer):
