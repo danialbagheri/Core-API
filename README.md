@@ -26,3 +26,8 @@ All passwords are saved in environment.sh type files. It is not in the repositor
 - Requirements file updated
 - Website address added to environment
 - New model SearchQuery added
+
+### Beta 0.3
+
+- Add initial access token, and its timestamp as a Configuration
+- The package Beautiful Soup 4 is added to the requirements
