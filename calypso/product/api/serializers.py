@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.contrib.sites.models import Site
 from django.db.models import Avg, Count
 from rest_framework import serializers
@@ -126,6 +127,7 @@ class ProductSerializer(serializers.ModelSerializer):
     review_average_score = serializers.SerializerMethodField()
     collection_names = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
+    plain_description = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -193,6 +195,11 @@ class ProductSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return False
         return user.favorite_products.all().filter(id=product.id).exists()
+
+    @staticmethod
+    def get_plain_description(product: Product):
+        soup = BeautifulSoup(product.description)
+        return soup.text
 
 
 class RelatedProducts(serializers.ModelSerializer):
