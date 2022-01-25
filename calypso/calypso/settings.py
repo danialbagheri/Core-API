@@ -321,3 +321,5 @@ SUMMERNOTE_CONFIG = {
         os.path.join(STATIC_URL, '/static/summernote/summernote-cleaner.js'),
     ),
 }
+
+CELERY_BROKER_URL = 'amqp://localhost'
