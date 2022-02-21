@@ -72,25 +72,28 @@ class ContactFormSerializer(serializers.ModelSerializer):
             if reason_config:
                 send_mail(contact_form.reason, message, email_from, reason_config.value.split(','))
                 contact_form.email_sent = True
+                contact_form.receivers_email = reason_config.value
                 contact_form.save()
                 return contact_form
             customer_service_emails, created = Configuration.objects.get_or_create(key='customer_service_emails')
             if created:
-                customer_service_emails.name = "Customer Service emails"
-                customer_service_emails.value = "info@calypsosun.com"
+                customer_service_emails.name = 'Customer Service emails'
+                customer_service_emails.value = 'info@calypsosun.com'
                 customer_service_emails.save()
-            marketing_emails, marketing_created = Configuration.objects.get_or_create(key="marketing_emails")
+            marketing_emails, marketing_created = Configuration.objects.get_or_create(key='marketing_emails')
             if marketing_created:
-                marketing_emails.name = "Marketing Emails"
-                marketing_emails.value = "pr@lincocare.com"
+                marketing_emails.name = 'Marketing Emails'
+                marketing_emails.value = 'pr@lincocare.com'
                 marketing_emails.save()
 
             if contact_form.reason in REASON_CHOICES[:3]:
                 send_mail(contact_form.reason, message, email_from, marketing_emails.value.split(','), )
+                contact_form.receivers_email = marketing_emails.value
             else:
                 send_mail(
                     contact_form.reason, message, email_from, customer_service_emails.value.split(',')
                 )
+                contact_form.receivers_email = customer_service_emails.value
             contact_form.email_sent = True
             contact_form.save()
         except:
