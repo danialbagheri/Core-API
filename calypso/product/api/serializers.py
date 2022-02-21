@@ -86,7 +86,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = '__all__'
-        lookup_field = "sku"
+        lookup_field = 'sku'
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
 
     def get_price_per_100ml(self, variant: ProductVariant):
@@ -132,12 +132,12 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-        lookup_field = "slug"
+        lookup_field = 'slug'
         depth = 3
         extra__kwargs = {'url': {'lookup_field': 'slug'}}
 
     def get_main_image_resized(self, obj):
-        request = self.context.get("request")
+        request = self.context.get('request')
         resize_w, resize_h = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
@@ -218,6 +218,7 @@ class SingleProductSerializer(ProductSerializer):
     questions = ProductReviewQuestionSerializer(many=True, read_only=True)
     # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
     # related_products = serializers.ReadOnlyField()
+    score_chart = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -229,33 +230,48 @@ class SingleProductSerializer(ProductSerializer):
     def get_related_products(self, obj):
         # related_products_filter = Product.objects.filter(
         #     tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
-        related_products_filter = Product.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id).\
-            annotate(num_common_tags=Count('pk')).order_by(
-                '-num_common_tags')[:5]
+        related_products_filter = Product.objects.filter(
+            tags__in=obj.tags.all(),
+        ).exclude(id=obj.id).annotate(
+            num_common_tags=Count('pk'),
+        ).order_by('-num_common_tags')[:5]
         # related_products_fields = related_products_filter.values('name', 'slug', 'sub_title')
         related_products = []
         for product in related_products_filter:
             # import pdb
             # pdb.set_trace()
             related_products.append({
-                "name": product.name,
-                "slug": product.slug,
-                "sub_title": product.sub_title,
-                "main_image": product.main_image,
+                'name': product.name,
+                'slug': product.slug,
+                'sub_title': product.sub_title,
+                'main_image': product.main_image,
                 # "main_image": ProductImageSerializer(product.main_image_object),
-                "img_height": f"{product.main_image_object.height if product.main_image_object else 0}",
-                "img_width": f"{product.main_image_object.width if product.main_image_object else 0}",
-                "total_review_count": product.get_total_review_count,
-                "review_average_score": product.get_review_average_score,
-                "starting_price": product.lowest_variant_price
+                'img_height': f"{product.main_image_object.height if product.main_image_object else 0}",
+                'img_width': f"{product.main_image_object.width if product.main_image_object else 0}",
+                'total_review_count': product.get_total_review_count,
+                'review_average_score': product.get_review_average_score,
+                'starting_price': product.lowest_variant_price,
+                'variants': ProductVariantSerializer(instance=product.variants.all(), many=True).data,
             })
         return related_products
 
-    def get_reviews(self, obj):
-        review_instance = Review.objects.filter(product=obj, approved=True)
+    @staticmethod
+    def get_reviews(product):
+        review_instance = Review.objects.filter(product=product, approved=True)
         serializer = ReviewSerializer(
             many=True, read_only=True, instance=review_instance)
         return serializer.data
+
+    @staticmethod
+    def get_score_chart(product: Product):
+        score_chart = {i: 0 for i in range(1, 6)}
+        scores_data = Review.objects.filter(
+            product=product,
+            approved=True,
+        ).values('score').annotate(score_count=Count('id'))
+        for score_data in scores_data:
+            score_chart[score_data['score']] = score_data['score_count']
+        return score_chart
 
 
 class CollectionItemSerializer(serializers.ModelSerializer):

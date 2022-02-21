@@ -14,7 +14,7 @@ from .serializers import (
 class VariantViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductVariant.objects.all()
     serializer_class = ProductVariantSerializer
-    lookup_field = "sku"
+    lookup_field = 'sku'
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):

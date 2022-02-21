@@ -2,15 +2,6 @@ from django.db import models
 
 
 class ContactForm(models.Model):
-    REASON_CHOICES = (
-        ('Urgent: Change Order detail or Address', 'Urgent: Change Order detail or Address'),
-        ('Question about order or Delivery', 'Question about order or Delivery'),
-        ('Press Contact & Media', 'Press Contact & Media'),
-        ('Wholesale, Discount, promo code query', 'Wholesale, Discount, promo code query'),
-        ('Product Question', 'Product Question'),
-        ('Other', 'Other'),
-    )
-
     email = models.EmailField(
         max_length=256,
     )
@@ -32,7 +23,6 @@ class ContactForm(models.Model):
 
     reason = models.CharField(
         max_length=256,
-        choices=REASON_CHOICES,
     )
 
     message = models.TextField(
@@ -41,4 +31,15 @@ class ContactForm(models.Model):
 
     email_sent = models.BooleanField(
         default=False,
+    )
+
+    sent_date = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        null=True,
+    )
+
+    receivers_email = models.CharField(
+        max_length=512,
+        blank=True,
     )
