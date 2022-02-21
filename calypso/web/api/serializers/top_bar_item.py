@@ -21,5 +21,6 @@ class TopBarItemSerializer(serializers.ModelSerializer):
             'id',
             'text',
             'icon',
+            'url',
             'position',
         )

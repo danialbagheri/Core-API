@@ -21,6 +21,11 @@ class TopBarItem(models.Model):
         null=True,
     )
 
+    url = models.URLField(
+        max_length=256,
+        blank=True,
+    )
+
     is_active = models.BooleanField()
 
     position = models.IntegerField()
