@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from . import views
 
-app_name = "web_api"
+app_name = 'web_api'
 
 
 web_routers = routers.DefaultRouter()
@@ -20,4 +20,5 @@ urlpatterns = [
     path('slider/', views.SliderViewSet.as_view({'get': 'list'}), name='sliders'),
     path('instagram-feed/', views.InstagramFeed.as_view(), name='instagram'),
     path('search/', views.Search.as_view(), name='search'),
+    path('top-bars/', views.TopBarListAPIView.as_view(), name='top-bars-list'),
 ]

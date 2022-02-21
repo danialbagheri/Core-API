@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
+from web.api.serializers.top_bar_item import TopBarItemSerializer
 from web.models import TopBar
-from web.serializers.top_bar_item import TopBarItemSerializer
 
 
 class TopBarListSerializer(serializers.ListSerializer):

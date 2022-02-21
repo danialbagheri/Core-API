@@ -9,7 +9,6 @@ app_name = 'web'
 
 urlpatterns = [
     path('', views.HomePage.as_view(), name='home'),
-    path('top-bars/', views.TopBarListAPIView.as_view(), name='top-bars-list'),
     url('login/',
         auth_views.LoginView.as_view(
             template_name='account/login.html',

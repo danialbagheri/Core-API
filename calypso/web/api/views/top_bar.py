@@ -2,7 +2,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 
 from web.models import TopBar
-from web.serializers import TopBarSerializer
+from ..serializers import TopBarSerializer
 
 
 class TopBarListAPIView(ListAPIView):
