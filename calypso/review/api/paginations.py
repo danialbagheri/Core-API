@@ -17,7 +17,7 @@ class ReviewPagination(pagination.PageNumberPagination):
         for score_data in scores_data:
             self.total_review_count += score_data['score_count']
             self.review_average_score += score_data['score'] * score_data['score_count']
-            self.reviews_score_chart[score_data['score']] = score_data['score_count']
+            self.reviews_score_chart[score_data['score']] += score_data['score_count']
         self.review_average_score = (
             self.review_average_score / self.total_review_count if self.total_review_count else 0
         )
