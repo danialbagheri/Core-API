@@ -33,6 +33,12 @@ class ProductVariant(models.Model):
         null=True,
     )
 
+    graphql_id = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+    )
+
     shopify_storefront_variant_id = models.CharField(
         max_length=355,
         blank=True,

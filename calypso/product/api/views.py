@@ -2,13 +2,16 @@ from rest_framework import viewsets, status
 from rest_framework.generics import ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from calypso.common.permissions import WebhookPermission
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag
 from .serializers import (
     ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer,
     CollectionSerializer, ProductTypeSerializer
 )
+from ..tasks import ProductEditTask
 
 
 class VariantViewSet(viewsets.ReadOnlyModelViewSet):
@@ -28,7 +31,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'slug'
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(is_public=True)
         product_type = self.request.query_params.get('type', None)
         count = self.request.query_params.get('count', None)
         top_seller = self.request.query_params.get('top', None)
@@ -51,7 +54,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 
 class SingleProductViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = (JWTAuthentication,)
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_public=True)
     serializer_class = SingleProductSerializer
     lookup_field = "slug"
 
@@ -106,13 +109,13 @@ class FavoriteProductListAPIView(ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        return self.request.user.favorite_products.all()
+        return self.request.user.favorite_products.filter(is_public=True)
 
 
 class FavoriteProductUpdateAPIView(UpdateAPIView):
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_public=True)
     lookup_field = 'slug'
 
     def patch(self, request, *args, **kwargs):
@@ -132,3 +135,12 @@ class FavoriteProductUpdateAPIView(UpdateAPIView):
             data='Action done successfully',
             status=status.HTTP_200_OK,
         )
+
+
+class ProductEditWebhookAPI(APIView):
+    permission_classes = (WebhookPermission,)
+    http_method_names = ('post',)
+
+    def post(self, request, *args, **kwargs):
+        ProductEditTask().delay(request.data)
+        return Response(data={}, status=status.HTTP_200_OK)

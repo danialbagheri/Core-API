@@ -259,8 +259,9 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
-        'fontNames': ['proxima-nova','Courier New', 'Roboto','proxima-nova','sans-serif'],
-        'spellCheck':True,
+        'fontNames': ['proxima-nova', 'Courier New', 'Roboto', 'sans-serif'],
+        'fontNamesIgnoreCheck': ['proxima-nova'],
+        'spellCheck': True,
         'width': '100%',
         'height': '400px',
         'prettifyHtml': True,

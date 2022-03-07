@@ -11,6 +11,17 @@ class Product(models.Model):
         verbose_name=_('name'),
     )
 
+    legacy_id = models.BigIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    graphql_id = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+    )
+
     sub_title = models.CharField(
         max_length=300,
         verbose_name=_('sub title'),
@@ -49,7 +60,7 @@ class Product(models.Model):
         blank=True,
     )
 
-    top_seller = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
 
