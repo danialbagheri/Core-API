@@ -14,6 +14,8 @@ PRODUCT_RETRIEVE_QUERY = '''
     id
     legacyResourceId
     handle
+    title
+    description
     variants(first: 10) {
       edges {
         node{
@@ -96,6 +98,8 @@ class ProductEditTask(Task):
             defaults={
                 'legacy_id': data['legacyResourceId'],
                 'slug': data['handle'],
+                'name': data['title'],
+                'description': data['description'],
             }
         )
         self.update_variants(product, data['variants'])
