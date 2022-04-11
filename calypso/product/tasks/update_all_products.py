@@ -47,7 +47,7 @@ class UpdateAllProductsTask(Task):
             data = variant_data['node']
             variant = ProductVariant.objects.filter(shopify_rest_variant_id=data['legacyResourceId']).first()
             if not variant:
-                ProductEditTask().run(data['product']['legacyResourceId'])
+                ProductEditTask().run(data['product']['id'])
                 continue
             variant.graphql_id = data['id']
             variant.save()

@@ -14,10 +14,11 @@ class ReviewQuestionInlineAdmin(admin.StackedInline):
 class ProductAdmin(ExportableAdminMixin,
                    SummernoteModelAdmin):
     summernote_fields = '__all__'
-    list_filter = ('types',)
+    list_filter = ('types', 'is_public')
     list_display = [
         'name',
         'slug',
+        'is_public',
     ]
     filter_vertical = ('keyword', 'tags', 'types')
     search_fields = ['name']
