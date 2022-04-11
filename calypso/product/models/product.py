@@ -11,6 +11,17 @@ class Product(models.Model):
         verbose_name=_('name'),
     )
 
+    legacy_id = models.BigIntegerField(
+        blank=True,
+        null=True,
+    )
+
+    graphql_id = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+    )
+
     sub_title = models.CharField(
         max_length=300,
         verbose_name=_('sub title'),
@@ -49,7 +60,7 @@ class Product(models.Model):
         blank=True,
     )
 
-    top_seller = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
 
@@ -102,6 +113,28 @@ class Product(models.Model):
         if average_score is not None:
             return f"{average_score:.1f}"
         return 0
+
+    @property
+    def variant_sku_list(self):
+        variants = self.variants.filter(is_public=True)
+        sku_list = [variant.sku for variant in variants]
+        sku_list_str = '/'.join(sku_list)
+        return sku_list_str
+
+    @property
+    def keywords_str(self):
+        keywords = [keyword.name for keyword in self.keyword.all()]
+        return '/'.join(keywords) if keywords else '-'
+
+    @property
+    def tags_str(self):
+        tags = [tag.name for tag in self.tags.all()]
+        return '/'.join(tags) if tags else '-'
+
+    @property
+    def types_str(self):
+        types = [product_type.name for product_type in self.types.all()]
+        return '/'.join(types) if types else '-'
 
     def __str__(self):
         return self.name

@@ -10,6 +10,7 @@ from product.models import ProductVariant, Product, ProductImage, WhereToBuy, Ta
 from product.utils import get_ml_number
 from review.models import Review
 from review.api.serializers import ReviewSerializer
+from web.api.serializers import InstagramSerializer
 
 RESIZE_W = 100
 RESIZE_H = 100
@@ -76,16 +77,28 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProductVariantListSerializer(serializers.ListSerializer):
+
+    def update(self, instance, validated_data):
+        pass
+
+    def to_representation(self, data):
+        data = data.filter(is_public=True)
+        return super().to_representation(data)
+
+
 class ProductVariantSerializer(serializers.ModelSerializer):
     image_list = ProductImageSerializer(
         many=True, read_only=True, source='variant_images')
     where_to_buy = WhereToBuySerializer(
         many=True, read_only=True, source='wheretobuy')
     price_per_100ml = serializers.SerializerMethodField()
+    instagram_posts = InstagramSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductVariant
         fields = '__all__'
+        list_serializer_class = ProductVariantListSerializer
         lookup_field = 'sku'
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
 
@@ -198,6 +211,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_plain_description(product: Product):
+        if not product.description:
+            return ''
         soup = BeautifulSoup(product.description)
         return soup.text
 

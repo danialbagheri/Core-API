@@ -1,0 +1,1 @@
+from .update_instagram_posts import UpdateInstagramPostsTask
