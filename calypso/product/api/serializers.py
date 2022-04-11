@@ -77,6 +77,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProductVariantListSerializer(serializers.ListSerializer):
+
+    def update(self, instance, validated_data):
+        pass
+
+    def to_representation(self, data):
+        data = data.filter(is_public=True)
+        return super().to_representation(data)
+
+
 class ProductVariantSerializer(serializers.ModelSerializer):
     image_list = ProductImageSerializer(
         many=True, read_only=True, source='variant_images')
@@ -88,6 +98,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = '__all__'
+        list_serializer_class = ProductVariantListSerializer
         lookup_field = 'sku'
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
 

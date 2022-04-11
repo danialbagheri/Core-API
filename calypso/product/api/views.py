@@ -26,7 +26,6 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
@@ -34,7 +33,6 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Product.objects.filter(is_public=True)
         product_type = self.request.query_params.get('type', None)
         count = self.request.query_params.get('count', None)
-        top_seller = self.request.query_params.get('top', None)
 
         # image_width = self.request.query_params.get('image_width', None)
         if product_type is not None:
@@ -44,8 +42,6 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(types=product_type_instance)
             except:
                 pass
-        if top_seller and top_seller.lower() == "yes":
-            queryset = queryset.filter(top_seller=True)
         # slide should happen after filtering
         if count:
             queryset = queryset[: int(count)]
