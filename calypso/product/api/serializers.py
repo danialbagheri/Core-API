@@ -200,6 +200,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_plain_description(product: Product):
+        if not product.description:
+            return ''
         soup = BeautifulSoup(product.description)
         return soup.text
 
