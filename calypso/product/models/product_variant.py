@@ -116,6 +116,10 @@ class ProductVariant(models.Model):
         null=True,
     )
 
+    is_public = models.BooleanField(
+        default=False,
+    )
+
     @property
     def image_list(self):
         image_list = []
