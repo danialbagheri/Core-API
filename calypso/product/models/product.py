@@ -116,26 +116,25 @@ class Product(models.Model):
 
     @property
     def variant_sku_list(self):
-        from product.models import ProductVariant
-        variants = ProductVariant.objects.filter(is_public=True)
+        variants = self.variants.filter(is_public=True)
         sku_list = [variant.sku for variant in variants]
-        sku_list_str = ', '.join(sku_list)
+        sku_list_str = '/'.join(sku_list)
         return sku_list_str
 
     @property
     def keywords_str(self):
         keywords = [keyword.name for keyword in self.keyword.all()]
-        return ', '.join(keywords) if keywords else '-'
+        return '/'.join(keywords) if keywords else '-'
 
     @property
     def tags_str(self):
         tags = [tag.name for tag in self.tags.all()]
-        return ', '.join(tags) if tags else '-'
+        return '/'.join(tags) if tags else '-'
 
     @property
     def types_str(self):
         types = [product_type.name for product_type in self.types.all()]
-        return ', '.join(types) if types else '-'
+        return '/'.join(types) if types else '-'
 
     def __str__(self):
         return self.name
