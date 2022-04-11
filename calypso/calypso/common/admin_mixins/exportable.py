@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 class ExportableAdminMixin:
     export_exclude = ()
+    export_fields = ()
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -15,7 +16,7 @@ class ExportableAdminMixin:
 
     def export_as_csv(self, request, queryset):
         queryset = self.get_queryset(request)
-        list_fields = self.get_list_display(request)
+        list_fields = self.export_fields or self.get_list_display(request)
         list_fields = [field for field in list_fields if field not in self.export_exclude]
 
         now = datetime.now().date()

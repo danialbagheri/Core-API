@@ -20,6 +20,10 @@ class ProductAdmin(ExportableAdminMixin,
         'slug',
         'is_public',
     ]
+    export_fields = (
+        'slug', 'name',  'sub_title', 'description', 'direction_of_use', 'variant_sku_list', 'lowest_variant_price',
+        'get_total_review_count', 'get_review_average_score', 'keywords_str', 'tags_str', 'types_str',
+    )
     filter_vertical = ('keyword', 'tags', 'types')
     search_fields = ['name']
     inlines = (ReviewQuestionInlineAdmin,)
