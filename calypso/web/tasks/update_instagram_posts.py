@@ -10,8 +10,12 @@ from web.utils import InstagramUtils
 class UpdateInstagramPostsTask(Task):
     name = 'UpdateInstagramPosts'
 
-    @staticmethod
-    def check_image_variants(instagram_post):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        variants = ProductVariant.objects.all()
+        self.sku_map = {variant.sku: variant for variant in variants}
+
+    def check_image_variants(self, instagram_post):
         caption = instagram_post.caption or ''
         caption_parts = caption.split(' ')
         variants_to_add = []
@@ -19,7 +23,7 @@ class UpdateInstagramPostsTask(Task):
             if not caption_part.startswith('#'):
                 continue
             sku = caption_part[1:]
-            variant = ProductVariant.objects.filter(sku=sku).first()
+            variant = self.sku_map.get(sku, None)
             if variant:
                 variants_to_add.append(variant)
         if variants_to_add:
