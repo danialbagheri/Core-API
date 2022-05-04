@@ -6,6 +6,10 @@ from product.models import Tag, Keyword, ProductType
 
 
 class Product(models.Model):
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
     name = models.CharField(
         max_length=300,
         verbose_name=_('name'),

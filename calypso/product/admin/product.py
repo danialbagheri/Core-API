@@ -26,5 +26,6 @@ class ProductAdmin(ExportableAdminMixin,
     )
     filter_vertical = ('keyword', 'tags', 'types')
     search_fields = ['name']
+    ordering = ('-updated',)
     inlines = (ReviewQuestionInlineAdmin,)
     save_as = True
