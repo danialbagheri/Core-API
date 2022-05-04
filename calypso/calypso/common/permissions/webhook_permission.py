@@ -14,7 +14,7 @@ class WebhookPermission(BasePermission):
             return False
 
         digest = hmac.new(
-            settings.SHOPIFY_PASSWORD.encode('utf-8'),
+            settings.SHOPIFY_SHARED_SECRET_KEY.encode('utf-8'),
             data,
             digestmod=hashlib.sha256,
         ).digest()

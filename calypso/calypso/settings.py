@@ -46,6 +46,7 @@ DEFAULT_FROM_EMAIL = 'Calypso Sun <info@calypsosun.com>'
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SHOPIFY_API_KEY = env('SHOPIFY_API_KEY')
 SHOPIFY_PASSWORD = env('SHOPIFY_PASSWORD')
+SHOPIFY_SHARED_SECRET_KEY = env('SHOPIFY_SHARED_SECRET_KEY')
 API_VERSION = "2020-10"
 SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
     SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
