@@ -1,18 +1,32 @@
 from django.db import models
-# from django.db.models.expressions import OrderBy
-# Create your models here.
-
 
 
 class Faq(models.Model):
-    question = models.CharField(max_length=450)
-    answer = models.TextField(blank=True, null=True)
-    public = models.BooleanField(default=True)
-    product = models.ManyToManyField('product.Product', blank=True, related_name="faqs")
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+    question = models.CharField(
+        max_length=450,
+    )
+
+    answer = models.TextField(
+        null=True,
+        blank=True,
+    )
+
+    public = models.BooleanField(
+        default=True,
+    )
+
+    product = models.ManyToManyField(
+        to='product.Product',
+        blank=True,
+        related_name='faqs',
+    )
 
     class Meta:
-        ordering = ["pk"]
+        ordering = ['pk']
 
     def __str__(self):
         return self.question
-    

@@ -69,7 +69,7 @@ class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = ProductImage.objects.all()
         image_type = self.request.query_params.get('image_type', None)
-        sku= self.request.query_params.get('sku', None)
+        sku = self.request.query_params.get('sku', None)
         if image_type is not None:
             try:
                 image_type_tuple = self.get_product_image_type_tuple_search(image_type)
@@ -138,5 +138,6 @@ class ProductEditWebhookAPI(APIView):
     http_method_names = ('post',)
 
     def post(self, request, *args, **kwargs):
-        ProductEditTask().delay(request.data)
+        graphql_id = request.data.get('admin_graphql_api_id', None)
+        ProductEditTask().delay(graphql_id)
         return Response(data={}, status=status.HTTP_200_OK)
