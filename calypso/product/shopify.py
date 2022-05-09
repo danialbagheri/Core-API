@@ -41,6 +41,7 @@ def get_variant_info_by_sku(sku):
         displayName
         legacyResourceId
         inventoryQuantity
+        position
         presentmentPrices(first:1, presentmentCurrencies:[EUR]) {
           edges {
             node {

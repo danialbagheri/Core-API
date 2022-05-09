@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from django.contrib.sites.models import Site
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, F
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
@@ -83,7 +83,7 @@ class ProductVariantListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
-        data = data.filter(is_public=True)
+        data = data.filter(is_public=True).order_by(F('position').asc(nulls_last=True))
         return super().to_representation(data)
 
 
@@ -94,6 +94,9 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         many=True, read_only=True, source='wheretobuy')
     price_per_100ml = serializers.SerializerMethodField()
     instagram_posts = InstagramSerializer(many=True, read_only=True)
+    price = serializers.SerializerMethodField()
+    euro_price = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductVariant
@@ -102,11 +105,24 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         lookup_field = 'sku'
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
 
-    def get_price_per_100ml(self, variant: ProductVariant):
+    @staticmethod
+    def get_price_per_100ml(variant: ProductVariant):
         if not variant.size:
             return None
         ml_number = get_ml_number(variant.size)
         return '%.2f' % (100 * (variant.price / ml_number))
+
+    @staticmethod
+    def get_price(variant: ProductVariant):
+        return '%.2f' % variant.price
+
+    @staticmethod
+    def get_euro_price(variant: ProductVariant):
+        return '%.2f' % variant.euro_price
+
+    @staticmethod
+    def get_ingredients(variant: ProductVariant):
+        return list(variant.ingredients.all().values_list('name', flat=True))
 
 
 class ProductReviewQuestionSerializer(serializers.ModelSerializer):

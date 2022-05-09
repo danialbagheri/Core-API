@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from celery import Task
+from celery import Task, current_app
 from django.conf import settings
 
 from product.models import ProductVariant, Product
@@ -29,6 +29,7 @@ PRODUCT_RETRIEVE_QUERY = '''
           displayName
           legacyResourceId
           inventoryQuantity
+          position
           presentmentPrices(first:1, presentmentCurrencies:[EUR]) {
             edges {
               node {
@@ -76,7 +77,8 @@ class ProductEditTask(Task):
                     'barcode': data['barcode'],
                     'euro_price': euro_info['price']['amount'] if euro_info else None,
                     'euro_compare_at_price':
-                        euro_info['compareAtPrice']['amount'] if euro_info and euro_info['compareAtPrice'] else None
+                        euro_info['compareAtPrice']['amount'] if euro_info and euro_info['compareAtPrice'] else None,
+                    'position': data['position'],
                 }
             )
 
@@ -103,3 +105,6 @@ class ProductEditTask(Task):
             }
         )
         self.update_variants(product, data['variants'])
+
+
+current_app.register_task(ProductEditTask())

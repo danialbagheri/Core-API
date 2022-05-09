@@ -7,10 +7,6 @@ from product.shopify import get_variant_info_by_restVariantId, get_variant_info_
 
 class ProductVariant(models.Model):
 
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
     sku = models.CharField(
         max_length=100,
         blank=True,
@@ -76,7 +72,7 @@ class ProductVariant(models.Model):
     ingredients = models.ManyToManyField(
         to=Ingredient,
         blank=True,
-        verbose_name=_("ingredients"),
+        verbose_name=_('ingredients'),
     )
 
     discontinued = models.BooleanField(
@@ -124,6 +120,11 @@ class ProductVariant(models.Model):
         default=False,
     )
 
+    position = models.IntegerField(
+        null=True,
+        blank=True,
+    )
+
     @property
     def image_list(self):
         image_list = []
@@ -164,6 +165,7 @@ class ProductVariant(models.Model):
             self.shopify_storefront_variant_id = info['storefrontId']
             self.inventory_quantity = info['inventoryQuantity']
             self.barcode = info['barcode']
+            self.position = info['position']
             presentment_prices = info['presentmentPrices']['edges']
             if not presentment_prices:
                 self.save()

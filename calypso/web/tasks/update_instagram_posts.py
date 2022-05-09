@@ -1,4 +1,4 @@
-from celery import Task
+from celery import Task, current_app
 from django.db import transaction
 
 from product.models import ProductVariant
@@ -12,8 +12,7 @@ class UpdateInstagramPostsTask(Task):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        variants = ProductVariant.objects.all()
-        self.sku_map = {variant.sku: variant for variant in variants}
+        self.sku_map = None
 
     def check_image_variants(self, instagram_post):
         caption = instagram_post.caption or ''
@@ -30,6 +29,8 @@ class UpdateInstagramPostsTask(Task):
             instagram_post.variants.add(*variants_to_add)
 
     def run(self):
+        variants = ProductVariant.objects.all()
+        self.sku_map = {variant.sku: variant for variant in variants}
         with transaction.atomic():
             InstagramPost.objects.all().delete()
             images_data = get_user_feed()
@@ -47,3 +48,6 @@ class UpdateInstagramPostsTask(Task):
                     permalink=image_data['permalink'],
                 )
                 self.check_image_variants(instagram_post)
+
+
+current_app.register_task(UpdateInstagramPostsTask())
