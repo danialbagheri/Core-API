@@ -72,7 +72,7 @@ class ProductVariant(models.Model):
     ingredients = models.ManyToManyField(
         to=Ingredient,
         blank=True,
-        verbose_name=_("ingredients"),
+        verbose_name=_('ingredients'),
     )
 
     discontinued = models.BooleanField(
