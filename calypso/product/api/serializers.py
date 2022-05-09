@@ -96,6 +96,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     instagram_posts = InstagramSerializer(many=True, read_only=True)
     price = serializers.SerializerMethodField()
     euro_price = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductVariant
@@ -104,7 +105,8 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         lookup_field = 'sku'
         extra__kwargs = {'url': {'lookup_field': 'sku'}}
 
-    def get_price_per_100ml(self, variant: ProductVariant):
+    @staticmethod
+    def get_price_per_100ml(variant: ProductVariant):
         if not variant.size:
             return None
         ml_number = get_ml_number(variant.size)
@@ -117,6 +119,10 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_euro_price(variant: ProductVariant):
         return '%.2f' % variant.euro_price
+
+    @staticmethod
+    def get_ingredients(variant: ProductVariant):
+        return list(variant.ingredients.all().values_list('name', flat=True))
 
 
 class ProductReviewQuestionSerializer(serializers.ModelSerializer):
