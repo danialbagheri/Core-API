@@ -5,3 +5,5 @@ from .configuration import ConfigurationView
 from .search import Search
 from .top_bar import TopBarListAPIView
 from .instagram import InstagramListAPIView
+
+from web.tasks import UpdateInstagramPostsTask

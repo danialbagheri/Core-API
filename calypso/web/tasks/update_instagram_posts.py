@@ -1,4 +1,4 @@
-from celery import Task
+from celery import Task, current_app
 from django.db import transaction
 
 from product.models import ProductVariant
@@ -47,3 +47,6 @@ class UpdateInstagramPostsTask(Task):
                     permalink=image_data['permalink'],
                 )
                 self.check_image_variants(instagram_post)
+
+
+current_app.register_task(UpdateInstagramPostsTask())

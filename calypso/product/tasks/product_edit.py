@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from celery import Task
+from celery import Task, current_app
 from django.conf import settings
 
 from product.models import ProductVariant, Product
@@ -103,3 +103,6 @@ class ProductEditTask(Task):
             }
         )
         self.update_variants(product, data['variants'])
+
+
+current_app.register_task(ProductEditTask())
