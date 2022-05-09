@@ -16,5 +16,5 @@ class ProductVariantAdmin(ExportableAdminMixin,
         'is_public',
     ]
     search_fields = ('sku', )
-    ordering = ('-updated',)
+    ordering = ('-date_last_modified',)
     save_as = True
