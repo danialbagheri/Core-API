@@ -68,7 +68,7 @@
               <th scope="row"><a href="{% url "dashboard:product-edit" product.slug %}">{{ product.slug }}</a></th>
               <td>
                 {% if product.main_image %}
-                  {% thumbnail product.main_image "60" format="PNG" as im %}
+                  {% thumbnail product.main_image.get_absolute_image_url "60" format="PNG" as im %}
                     <img src="{{im.url}}" style="width: 50px" />
                   {% endthumbnail %}
                 {% endif %}

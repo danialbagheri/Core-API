@@ -121,7 +121,7 @@ class WhereToBuyAdmin(admin.ModelAdmin):
         context = {'form': form}
         return render(
             request=request,
-            template_name='admin/csv_form.html',
+            template_name='admin/locations_csv_form.html',
             context=context,
         )
 

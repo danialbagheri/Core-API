@@ -2,6 +2,7 @@
 
 {% block content %}
     <div>
+        <a href="/media/csv/Location-Example.csv">DOWNLOAD EXAMPLE TEMPLATE</a>
         <form action="." method="POST" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
