@@ -27,6 +27,7 @@ class ProductVariantInlineAdmin(admin.StackedInline):
 class IngredientAdmin(admin.ModelAdmin):
     change_list_template = 'admin/product/ingredient_changelist.html'
     inlines = (ProductVariantInlineAdmin,)
+    search_fields = ('name',)
 
     @staticmethod
     def clean_ingredient_names(ingredient_names):

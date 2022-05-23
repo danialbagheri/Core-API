@@ -2,7 +2,7 @@ from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
 from calypso.common.admin_mixins import ExportableAdminMixin
-from product.models import Product
+from product.models import Product, ProductImage
 
 
 class ReviewQuestionInlineAdmin(admin.StackedInline):
@@ -29,3 +29,10 @@ class ProductAdmin(ExportableAdminMixin,
     ordering = ('-updated',)
     inlines = (ReviewQuestionInlineAdmin,)
     save_as = True
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field not in ['main_image', 'secondary_image']:
+            return super().formfield_for_foreignkey(db_field, request, **kwargs)
+        product_id = request.resolver_match.kwargs['object_id']
+        kwargs['queryset'] = ProductImage.objects.filter(variant__product_id=product_id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

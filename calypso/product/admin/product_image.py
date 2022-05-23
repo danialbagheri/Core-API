@@ -14,3 +14,4 @@ class ProductImageAdmin(admin.ModelAdmin):
         'alternate_text',
     )
     search_fields = ('variant__sku', 'variant__name')
+    raw_id_fields = ('variant',)

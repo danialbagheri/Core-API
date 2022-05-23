@@ -44,6 +44,11 @@ class ProductImage(models.Model):
             self.variant.product.name, self.variant.sku, new_file_name
         ).replace(" ", "_")
 
+    name = models.CharField(
+        max_length=128,
+        blank=True,
+    )
+
     variant = models.ForeignKey(
         to=ProductVariant,
         on_delete=models.CASCADE,
@@ -111,7 +116,7 @@ class ProductImage(models.Model):
         return str(b64encode(data).decode('utf-8'))
 
     def __str__(self):
-        return "{} - {}".format(self.variant.product.name, self.variant)
+        return "{} - {} - {}".format(self.name, self.variant.product.name, self.variant)
 
     def save(self, *args, **kwargs):
         self.width = 0

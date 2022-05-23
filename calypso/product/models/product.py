@@ -68,6 +68,18 @@ class Product(models.Model):
         default=False,
     )
 
+    main_image = models.OneToOneField(
+        to='product.ProductImage',
+        on_delete=models.SET_NULL,
+        related_name='main_product',
+    )
+
+    secondary_image = models.OneToOneField(
+        to='product.ProductImage',
+        on_delete=models.SET_NULL,
+        related_name='secondary_product',
+    )
+
     @property
     def related_products(self):
         related_products = Product.objects.filter(
