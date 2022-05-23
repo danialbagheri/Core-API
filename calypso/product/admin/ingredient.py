@@ -19,6 +19,16 @@ class CsvImportForm(forms.Form):
 class IngredientAdmin(admin.ModelAdmin):
     change_list_template = 'admin/product/ingredient_changelist.html'
 
+    @staticmethod
+    def clean_ingredient_names(ingredient_names):
+        clean_names = []
+        for ingredient_name in ingredient_names:
+            cut_index = ingredient_name.find('###')
+            if cut_index >= 0:
+                ingredient_name = ingredient_name[:cut_index]
+            clean_names.append(ingredient_name.strip())
+        return clean_names
+
     def update_ingredients_with_csv(self, ingredients_file, request):
         reader = csv.reader(ingredients_file, delimiter=',')
         count = 0
@@ -42,8 +52,10 @@ class IngredientAdmin(admin.ModelAdmin):
                 )
                 continue
             variants_map[sku] = variant
-            ingredients = row[5].split(',')
-            ingredients = [ingredient.strip() for ingredient in ingredients]
+            ingredients = row[5]\
+                .replace('\n', ' ').replace('contains', '###').replace('Contains', '###')\
+                .replace('/ Inneholder / Innehåller / Indeholder / Sisältää', '###').split(', ')
+            ingredients = self.clean_ingredient_names(ingredients)
             for ingredient in ingredients:
                 if not ingredient:
                     continue
@@ -78,7 +90,7 @@ class IngredientAdmin(admin.ModelAdmin):
         context = {'form': form}
         return render(
             request=request,
-            template_name='admin/csv_form.html',
+            template_name='admin/ingredients_csv_form.html',
             context=context,
         )
 
