@@ -145,6 +145,8 @@ class ProductReviewQuestionSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    main_image = serializers.SerializerMethodField()
+    secondary_image = serializers.SerializerMethodField()
     main_image_resized = serializers.SerializerMethodField()
     main_image_webp = serializers.SerializerMethodField()
     secondary_image_resized = serializers.SerializerMethodField()
@@ -166,7 +168,17 @@ class ProductSerializer(serializers.ModelSerializer):
         depth = 3
         extra__kwargs = {'url': {'lookup_field': 'slug'}}
 
-    def edit_image(self, product: Product, image: ProductImage, image_format):
+    @staticmethod
+    def get_main_image(product: Product):
+        if product.main_image:
+            return product.main_image.get_absolute_image_url
+
+    @staticmethod
+    def get_secondary_image(product: Product):
+        if product.secondary_image:
+            return product.secondary_image.get_absolute_image_url
+
+    def edit_image(self, image: ProductImage, image_format):
         request = self.context.get('request')
         resize_width, resize_height = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
@@ -184,22 +196,22 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_main_image_resized(self, obj):
         if not obj.main_image:
             return
-        return self.edit_image(obj, obj.main_image, 'PNG')
+        return self.edit_image(obj.main_image, 'PNG')
 
     def get_main_image_webp(self, obj):
         if not obj.main_image:
             return
-        return self.edit_image(obj, obj.main_image, 'WEBP')
+        return self.edit_image(obj.main_image, 'WEBP')
 
     def get_secondary_image_resized(self, product: Product):
         if not product.secondary_image:
             return
-        return self.edit_image(product, product.secondary_image, 'PNG')
+        return self.edit_image(product.secondary_image, 'PNG')
 
     def get_secondary_image_webp(self, product: Product):
         if not product.secondary_image:
             return
-        return self.edit_image(product, product.secondary_image, 'WEBP')
+        return self.edit_image(product.secondary_image, 'WEBP')
 
     @staticmethod
     def get_total_review_count(obj):
