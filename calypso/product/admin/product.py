@@ -24,14 +24,14 @@ class ProductAdmin(ExportableAdminMixin,
         'slug', 'name',  'sub_title', 'description', 'direction_of_use', 'variant_sku_list', 'lowest_variant_price',
         'get_total_review_count', 'get_review_average_score', 'keywords_str', 'tags_str', 'types_str',
     )
-    filter_vertical = ('keyword', 'tags', 'types')
+    filter_horizontal = ('keyword', 'tags', 'types')
     search_fields = ['name']
     ordering = ('-updated',)
     inlines = (ReviewQuestionInlineAdmin,)
     save_as = True
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field not in ['main_image', 'secondary_image']:
+        if db_field.name not in ['main_image', 'secondary_image']:
             return super().formfield_for_foreignkey(db_field, request, **kwargs)
         product_id = request.resolver_match.kwargs['object_id']
         kwargs['queryset'] = ProductImage.objects.filter(variant__product_id=product_id)
