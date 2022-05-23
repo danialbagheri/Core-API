@@ -15,7 +15,7 @@ class ProductVariantAdmin(ExportableAdminMixin,
         'size',
         'is_public',
     ]
-    filter_vertical = ('ingredients',)
+    filter_horizontal = ('ingredients',)
     search_fields = ('sku', )
     ordering = ('-date_last_modified',)
     save_as = True
