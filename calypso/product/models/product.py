@@ -71,12 +71,16 @@ class Product(models.Model):
     main_image = models.OneToOneField(
         to='product.ProductImage',
         on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='main_product',
     )
 
     secondary_image = models.OneToOneField(
         to='product.ProductImage',
         on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='secondary_product',
     )
 
@@ -93,28 +97,11 @@ class Product(models.Model):
         return ProductImage.objects.filter(variant__product=self)
 
     @property
-    def main_image_object(self):
-        main_image = self.all_images.filter(main=True)
-        if len(main_image) >= 1:
-            return self.all_images.filter(main=True).first()
-        return self.all_images.first()
-
-    @property
     def lowest_variant_price(self):
         lowest_price = self.variants.all().aggregate(
             min_price=Min('price'),
         ).get('min_price', None)
         return '%.2f' % lowest_price if lowest_price else '0.00'
-
-    @property
-    def main_image(self):
-        # return self.main_image_object.image.get_absolute_image_url
-        try:
-            main_image_object = self.main_image_object
-            main_image = main_image_object.get_absolute_image_url
-        except:
-            main_image = None
-        return main_image
 
     @property
     def get_total_review_count(self):

@@ -147,8 +147,9 @@ class ProductReviewQuestionSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     main_image_resized = serializers.SerializerMethodField()
     main_image_webp = serializers.SerializerMethodField()
+    secondary_image_resized = serializers.SerializerMethodField()
+    secondary_image_webp = serializers.SerializerMethodField()
     variants = ProductVariantSerializer(many=True, read_only=True)
-    main_image = serializers.ReadOnlyField()
     lowest_variant_price = serializers.ReadOnlyField()
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs')
     types = serializers.SerializerMethodField()
@@ -165,35 +166,40 @@ class ProductSerializer(serializers.ModelSerializer):
         depth = 3
         extra__kwargs = {'url': {'lookup_field': 'slug'}}
 
-    def get_main_image_resized(self, obj):
+    def edit_image(self, product: Product, image: ProductImage, image_format):
         request = self.context.get('request')
-        resize_w, resize_h = check_request_image_size_params(request)
+        resize_width, resize_height = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
-        if resize_h is None and resize_w is None:
-            resize_w = "400"
-        if resize_w is None:
-            resize_w = ""
-        if resize_h is None:
-            height = ""
+        if resize_height is None and resize_width is None:
+            resize_width = '400'
+        if resize_width is None:
+            resize_width = ''
+        if resize_height is None:
+            height = ''
         else:
-            height = f"x{resize_h}"
-        if obj.main_image:
-            return domain+get_thumbnail(obj.main_image, f'{resize_w}{height}', quality=100, format="PNG").url
+            height = f'x{resize_height}'
+        image_url = image.get_absolute_image_url
+        return domain + get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
+
+    def get_main_image_resized(self, obj):
+        if not obj.main_image:
+            return
+        return self.edit_image(obj, obj.main_image, 'PNG')
 
     def get_main_image_webp(self, obj):
-        request = self.context.get("request")
-        resize_w, resize_h = check_request_image_size_params(request)
-        domain = Site.objects.get_current().domain
-        if resize_h is None and resize_w is None:
-            resize_w = "400"
-        if resize_w is None:
-            resize_w = ""
-        if resize_h is None:
-            height = ""
-        else:
-            height = f"x{resize_h}"
-        if obj.main_image:
-            return domain+get_thumbnail(obj.main_image, f'{resize_w}{height}', quality=100, format="WEBP").url
+        if not obj.main_image:
+            return
+        return self.edit_image(obj, obj.main_image, 'WEBP')
+
+    def get_secondary_image_resized(self, product: Product):
+        if not product.secondary_image:
+            return
+        return self.edit_image(product, product.secondary_image, 'PNG')
+
+    def get_secondary_image_webp(self, product: Product):
+        if not product.secondary_image:
+            return
+        return self.edit_image(product, product.secondary_image, 'WEBP')
 
     @staticmethod
     def get_total_review_count(obj):
@@ -233,12 +239,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return soup.text
 
 
-class RelatedProducts(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-
 class SingleProductSerializer(ProductSerializer):
     """
     Similar to ProductSerializer but with more info such as reviews and related_products,
@@ -247,8 +247,6 @@ class SingleProductSerializer(ProductSerializer):
     reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
     questions = ProductReviewQuestionSerializer(many=True, read_only=True)
-    # reviews = ReviewSerializer(many=True, read_only=True, source='review_set')
-    # related_products = serializers.ReadOnlyField()
     score_chart = serializers.SerializerMethodField()
 
     class Meta:
@@ -259,26 +257,26 @@ class SingleProductSerializer(ProductSerializer):
         extra__kwargs = {'url': {'lookup_field': 'slug'}}
 
     def get_related_products(self, obj):
-        # related_products_filter = Product.objects.filter(
-        #     tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
         related_products_filter = Product.objects.filter(
             tags__in=obj.tags.all(),
+            is_public=True,
         ).exclude(id=obj.id).annotate(
             num_common_tags=Count('pk'),
         ).order_by('-num_common_tags')[:5]
-        # related_products_fields = related_products_filter.values('name', 'slug', 'sub_title')
         related_products = []
         for product in related_products_filter:
-            # import pdb
-            # pdb.set_trace()
+            main_image = product.main_image
+            secondary_image = product.secondary_image
             related_products.append({
                 'name': product.name,
                 'slug': product.slug,
                 'sub_title': product.sub_title,
-                'main_image': product.main_image,
-                # "main_image": ProductImageSerializer(product.main_image_object),
-                'img_height': f"{product.main_image_object.height if product.main_image_object else 0}",
-                'img_width': f"{product.main_image_object.width if product.main_image_object else 0}",
+                'main_image': main_image.get_absolute_image_url if main_image else None,
+                'secondary_image': secondary_image.get_absolute_image_url if secondary_image else None,
+                'img_height': f'{main_image.height if main_image else 0}',
+                'img_width': f'{main_image.width if main_image else 0}',
+                'secondary_image_height': secondary_image.height if secondary_image else 0,
+                'secondary_image_width': secondary_image.width if secondary_image else 0,
                 'total_review_count': product.get_total_review_count,
                 'review_average_score': product.get_review_average_score,
                 'starting_price': product.lowest_variant_price,
@@ -315,16 +313,10 @@ class CollectionItemSerializer(serializers.ModelSerializer):
 
 
 class CollectionSerializer(serializers.ModelSerializer):
-    # items = serializers.SerializerMethodField()
     items = CollectionItemSerializer(many=True, source="collection_items")
     counts = serializers.SerializerMethodField()
     resized = serializers.SerializerMethodField()
     webp = serializers.SerializerMethodField()
-
-    # def get_items(self, obj):
-    #     items = [n.item for n in obj.collection_items.order_by("order")]
-    #     request = self.context.get("request")
-    #     return ProductSerializer(context={'request': request}, instance=items, many=True).data
 
     class Meta:
         model = Collection
