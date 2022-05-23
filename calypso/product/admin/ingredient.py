@@ -15,9 +15,18 @@ class CsvImportForm(forms.Form):
     csv_file = forms.FileField()
 
 
+class ProductVariantInlineAdmin(admin.StackedInline):
+    model = ProductVariant.ingredients.through
+    extra = 0
+    raw_id_fields = ('productvariant',)
+    verbose_name = 'Variant'
+    verbose_name_plural = 'Variants'
+
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     change_list_template = 'admin/product/ingredient_changelist.html'
+    inlines = (ProductVariantInlineAdmin,)
 
     @staticmethod
     def clean_ingredient_names(ingredient_names):

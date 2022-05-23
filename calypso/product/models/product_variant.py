@@ -184,4 +184,4 @@ class ProductVariant(models.Model):
         pass
 
     def __str__(self):
-        return "{}, {}, {}".format(self.sku, self.product, self.name, self.size)
+        return '{}, {}, {}'.format(self.sku, self.product, self.name, self.size)
