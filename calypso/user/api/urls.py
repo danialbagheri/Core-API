@@ -12,4 +12,5 @@ urlpatterns = [
     path('orders/', views.OrderAPIView.as_view(), name='user-orders'),
     path('addresses/', views.AddressAPIView.as_view(), name='user-addresses'),
     path('push-subscribers/', views.PushSubscriberCreateAPIView.as_view(), name='push-subscribers-create'),
+    path('orders/paid/', views.OrderPaidWebhookAPI.as_view(), name='orders-paid'),
 ]
