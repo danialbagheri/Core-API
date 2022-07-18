@@ -22,3 +22,22 @@ class ReviewReminder(models.Model):
     email_sent = models.BooleanField(
         default=False,
     )
+
+
+class ReviewReminderBoughtVariant(models.Model):
+    review_reminder = models.ForeignKey(
+        to=ReviewReminder,
+        on_delete=models.CASCADE,
+        db_column='reviewreminder_id',
+    )
+
+    variant = models.ForeignKey(
+        to=ProductVariant,
+        on_delete=models.CASCADE,
+        db_column='productvariant_id',
+    )
+
+    quantity = models.IntegerField()
+
+    class Meta:
+        unique_together = ('review_reminder', 'variant')

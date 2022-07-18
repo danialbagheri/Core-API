@@ -52,7 +52,6 @@ class ProductImage(models.Model):
 
     updated = models.DateTimeField(
         auto_now=True,
-        default=datetime.now,
     )
 
     variant = models.ForeignKey(
