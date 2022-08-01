@@ -120,7 +120,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_compare_at_price(variant: ProductVariant):
-        return '%.2f' % variant.compare_at_price
+        return '%.2f' % variant.compare_at_price if variant.compare_at_price else None
 
     @staticmethod
     def get_euro_price(variant: ProductVariant):
@@ -128,7 +128,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_euro_compare_at_price(variant: ProductVariant):
-        return '%.2f' % variant.euro_compare_at_price
+        return '%.2f' % variant.euro_compare_at_price if variant.euro_compare_at_price else None
 
     @staticmethod
     def get_ingredients(variant: ProductVariant):
