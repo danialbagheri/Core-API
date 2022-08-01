@@ -35,6 +35,8 @@ mutation productVariantsBulkUpdate(
         for variant in variants:
             compare_at_price = variant.compare_at_price or variant.price
             price = round(compare_at_price * (100 - self.discount_percentage) / 100, 2)
+            if self.discount_percentage == 0:
+                compare_at_price = None
             variant_data = {
                 'id': variant.graphql_id,
                 'price': price,
