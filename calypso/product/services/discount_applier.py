@@ -38,7 +38,7 @@ mutation productVariantsBulkUpdate(
             variant_data = {
                 'id': variant.graphql_id,
                 'price': price,
-                'compare_at_price': compare_at_price,
+                'compareAtPrice': compare_at_price,
             }
             variants_data.append(variant_data)
         return variants_data
