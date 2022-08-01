@@ -1,8 +1,6 @@
 import requests
 from django.contrib import messages
 
-from product.models import WhereToBuy
-
 
 def check_locations(modeladmin, request, queryset):
     amazon_headers = {

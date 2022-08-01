@@ -70,6 +70,7 @@ class ProductEditTask(Task):
                 defaults={
                     'sku': data['sku'],
                     'shopify_rest_variant_id': data['legacyResourceId'],
+                    'graphql_id': data['id'],
                     'product': product,
                     'price': data['price'],
                     'compare_at_price': data['compareAtPrice'],

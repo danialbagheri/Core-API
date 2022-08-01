@@ -15,3 +15,4 @@ class ProductImageAdmin(admin.ModelAdmin):
     )
     search_fields = ('variant__sku', 'variant__name')
     raw_id_fields = ('variant',)
+    ordering = ('-updated',)

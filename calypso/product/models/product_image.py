@@ -1,6 +1,7 @@
 import os
 import random
 from base64 import b64encode
+from datetime import datetime
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.images import get_image_dimensions
@@ -47,6 +48,10 @@ class ProductImage(models.Model):
     name = models.CharField(
         max_length=128,
         blank=True,
+    )
+
+    updated = models.DateTimeField(
+        auto_now=True,
     )
 
     variant = models.ForeignKey(
