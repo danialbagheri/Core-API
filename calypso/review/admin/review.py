@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from review.models import Review, ReviewAnswer
+from review.models import Review, ReviewAnswer, ReviewImage
 
 
 class ReviewAnswerInlineAdmin(admin.StackedInline):
@@ -24,6 +24,15 @@ class ReviewAnswerInlineAdmin(admin.StackedInline):
         return False
 
 
+class ReviewImageInlineAdmin(admin.StackedInline):
+    model = ReviewImage
+    fields = ('image',)
+    readonly_fields = ('image',)
+
+    def has_add_permission(self, request, obj):
+        return False
+
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_filter = ('score', 'product')
@@ -39,4 +48,4 @@ class ReviewAdmin(admin.ModelAdmin):
         'date_created',
     ]
     search_fields = ['customer_name']
-    inlines = (ReviewAnswerInlineAdmin,)
+    inlines = (ReviewAnswerInlineAdmin, ReviewImageInlineAdmin)
