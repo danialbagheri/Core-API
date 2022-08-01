@@ -15,6 +15,8 @@ class ProductVariantAdmin(ExportableAdminMixin,
         'product',
         'name',
         'size',
+        'price',
+        'compare_at_price',
         'is_public',
     ]
     filter_horizontal = ('ingredients',)
