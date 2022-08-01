@@ -10,6 +10,6 @@ class ReviewImageAdmin(admin.ModelAdmin):
     readonly_fields = ('review',)
 
     def get_review_title(self, review_image: ReviewImage):
-        return review_image.review.title
+        return review_image.review.title if review_image.review else None
 
     get_review_title.short_description = 'Review Title'
