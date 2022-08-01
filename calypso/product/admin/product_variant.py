@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from calypso.common.admin_mixins import ExportableAdminMixin
+from product.admin.actions import apply_discounts
 from product.models import ProductVariant
 
 
@@ -18,4 +19,5 @@ class ProductVariantAdmin(ExportableAdminMixin,
     filter_horizontal = ('ingredients',)
     search_fields = ('sku', )
     ordering = ('-date_last_modified',)
+    actions = (apply_discounts,)
     save_as = True
