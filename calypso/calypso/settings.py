@@ -325,3 +325,5 @@ SUMMERNOTE_CONFIG = {
 }
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+IP_INFO_TOKEN = env('IP_INFO_TOKEN')
