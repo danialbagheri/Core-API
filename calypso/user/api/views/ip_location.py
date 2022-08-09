@@ -14,7 +14,7 @@ class IPLocationAPIView(APIView):
 
     @method_decorator(cache_page(60 * 60 * 24))
     def get(self, request, *args, **kwargs):
-        ip = request.query_params.get('ip')
+        ip = kwargs.get('ip', None)
         ip_location_finder = IPLocationFinderService(ip)
         ip_location_finder.receive_location_data()
 

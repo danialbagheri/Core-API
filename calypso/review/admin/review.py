@@ -48,4 +48,5 @@ class ReviewAdmin(admin.ModelAdmin):
         'date_created',
     ]
     search_fields = ['customer_name']
+    raw_id_fields = ('product', 'variant', 'user')
     inlines = (ReviewAnswerInlineAdmin, ReviewImageInlineAdmin)

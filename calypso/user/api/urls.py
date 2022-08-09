@@ -14,4 +14,5 @@ urlpatterns = [
     path('push-subscribers/', views.PushSubscriberCreateAPIView.as_view(), name='push-subscribers-create'),
     path('orders/paid/', views.OrderPaidWebhookAPI.as_view(), name='orders-paid'),
     path('refunds/', views.RefundWebhookAPI.as_view(), name='refunds'),
+    path('ips/<str:ip>/locations/', views.IPLocationAPIView.as_view(), name='ip-locations'),
 ]
