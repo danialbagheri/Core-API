@@ -1,0 +1,1 @@
+from .product_in_stock_report import ProductInStockReportValidator

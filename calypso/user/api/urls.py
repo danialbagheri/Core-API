@@ -15,4 +15,5 @@ urlpatterns = [
     path('orders/paid/', views.OrderPaidWebhookAPI.as_view(), name='orders-paid'),
     path('refunds/', views.RefundWebhookAPI.as_view(), name='refunds'),
     path('ips/<str:ip>/locations/', views.IPLocationAPIView.as_view(), name='ip-locations'),
+    path('stock-reports/', views.ProductInStockReportCreateAPI.as_view(), name='stock-report-create'),
 ]
