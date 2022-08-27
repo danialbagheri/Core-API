@@ -11,6 +11,10 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'update instagram posts': {
         'task': 'UpdateInstagramPosts',
-        'schedule': crontab(minute=0, hour=0),
+        'schedule': crontab(hour=0, minute=0),
     },
+    'send review reminder emails': {
+        'task': 'users.tasks.SendReviewReminderTask',
+        'schedule': crontab(hour=18, minute=0),
+    }
 }
