@@ -30,15 +30,11 @@ class ProductVariant(models.Model):
     shopify_rest_variant_id = models.CharField(
         max_length=355,
         unique=True,
-        blank=True,
-        null=True,
     )
 
     graphql_id = models.CharField(
         max_length=512,
         unique=True,
-        blank=True,
-        null=True,
     )
 
     shopify_storefront_variant_id = models.CharField(
