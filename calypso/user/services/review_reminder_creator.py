@@ -34,9 +34,13 @@ class ReviewReminderCreatorService:
         reminder_date = timezone.now() + timedelta(days=21)
 
         with transaction.atomic():
-            review_reminder = ReviewReminder.objects.create(
+            review_reminder, created = ReviewReminder.objects.get_or_create(
                 order_id=order_id,
                 email=email,
-                reminder_date=reminder_date,
+                defaults={
+                    'reminder_date': reminder_date,
+                },
             )
+            if not created:
+                return
             self._create_order_bought_variants(review_reminder)

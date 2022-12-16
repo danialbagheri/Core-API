@@ -4,6 +4,10 @@ from product.models import ProductVariant
 
 
 class ProductInStockReport(models.Model):
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+
     variant = models.ForeignKey(
         to=ProductVariant,
         on_delete=models.CASCADE,
