@@ -27,7 +27,9 @@ class ProductInStockReportSender:
     def _send_reports(self):
         for variant_id, emails in self.variant_id_emails.items():
             variant = ProductVariant.objects.select_related('product').get(id=variant_id)
-            image_url = f'{settings.WEBSITE_ADDRESS}{variant.variant_images.first().image.url}'
+            variant_image = variant.variant_images.first()
+            image_url = variant_image.image.url if variant_image else '/media/email-images/lost-image.svg'
+            image_url = f'{settings.WEBSITE_ADDRESS}{image_url}'
             data = {
                 'template_name': 'back-in-stock',
                 'message': {
