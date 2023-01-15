@@ -27,6 +27,7 @@ class ReviewReminderUndoService:
                 bought_variant.quantity -= quantity
                 bought_variant.save()
             else:
+                review_reminder.bought_variants.remove(bought_variant.variant)
                 bought_variant.delete()
 
     def undo_review_reminder(self):
