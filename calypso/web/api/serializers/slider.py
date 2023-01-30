@@ -2,13 +2,53 @@ from django.contrib.sites.models import Site
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
-from web.models import Slider, SliderSlidesThroughModel
+from web.models import Slider, SliderSlidesThroughModel, Slide
 
 
 class SlideSerializer(serializers.ModelSerializer):
     desktop_resized = serializers.SerializerMethodField()
     desktop_webp = serializers.SerializerMethodField()
     mobile_webp = serializers.SerializerMethodField()
+
+    image_png = serializers.SerializerMethodField()
+    image_webp = serializers.SerializerMethodField()
+
+    def _get_image(self, slide: Slide):
+        request = self.context['request']
+        image_type = request.query_params.get('image_type')
+        if not image_type:
+            return None
+        if image_type == 'xs':
+            return slide.xs_image
+        elif image_type == 'sm':
+            return slide.sm_image
+        elif image_type == 'md':
+            return slide.md_image
+        elif image_type == 'lg':
+            return slide.lg_image
+        elif image_type == 'xl':
+            return slide.xl_image
+
+    def _create_thumbnail(self, image, image_format):
+        if not image:
+            return None
+        request = self.context['request']
+        resize_w = request.query_params.get('resize_w')
+        resize_h = request.query_params.get('resize_h')
+        if not resize_w or not resize_h:
+            return None
+        domain = Site.objects.get_current().domain
+        return domain + get_thumbnail(image, f'{resize_w}x{resize_h}', quality=100, format=image_format).url
+
+    def get_image_png(self, instance: SliderSlidesThroughModel):
+        slide = instance.slide
+        image = self._get_image(slide)
+        return self._create_thumbnail(image, 'PNG')
+
+    def get_image_webp(self, instance: SliderSlidesThroughModel):
+        slide = instance.slide
+        image = self._get_image(slide)
+        return self._create_thumbnail(image, 'WEBP')
 
     def get_desktop_resized(self, obj):
         request = self.context.get("request")
