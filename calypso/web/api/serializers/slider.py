@@ -23,8 +23,8 @@ class SlideSerializer(serializers.ModelSerializer):
             height = ""
         else:
             height = f"x{resize_h}"
-        if obj.slide.desktop_image:
-            return domain + get_thumbnail(obj.slide.desktop_image, f'{resize_w}{height}', quality=100, format="PNG").url
+        if obj.slide.lg_image:
+            return domain + get_thumbnail(obj.slide.lg_image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     def get_desktop_webp(self, obj):
         request = self.context.get("request")
@@ -39,16 +39,16 @@ class SlideSerializer(serializers.ModelSerializer):
             height = ""
         else:
             height = f"x{resize_h}"
-        if obj.slide.desktop_image:
+        if obj.slide.lg_image:
             return domain + get_thumbnail(
-                obj.slide.desktop_image, f'{resize_w}{height}', quality=100, format="WEBP"
+                obj.slide.lg_image, f'{resize_w}{height}', quality=100, format="WEBP"
             ).url
 
     @staticmethod
     def get_mobile_webp(obj):
         domain = Site.objects.get_current().domain
-        if obj.slide.mobile_image:
-            return domain + get_thumbnail(obj.slide.mobile_image, f"640", quality=100, format="WEBP").url
+        if obj.slide.sm_image:
+            return domain + get_thumbnail(obj.slide.sm_image, f"640", quality=100, format="WEBP").url
 
     class Meta:
         model = SliderSlidesThroughModel

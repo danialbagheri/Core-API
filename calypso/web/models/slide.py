@@ -7,20 +7,32 @@ class Slide(models.Model):
         verbose_name='name',
     )
 
-    desktop_image = models.ImageField(
-        upload_to='slide/desktop/',
+    xl_image = models.ImageField(
+        upload_to='slide/xl/',
         max_length=None,
         blank=True,
     )
 
-    tablet_image = models.ImageField(
-        upload_to='slide/tablet/',
+    lg_image = models.ImageField(
+        upload_to='slide/lg/',
         max_length=None,
         blank=True,
     )
 
-    mobile_image = models.ImageField(
-        upload_to='slide/mobile/',
+    md_image = models.ImageField(
+        upload_to='slide/md/',
+        max_length=None,
+        blank=True,
+    )
+
+    sm_image = models.ImageField(
+        upload_to='slide/sm/',
+        max_length=None,
+        blank=True,
+    )
+
+    xs_image = models.ImageField(
+        upload_to='slide/xs/',
         max_length=None,
         blank=True,
     )
