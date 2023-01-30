@@ -6,6 +6,7 @@ from mailchimp_transactional.api_client import ApiClientError
 
 from product.models import ProductVariant
 from user.models import ProductInStockReport
+from web.models import Configuration
 
 
 class ProductInStockReportSender:
@@ -30,10 +31,12 @@ class ProductInStockReportSender:
             variant_image = variant.variant_images.first()
             image_url = variant_image.image.url if variant_image else '/media/email-images/lost-image.svg'
             image_url = f'{settings.WEBSITE_ADDRESS}{image_url}'
+            subject_config = Configuration.objects.filter(key='stock-email-subject').first()
+            subject = subject_config.value if subject_config else 'Calypso: Back in Stock'
             data = {
                 'template_name': 'back-in-stock',
                 'message': {
-                    'subject': '',
+                    'subject': subject,
                     'to': [{'email': email} for email in emails],
                     'global_merge_vars': [
                         {'name': 'product_image', 'content': image_url},
