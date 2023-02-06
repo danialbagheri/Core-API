@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.db import transaction
 from django.utils import timezone
 
 from product.models import ProductVariant
@@ -17,7 +18,9 @@ class ReviewReminderCreatorService:
 
         for line_item in line_items:
             shopify_variant_id = line_item['variant_id']
-            variant_id = variants_map[shopify_variant_id]
+            variant_id = variants_map.get(shopify_variant_id)
+            if not variant_id:
+                continue
             review_reminder_bought_variants.append(ReviewReminderBoughtVariant(
                 review_reminder=review_reminder,
                 variant_id=variant_id,
@@ -30,9 +33,14 @@ class ReviewReminderCreatorService:
         email = self._order_data['email']
         reminder_date = timezone.now() + timedelta(days=21)
 
-        review_reminder = ReviewReminder.objects.create(
-            order_id=order_id,
-            email=email,
-            reminder_date=reminder_date,
-        )
-        self._create_order_bought_variants(review_reminder)
+        with transaction.atomic():
+            review_reminder, created = ReviewReminder.objects.get_or_create(
+                order_id=order_id,
+                email=email,
+                defaults={
+                    'reminder_date': reminder_date,
+                },
+            )
+            if not created:
+                return
+            self._create_order_bought_variants(review_reminder)
