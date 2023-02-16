@@ -6,6 +6,12 @@ class VariantImageRequest(models.Model):
 
     sku_list = models.TextField()
 
+    image_format = models.CharField(
+        max_length=16,
+    )
+
+    email = models.EmailField()
+
     zip_file = models.FileField(
         max_length=512,
         upload_to='variant-image-zips/',
@@ -13,4 +19,6 @@ class VariantImageRequest(models.Model):
         null=True,
     )
 
-    email = models.EmailField()
+    email_sent = models.BooleanField(
+        default=False,
+    )
