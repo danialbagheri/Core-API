@@ -1,3 +1,4 @@
 from .user import UserSerializer
 from .push_subscriber import PushSubscriberSerializer
 from .product_in_stock_report import ProductInStockReportSerializer
+from .variant_image_request import VariantImageRequestSerializer
