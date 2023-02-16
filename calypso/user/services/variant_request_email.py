@@ -4,24 +4,17 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
 
-from user.models import VariantImageRequest
-
 
 class VariantRequestEmailService:
-    def __init__(self, sku_list, email, zip_buffer):
-        self.sku_list = sku_list
-        self.email = email
+    def __init__(self, variant_image_request, zip_buffer):
+        self.variant_image_request = variant_image_request
         self.zip_buffer = zip_buffer
 
     def _save_zip_file(self):
-        variant_image_request = VariantImageRequest.objects.create(
-            sku_list=str(self.sku_list),
-            email=self.email,
-        )
         zip_file_name = f'{uuid.uuid4()}.zip'
-        variant_image_request.zip_file.save(zip_file_name, ContentFile(self.zip_buffer.get_value()), save=False)
-        variant_image_request.save()
-        return f'{get_current_site(None).domain}{variant_image_request.zip_file.url}'
+        self.variant_image_request.zip_file.save(zip_file_name, ContentFile(self.zip_buffer.get_value()), save=False)
+        self.variant_image_request.save()
+        return f'{get_current_site(None).domain}{self.variant_image_request.zip_file.url}'
 
     @staticmethod
     def _get_message(zip_file_url):
@@ -42,5 +35,5 @@ If you have not requested this email please ignore this email.
             subject='Image Files',
             message=message,
             from_email=from_email,
-            recipient_list=[self.email],
+            recipient_list=[self.variant_image_request.email],
         )
