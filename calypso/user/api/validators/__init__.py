@@ -1,1 +1,2 @@
 from .product_in_stock_report import ProductInStockReportValidator
+from .sku_list_validator import SkuListValidator

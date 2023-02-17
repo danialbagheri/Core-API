@@ -16,4 +16,5 @@ urlpatterns = [
     path('refunds/', views.RefundWebhookAPI.as_view(), name='refunds'),
     path('ips/<str:ip>/locations/', views.IPLocationAPIView.as_view(), name='ip-locations'),
     path('stock-reports/', views.ProductInStockReportCreateAPI.as_view(), name='stock-report-create'),
+    path('variant-image-requests/', views.VariantImageRequestCreateAPIView.as_view(), name='image-request-create'),
 ]

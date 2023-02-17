@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import gettext, gettext_lazy as _
-from .models import User
-# Register your models here.
+from django.utils.translation import gettext_lazy as _
+
+from .models import User, VariantImageRequest
+
+
 class UserAdmin(UserAdmin):
     list_display = [
         "email",
@@ -34,7 +36,14 @@ class UserAdmin(UserAdmin):
         }),
     )
     ordering = ('email',)
+
     class Meta:
         model = User
 
+
+class VariantImageRequestAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
+admin.site.register(VariantImageRequest, VariantImageRequestAdmin)
