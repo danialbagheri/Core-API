@@ -39,6 +39,9 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         sku_list = ast.literal_eval(attrs['sku_list'])
         SkuListValidator(sku_list).validate_sku_list()
 
+        if '@lincocare.com' not in attrs['email']:
+            raise ValidationError({'email': 'Email must be from the domain "lincocare.com"'})
+
         if not self.recaptcha_value:
             raise ValidationError('Recaptcha data not sent.')
         ip, _ = get_client_ip(self.context['request'])
