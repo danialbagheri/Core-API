@@ -12,7 +12,7 @@ class VariantRequestEmailService:
 
     def _save_zip_file(self):
         zip_file_name = f'{uuid.uuid4()}.zip'
-        self.variant_image_request.zip_file.save(zip_file_name, ContentFile(self.zip_buffer.get_value()), save=False)
+        self.variant_image_request.zip_file.save(zip_file_name, ContentFile(self.zip_buffer.read()), save=False)
         self.variant_image_request.save()
         return f'{get_current_site(None).domain}{self.variant_image_request.zip_file.url}'
 
@@ -37,3 +37,5 @@ If you have not requested this email please ignore this email.
             from_email=from_email,
             recipient_list=[self.variant_image_request.email],
         )
+        self.variant_image_request.email_sent = True
+        self.variant_image_request.save()

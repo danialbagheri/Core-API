@@ -32,7 +32,7 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         self.recaptcha_value = data.get('recaptcha')
         if data.get('sku_list'):
             data['sku_list'] = str(data['sku_list'])
-        return data
+        return super().to_internal_value(data)
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
