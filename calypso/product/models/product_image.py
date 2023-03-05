@@ -19,6 +19,10 @@ class ProductImage(models.Model):
         ('PI', 'Product Image'),
         ('LS', 'Life Style'),
         ('RP', 'Range Photo'),
+        ('TX', 'Texture'),
+        ('AN', 'Animation'),
+        ('ST', 'Studio'),
+        ('RS', 'Result'),
         ('OT', 'Others'),
     )
 
