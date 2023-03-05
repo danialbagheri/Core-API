@@ -17,6 +17,8 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'sku_list',
+            'image_type',
+            'image_angle',
             'image_format',
             'email',
         )
