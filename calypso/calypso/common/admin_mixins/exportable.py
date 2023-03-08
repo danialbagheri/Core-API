@@ -14,6 +14,18 @@ class ExportableAdminMixin:
         actions['export_as_csv'] = (getattr(self.__class__, 'export_as_csv'), 'export_as_csv', 'Export as CSV')
         return actions
 
+    def get_row_data(self, instance, list_fields):
+        row = []
+        for field in list_fields:
+            try:
+                if hasattr(instance, field):
+                    row.append(getattr(instance, field))
+                else:
+                    row.append(getattr(self, field)(instance))
+            except Exception:
+                row.append('-')
+        return row
+
     def export_as_csv(self, request, queryset):
         queryset = self.get_queryset(request)
         list_fields = self.export_fields or self.get_list_display(request)
@@ -25,15 +37,7 @@ class ExportableAdminMixin:
         writer = csv.writer(response)
         writer.writerow(list_fields)
         for element in queryset:
-            row = []
-            for field in list_fields:
-                try:
-                    if hasattr(element, field):
-                        row.append(getattr(element, field))
-                    else:
-                        row.append(getattr(self, field)(element))
-                except Exception:
-                    row.append('-')
+            row = self.get_row_data(element, list_fields)
             writer.writerow(row)
         return response
 
