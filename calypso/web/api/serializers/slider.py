@@ -6,6 +6,12 @@ from web.models import Slider, SliderSlidesThroughModel, Slide
 
 
 class SlideSerializer(serializers.ModelSerializer):
+    xl_image = serializers.ImageField(source='slide.xl_image')
+    lg_image = serializers.ImageField(source='slide.lg_image')
+    md_image = serializers.ImageField(source='slide.md_image')
+    sm_image = serializers.ImageField(source='slide.sm_image')
+    xs_image = serializers.ImageField(source='slide.xs_image')
+
     desktop_resized = serializers.SerializerMethodField()
     desktop_webp = serializers.SerializerMethodField()
     mobile_webp = serializers.SerializerMethodField()
