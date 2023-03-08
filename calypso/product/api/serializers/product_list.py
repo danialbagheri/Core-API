@@ -59,23 +59,29 @@ class ProductSerializer(serializers.ModelSerializer):
         image_url = image.get_absolute_image_url
         return domain + get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
 
+    @staticmethod
+    def _is_gif(image):
+        if image.name.lower().endswith('.gif'):
+            return True
+        return False
+
     def get_main_image_resized(self, obj):
-        if not obj.main_image:
+        if not obj.main_image or self._is_gif(obj.main_image.image):
             return
         return self.edit_image(obj.main_image, 'PNG')
 
     def get_main_image_webp(self, obj):
-        if not obj.main_image:
+        if not obj.main_image or self._is_gif(obj.main_image.image):
             return
         return self.edit_image(obj.main_image, 'WEBP')
 
     def get_secondary_image_resized(self, product: Product):
-        if not product.secondary_image:
+        if not product.secondary_image or self._is_gif(product.secondary_image.image):
             return
         return self.edit_image(product.secondary_image, 'PNG')
 
     def get_secondary_image_webp(self, product: Product):
-        if not product.secondary_image:
+        if not product.secondary_image or self._is_gif(product.secondary_image.image):
             return
         return self.edit_image(product.secondary_image, 'WEBP')
 

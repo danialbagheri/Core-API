@@ -8,6 +8,7 @@ from django import forms
 from django.shortcuts import redirect, render
 from django.urls import path
 
+from calypso.common.admin_mixins import ExportableAdminMixin
 from product.admin.actions import check_locations
 from product.models import WhereToBuy, ProductVariant, Stockist
 
@@ -17,7 +18,8 @@ class CsvImportForm(forms.Form):
 
 
 @admin.register(WhereToBuy)
-class WhereToBuyAdmin(admin.ModelAdmin):
+class WhereToBuyAdmin(ExportableAdminMixin,
+                      admin.ModelAdmin):
     change_list_template = 'admin/product/where_to_buy_changelist.html'
     list_display = (
         'variant',
@@ -27,6 +29,9 @@ class WhereToBuyAdmin(admin.ModelAdmin):
     search_fields = ('variant__sku', 'variant__name', 'stockist__name')
     list_filter = ('stockist',)
     actions = (check_locations,)
+
+    def get_row_data(self, instance: WhereToBuy, list_fields):
+        return [instance.variant.sku, instance.stockist.name, instance.url]
 
     def is_valid_data(self, variant, stockist, request, row_num):
         if variant and stockist:

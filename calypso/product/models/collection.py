@@ -1,5 +1,7 @@
 from django.db import models
 
+from web.models import Slider
+
 
 class Collection(models.Model):
     name = models.CharField(
@@ -31,6 +33,13 @@ class Collection(models.Model):
         null=True,
         blank=True,
         max_length=None,
+    )
+
+    slider = models.ForeignKey(
+        to=Slider,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):

@@ -14,7 +14,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = '__all__'
 
+    @staticmethod
+    def _is_gif(image):
+        if image.name.lower().endswith('.gif'):
+            return True
+        return False
+
     def get_resized(self, obj):
+        if self._is_gif(obj.image):
+            return None
+
         request = self.context.get("request")
         resize_w, resize_h = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
@@ -30,6 +39,9 @@ class ProductImageSerializer(serializers.ModelSerializer):
             return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     def get_webp(self, obj):
+        if self._is_gif(obj.image):
+            return None
+
         request = self.context.get("request")
         resize_w, resize_h = check_request_image_size_params(request)
         domain = Site.objects.get_current().domain
