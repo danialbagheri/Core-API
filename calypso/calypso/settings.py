@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'drf_recaptcha',
     'ordered_model',
     'sorl.thumbnail',
+    'django_filters',
     'django.contrib.sites',
     'django_cleanup.apps.CleanupConfig',
 ]
