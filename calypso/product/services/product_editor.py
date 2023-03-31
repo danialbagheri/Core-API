@@ -63,7 +63,7 @@ class ProductEditor:
     def _retrieve_product_data(self):
         logger.info(f'Retrieving {self.product_id}')
         response = requests.post(
-            url='https://lincocare.myshopify.com/admin/api/2020-07/graphql.json',
+            url='https://lincocare.myshopify.com/admin/api/2023-01/graphql.json',
             json={
                 'query': PRODUCT_RETRIEVE_QUERY % self.product_id,
             },
@@ -94,7 +94,7 @@ class ProductEditor:
             if presentment_prices:
                 euro_info = presentment_prices[0]['node']
             variant, _ = ProductVariant.objects.update_or_create(
-                sku=data['legacyResourceId'],
+                sku=data['sku'],
                 defaults={
                     'sku': data['sku'],
                     'shopify_rest_variant_id': data['legacyResourceId'],
