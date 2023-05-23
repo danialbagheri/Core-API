@@ -58,7 +58,7 @@ mutation productVariantsBulkUpdate(
                 'variables': query_variables,
             }
             response = requests.post(
-                url=f'https://lincocare.myshopify.com/admin/api/2022-04/graphql.json',
+                url=f'https://lincocare.myshopify.com/admin/api/2023-04/graphql.json',
                 json=request_data,
                 headers={'X-Shopify-Access-Token': settings.SHOPIFY_PASSWORD},
             )

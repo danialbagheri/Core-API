@@ -155,7 +155,7 @@ class OrderAPIView(APIView):
         while True:
             query = self._get_orders_query(cursor)
             response = requests.post(
-                url='https://lincocare.myshopify.com/admin/api/2021-10/graphql.json',
+                url='https://lincocare.myshopify.com/admin/api/2023-04/graphql.json',
                 json={
                     'query': query,
                 },
