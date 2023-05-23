@@ -1,4 +1,5 @@
 import uuid
+from typing import Set
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.base import ContentFile
@@ -17,19 +18,28 @@ class VariantRequestEmailService:
         return f'{get_current_site(None).domain}{self.variant_image_request.zip_file.url}'
 
     @staticmethod
-    def _get_message(zip_file_url):
+    def _get_message(zip_file_url: str, all_invalid_sku: Set[str], all_sku_without_image: Set[str]):
         return f'''
 Your Images are now ready for you to view. Please follow the link below and download the zip file.
 
 {zip_file_url}
 
+Below SKUs did not have any images:
+
+{', '.join(all_invalid_sku)}
+
+Below given SKUs were invalid and did not exist in the system:
+
+{', '.join(all_sku_without_image)}
+
+
 For security purposes, always check the website URL and make sure the connection between you and our server is secure.
 If you have not requested this email please ignore this email.
 '''
 
-    def send_email(self):
+    def send_email(self, all_invalid_sku: Set[str], all_sku_without_image: Set[str]):
         zip_file_url = self._save_zip_file()
-        message = self._get_message(zip_file_url)
+        message = self._get_message(zip_file_url, all_invalid_sku, all_sku_without_image)
         from_email = 'admin@calypsosun.com'
         send_mail(
             subject='Image Files',
