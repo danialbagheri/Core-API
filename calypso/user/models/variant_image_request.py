@@ -48,22 +48,6 @@ class VariantImageRequest(models.Model):
 
     sku_list = models.TextField()
 
-    image_type = models.CharField(
-        max_length=32,
-        default=TYPE_ALL,
-        choices=IMAGE_TYPE_CHOICES,
-    )
-
-    image_angle = models.CharField(
-        max_length=32,
-        default=ANGLE_ALL,
-        choices=IMAGE_ANGLE_CHOICES,
-    )
-
-    image_format = models.CharField(
-        max_length=16,
-    )
-
     image_types = models.TextField()
 
     image_angles = models.TextField()
