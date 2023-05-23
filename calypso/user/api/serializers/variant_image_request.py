@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 from user.models import VariantImageRequest
 from user.tasks import SendVariantImagesEmailTask
-from ..validators import SkuListValidator
+from ..validators import ImageRequestFiltersValidator
 
 
 class VariantImageRequestSerializer(serializers.ModelSerializer):
@@ -17,9 +17,9 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'sku_list',
-            'image_type',
-            'image_angle',
-            'image_format',
+            'image_types',
+            'image_angles',
+            'image_formats',
             'email',
         )
         read_only_fields = (
@@ -32,17 +32,20 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         self.recaptcha_value = data.get('recaptcha')
-        if data.get('sku_list'):
-            data['sku_list'] = str(data['sku_list'])
+        list_filters = ['sku_list', 'image_types', 'image_angles', 'image_formats']
+
+        for list_filter in list_filters:
+            if list_filter in data:
+                data[list_filter] = str(list_filter)
+
+        for list_filter in list_filters[1:]:
+            if list_filter not in data and list_filter[:-1] in data:
+                data[list_filter] = [data.pop(list_filter[:-1])]
         return super().to_internal_value(data)
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        sku_list = ast.literal_eval(attrs['sku_list'])
-        SkuListValidator(sku_list).validate_sku_list()
-
-        if '@lincocare.com' not in attrs['email']:
-            raise ValidationError({'email': 'Email must be from the domain "lincocare.com"'})
+        ImageRequestFiltersValidator(attrs).validate()
 
         if not self.recaptcha_value:
             raise ValidationError('Recaptcha data not sent.')

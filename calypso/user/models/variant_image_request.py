@@ -64,6 +64,12 @@ class VariantImageRequest(models.Model):
         max_length=16,
     )
 
+    image_types = models.TextField()
+
+    image_angles = models.TextField()
+
+    image_formats = models.TextField()
+
     email = models.EmailField()
 
     zip_file = models.FileField(
