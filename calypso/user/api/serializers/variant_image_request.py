@@ -31,35 +31,35 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         self.recaptcha_value = None
 
     def to_internal_value(self, data):
-        self.recaptcha_value = data.get('recaptcha')
+        # self.recaptcha_value = data.get('recaptcha')
         list_filters = ['sku_list', 'image_types', 'image_angles', 'image_formats']
 
         for list_filter in list_filters:
             if list_filter in data:
-                data[list_filter] = str(list_filter)
+                data[list_filter] = str(data[list_filter])
 
         for list_filter in list_filters[1:]:
             if list_filter not in data and list_filter[:-1] in data:
-                data[list_filter] = [data.pop(list_filter[:-1])]
+                data[list_filter] = str([data.pop(list_filter[:-1])])
         return super().to_internal_value(data)
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
         ImageRequestFiltersValidator(attrs).validate()
 
-        if not self.recaptcha_value:
-            raise ValidationError('Recaptcha data not sent.')
-        ip, _ = get_client_ip(self.context['request'])
-        response = requests.post(
-            url=f'https://www.google.com/recaptcha/api/siteverify?'
-                f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={self.recaptcha_value}&remoteip={ip}',
-        )
-        data = response.json()
-        if response.status_code != 200 or not data.get('success', False):
-            raise ValidationError('Recaptcha validation failed.')
+        # if not self.recaptcha_value:
+        #     raise ValidationError('Recaptcha data not sent.')
+        # ip, _ = get_client_ip(self.context['request'])
+        # response = requests.post(
+        #     url=f'https://www.google.com/recaptcha/api/siteverify?'
+        #         f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={self.recaptcha_value}&remoteip={ip}',
+        # )
+        # data = response.json()
+        # if response.status_code != 200 or not data.get('success', False):
+        #     raise ValidationError('Recaptcha validation failed.')
         return attrs
 
     def create(self, validated_data):
         variant_image_request = super().create(validated_data)
-        SendVariantImagesEmailTask().delay(variant_image_request.id)
+        # SendVariantImagesEmailTask().delay(variant_image_request.id)
         return variant_image_request

@@ -17,9 +17,7 @@ class SendVariantImagesEmailTask(Task):
         images_zipper = VariantImageZipper(variant_images_retriever.variant_images, image_formats)
         zip_buffer = images_zipper.create_zip_file()
         images_email_service = VariantRequestEmailService(variant_image_request, zip_buffer)
-        images_email_service.send_email(
-            variant_images_retriever.all_invalid_sku, variant_images_retriever.sku_list_without_image,
-        )
+        images_email_service.send_email(variant_images_retriever.sku_list_without_image)
 
 
 current_app.register_task(SendVariantImagesEmailTask())

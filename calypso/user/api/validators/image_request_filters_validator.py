@@ -30,6 +30,7 @@ class ImageRequestFiltersValidator:
 
     def validate_image_types(self):
         self.image_types = ast.literal_eval(self.image_types)
+        self.image_types = [image_type.upper() for image_type in self.image_types]
         valid_image_types = {image_type[0] for image_type in VariantImageRequest.IMAGE_TYPE_CHOICES}
         invalid_image_types = set(self.image_types) - valid_image_types
         if invalid_image_types:

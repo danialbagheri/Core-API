@@ -18,34 +18,32 @@ class VariantRequestEmailService:
         return f'{get_current_site(None).domain}{self.variant_image_request.zip_file.url}'
 
     @staticmethod
-    def _get_message(zip_file_url: str, all_invalid_sku: Set[str], all_sku_without_image: Set[str]):
+    def _get_message(zip_file_url: str, all_sku_without_image: Set[str]):
         return f'''
 Your Images are now ready for you to view. Please follow the link below and download the zip file.
 
 {zip_file_url}
 
-Below SKUs did not have any images:
-
-{', '.join(all_invalid_sku)}
-
-Below given SKUs were invalid and did not exist in the system:
-
-{', '.join(all_sku_without_image)}
+Below given SKUs did not have any images the way you wanted:
+{', '.join(all_sku_without_image) if all_sku_without_image else '-'}
 
 
 For security purposes, always check the website URL and make sure the connection between you and our server is secure.
 If you have not requested this email please ignore this email.
 '''
 
-    def send_email(self, all_invalid_sku: Set[str], all_sku_without_image: Set[str]):
+    def send_email(self, all_sku_without_image: Set[str]):
         zip_file_url = self._save_zip_file()
-        message = self._get_message(zip_file_url, all_invalid_sku, all_sku_without_image)
+        message = self._get_message(zip_file_url, all_sku_without_image)
         from_email = 'admin@calypsosun.com'
-        send_mail(
-            subject='Image Files',
-            message=message,
-            from_email=from_email,
-            recipient_list=[self.variant_image_request.email],
-        )
+        print('####')
+        print(message)
+        print(from_email)
+        # send_mail(
+        #     subject='Image Files',
+        #     message=message,
+        #     from_email=from_email,
+        #     recipient_list=[self.variant_image_request.email],
+        # )
         self.variant_image_request.email_sent = True
         self.variant_image_request.save()
