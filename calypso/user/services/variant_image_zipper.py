@@ -27,7 +27,6 @@ class VariantImageZipper:
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
             for sku, images in self.variant_images.items():
-                # zip_file.write(f'{sku}/')
                 self.add_sku_images_to_zip(zip_file, sku, images)
         zip_buffer.seek(0)
         return zip_buffer

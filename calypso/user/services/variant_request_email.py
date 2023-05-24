@@ -36,14 +36,11 @@ If you have not requested this email please ignore this email.
         zip_file_url = self._save_zip_file()
         message = self._get_message(zip_file_url, all_sku_without_image)
         from_email = 'admin@calypsosun.com'
-        print('####')
-        print(message)
-        print(from_email)
-        # send_mail(
-        #     subject='Image Files',
-        #     message=message,
-        #     from_email=from_email,
-        #     recipient_list=[self.variant_image_request.email],
-        # )
+        send_mail(
+            subject='Image Files',
+            message=message,
+            from_email=from_email,
+            recipient_list=[self.variant_image_request.email],
+        )
         self.variant_image_request.email_sent = True
         self.variant_image_request.save()

@@ -17,9 +17,9 @@ class VariantImagesRetriever:
 
     def retrieve_variant_image(self):
         images = ProductImage.objects.filter(variant__sku__in=self.sku_list).select_related('variant')
-        if VariantImageRequest.TYPE_ALL not in self.image_types:
+        if self.image_types and VariantImageRequest.TYPE_ALL not in self.image_types:
             images = images.filter(image_type__in=self.image_types)
-        if VariantImageRequest.ANGLE_ALL not in self.image_angles:
+        if self.image_angles and VariantImageRequest.ANGLE_ALL not in self.image_angles:
             images = images.filter(image_angle__in=self.image_angles)
 
         for image in images:
