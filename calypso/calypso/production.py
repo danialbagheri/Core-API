@@ -20,12 +20,12 @@ MYSQL_PASSWORD = env('MYSQL_PASSWORD')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': MYSQL_DB_NAME,
-        'USER': MYSQL_USER_NAME,
-        'PASSWORD': MYSQL_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME', default=env('MYSQL_DB_NAME')),
+        'USER': env('DB_USER', default=env('MYSQL_USER_NAME')),
+        'PASSWORD': env('DB_PASSWORD', default=env('MYSQL_PASSWORD')),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'OPTIONS': env.json('DB_OPTIONS'),
     }
 }
