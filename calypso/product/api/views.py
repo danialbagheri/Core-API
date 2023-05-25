@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from calypso.common.permissions import WebhookPermission
+from common.permissions import WebhookPermission
 from product.models import Product, ProductVariant, ProductType, Collection, ProductImage, Tag
 from .serializers import (
     ProductVariantSerializer, ProductSerializer, ProductImageSerializer, TagSerializer, SingleProductSerializer,

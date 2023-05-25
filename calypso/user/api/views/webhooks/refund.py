@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from calypso.common.permissions import WebhookPermission
+from common.permissions import WebhookPermission
 from user.tasks import OrderRefundWebhookTask
 
 

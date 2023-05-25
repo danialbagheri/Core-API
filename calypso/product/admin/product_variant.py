@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 
-from calypso.common.admin_mixins import ExportableAdminMixin
+from common.admin_mixins import ExportableAdminMixin
 from product.admin.actions import apply_discounts, remove_discounts
 from product.models import ProductVariant
 

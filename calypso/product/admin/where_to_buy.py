@@ -8,7 +8,7 @@ from django import forms
 from django.shortcuts import redirect, render
 from django.urls import path
 
-from calypso.common.admin_mixins import ExportableAdminMixin
+from common.admin_mixins import ExportableAdminMixin
 from product.admin.actions import check_locations
 from product.models import WhereToBuy, ProductVariant, Stockist
 
