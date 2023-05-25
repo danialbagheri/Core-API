@@ -21,6 +21,7 @@ dist
 node_modules
 .env
 *.env
+.env*
 calypso/static_root/
 calypso/static_root/*
 # Created by https://www.toptal.com/developers/gitignore/api/django
