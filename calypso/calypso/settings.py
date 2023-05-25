@@ -164,8 +164,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %y',
     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
+        'calypso.throttling.SafeCacheAnonRateThrottle',
+        'calypso.throttling.SafeCacheUserRateThrottle',
         # 'calypso.throttling.PostAnonymousRateThrottle',
         'calypso.throttling.PutAnonymousRateThrottle'
     ],
