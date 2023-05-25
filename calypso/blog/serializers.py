@@ -2,7 +2,7 @@ from django.contrib.sites.models import Site
 from rest_framework import serializers
 from .models import BlogPost, BlogCollection, BlogCollectionItem
 from sorl.thumbnail import get_thumbnail
-from product.api.views import ProductSerializer
+from product.api.serializers import ProductSerializer
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
