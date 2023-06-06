@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, VariantImageRequest
+from .models import User, VariantImageRequest, SentEmail
 
 
 class UserAdmin(UserAdmin):
@@ -45,5 +45,10 @@ class VariantImageRequestAdmin(admin.ModelAdmin):
     pass
 
 
+class SentEmailAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(VariantImageRequest, VariantImageRequestAdmin)
+admin.site.register(SentEmail, SentEmailAdmin)
