@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
-from calypso.common.admin_mixins import ExportableAdminMixin
+from common.admin_mixins import ExportableAdminMixin
 from product.models import Product, ProductImage
 
 

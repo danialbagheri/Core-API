@@ -1,0 +1,1 @@
+from .mailjet_transactional_email import TransactionalMailJetEmailService
