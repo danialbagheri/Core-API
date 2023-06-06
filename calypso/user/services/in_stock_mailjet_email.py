@@ -25,10 +25,9 @@ class InStockMailjetEmail(TransactionalMailJetEmailService):
         return {
             'product_title': self.variant.product.name,
             'variant_title': self.variant.name,
-            'variant_price': self.variant.price,
             'variant_image': image_url,
             'shop_url': f'https://calypsosun.com/products/{self.variant.product.slug}',
-            'product_description': f'{plain_description[:125]}...',
+            'product_description': f'{plain_description[:200]}...',
         }
 
     def _get_extra_data(self) -> str:
