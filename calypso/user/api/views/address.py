@@ -89,7 +89,7 @@ class AddressAPIView(APIView):
         while True:
             query = self._get_addresses_query(cursor)
             response = requests.post(
-                url='https://lincocare.myshopify.com/admin/api/2020-07/graphql.json',
+                url='https://lincocare.myshopify.com/admin/api/2023-04/graphql.json',
                 json={
                     'query': query,
                 },

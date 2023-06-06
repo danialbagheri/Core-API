@@ -4,7 +4,7 @@ from django.conf import settings
 base_url = settings.SHOPIFY_URL
 api_key = settings.SHOPIFY_API_KEY
 password = settings.SHOPIFY_PASSWORD
-graphql_url = 'https://lincocare.myshopify.com/admin/api/2020-07/graphql.json'
+graphql_url = 'https://lincocare.myshopify.com/admin/api/2023-04/graphql.json'
 #  shopify.ShopifyResource.set_site(base_url)
 # shopify.Customer.search(query="bagheri.danial@gmail.com")
 
