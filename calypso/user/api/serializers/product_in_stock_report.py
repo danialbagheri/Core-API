@@ -5,6 +5,8 @@ from ..validators import ProductInStockReportValidator
 
 
 class ProductInStockReportSerializer(serializers.ModelSerializer):
+    variant_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = ProductInStockReport
         fields = (
