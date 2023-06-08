@@ -10,7 +10,7 @@ from web.models import Configuration
 
 
 class InStockMailjetEmail(TransactionalMailJetEmailService):
-    template_id = Configuration.objects.filter(key='in-stock-email-template-id').first()
+    template_id = Configuration.objects.filter(key='in-stock-email-template-id').first().value
     template_name = SentEmail.TEMPLATE_IN_STOCK
 
     def __init__(self, variant: ProductVariant, emails: List[str]):
