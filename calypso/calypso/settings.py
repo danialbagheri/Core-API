@@ -324,7 +324,7 @@ SUMMERNOTE_CONFIG = {
     ),
 }
 
-RABBITMQ_HOST = env('RABBITMQ_HOST', 'localhost')
+RABBITMQ_HOST = env('RABBITMQ_HOST', default='localhost')
 CELERY_BROKER_URL = f'amqp://{RABBITMQ_HOST}'
 
 IP_INFO_TOKEN = env('IP_INFO_TOKEN')
