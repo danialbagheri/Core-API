@@ -21,10 +21,16 @@ class TransactionalMailJetEmailService:
             version='v3.1',
         )
 
+    def _get_template_id(self):
+        return self.template_id
+
     def _get_receiver_emails(self) -> List[str]:
         return self.emails
 
     def _get_variables(self) -> Dict[str, Any]:
+        raise NotImplementedError
+
+    def _get_extra_data(self) -> str:
         raise NotImplementedError
 
     def _send_email_api_request(self) -> Response:
@@ -36,7 +42,7 @@ class TransactionalMailJetEmailService:
                             'Email': email
                         } for email in self._get_receiver_emails()
                     ],
-                    'TemplateID': self.template_id,
+                    'TemplateID': self._get_template_id(),
                     'TemplateLanguage': True,
                     'Variables': self._get_variables()
                 }
@@ -52,9 +58,6 @@ class TransactionalMailJetEmailService:
         if messages:
             email_id = messages[0]['To'][0]['MessageID']
         return email_id
-
-    def _get_extra_data(self) -> str:
-        raise NotImplementedError
 
     def _create_log(self, email_api_response: Response) -> None:
         email_id = self._get_email_id(email_api_response)
@@ -72,7 +75,7 @@ class TransactionalMailJetEmailService:
         )
 
     def send_emails(self) -> None:
-        if not self.template_id:
+        if not self._get_template_id():
             logger.warning(f'Template ID is not set.')
             return
         logger.info(f'Sending email {self.template_name} to email {self.emails}')
