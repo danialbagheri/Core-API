@@ -1,8 +1,5 @@
 from collections import defaultdict
 
-from django.conf import settings
-from mailchimp_transactional import Client
-
 from product.models import ProductVariant
 from user.models import ProductInStockReport
 from user.services import InStockMailjetEmail
@@ -11,7 +8,6 @@ from user.services import InStockMailjetEmail
 class ProductInStockReportSender:
     def __init__(self, in_stock_variants):
         self.in_stock_variants = in_stock_variants
-        self.mailchimp = Client(settings.MAILCHIMP_TRANSACTIONAL_API_KEY)
         self.reports_to_send = None
         self.variant_id_emails = defaultdict(set)
 

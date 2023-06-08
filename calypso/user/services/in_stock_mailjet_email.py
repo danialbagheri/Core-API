@@ -10,12 +10,17 @@ from web.models import Configuration
 
 
 class InStockMailjetEmail(TransactionalMailJetEmailService):
-    template_id = Configuration.objects.filter(key='in-stock-email-template-id').first().value
     template_name = SentEmail.TEMPLATE_IN_STOCK
 
     def __init__(self, variant: ProductVariant, emails: List[str]):
         super().__init__(emails)
         self.variant = variant
+
+    def _get_template_id(self):
+        template_id_config = Configuration.objects.filter(key='in-stock-email-template-id').first()
+        if not template_id_config:
+            return None
+        return template_id_config.value
 
     def _get_variables(self) -> Dict[str, Any]:
         variant_image = self.variant.variant_images.first()
