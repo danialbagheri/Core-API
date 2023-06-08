@@ -68,6 +68,12 @@ services:
       - 6379
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    expose:
+      - 5672
+    restart: unless-stopped
+
 volumes:
   api-static:
   api-media:
