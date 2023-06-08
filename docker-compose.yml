@@ -7,6 +7,8 @@ services:
     volumes:
       - api-static:/usr/src/app/static
       - api-media:/usr/src/app/media
+    ports:
+      - 8000:8000
     expose:
       - 8000
     links:
