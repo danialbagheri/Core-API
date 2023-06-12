@@ -34,18 +34,20 @@ class TransactionalMailJetEmailService:
         raise NotImplementedError
 
     def _send_email_api_request(self) -> Response:
+        template_id = self._get_template_id()
+        variables = self._get_variables()
         data = {
             'Messages': [
                 {
                     'To': [
                         {
                             'Email': email
-                        } for email in self._get_receiver_emails()
+                        }
                     ],
-                    'TemplateID': self._get_template_id(),
+                    'TemplateID': template_id,
                     'TemplateLanguage': True,
-                    'Variables': self._get_variables()
-                }
+                    'Variables': variables,
+                } for email in self._get_receiver_emails()
             ],
             'SandboxMode': settings.DEBUG,
         }
