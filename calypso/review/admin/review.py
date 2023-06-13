@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from review.models import Review, ReviewAnswer, ReviewImage
+from review.services import ReviewApprovalMailjetEmail
 
 
 class ReviewAnswerInlineAdmin(admin.StackedInline):
@@ -37,16 +38,23 @@ class ReviewImageInlineAdmin(admin.StackedInline):
 class ReviewAdmin(admin.ModelAdmin):
     list_filter = ('score', 'product')
     list_display = [
-        "name",
-        "title",
-        "score",
+        'name',
+        'title',
+        'score',
         'location',
         'product',
-        "like",
-        "dislike",
+        'like',
+        'dislike',
         'approved',
         'date_created',
     ]
     search_fields = ['customer_name']
     raw_id_fields = ('product', 'variant', 'user')
     inlines = (ReviewAnswerInlineAdmin, ReviewImageInlineAdmin)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        field_name = 'approved'
+        if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
+            email = obj.email
+            ReviewApprovalMailjetEmail(obj, [email]).send_emails()

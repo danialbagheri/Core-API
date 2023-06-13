@@ -1,0 +1,1 @@
+from .review_approval_mailjet_email import ReviewApprovalMailjetEmail
