@@ -3,8 +3,10 @@ from django.db import models
 
 class SentEmail(models.Model):
     TEMPLATE_IN_STOCK = 'in-stock'
+    TEMPLATE_REVIEW_REMINDER = 'review-reminder'
     TEMPLATE_CHOICES = (
         (TEMPLATE_IN_STOCK, 'In Stock'),
+        (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
     )
 
     email = models.EmailField()
