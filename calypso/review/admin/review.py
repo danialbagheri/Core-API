@@ -57,4 +57,6 @@ class ReviewAdmin(admin.ModelAdmin):
         field_name = 'approved'
         if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
             email = obj.email
+            if not email:
+                return
             ReviewApprovalMailjetEmail(obj, [email]).send_emails()
