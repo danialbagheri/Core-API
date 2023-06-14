@@ -33,7 +33,7 @@ class ReviewApprovalMailjetEmail(TransactionalMailJetEmailService):
             'variant_image': image_url,
             'product_title': product.name,
             'variant_title': variant.name,
-            'review_url': f'https://calypsosun.com/products/write-review?slug={product.slug}',
+            'review_url': f'https://calypsosun.com/products/{product.slug}#readReviews',
         }
         for index, related_product in enumerate(self.related_products):
             number = index + 1

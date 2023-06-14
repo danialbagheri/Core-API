@@ -31,7 +31,7 @@ class InStockMailjetEmail(TransactionalMailJetEmailService):
             'product_title': self.variant.product.name,
             'variant_title': self.variant.name,
             'variant_image': image_url,
-            'shop_url': f'https://calypsosun.com/products/{self.variant.product.slug}',
+            'shop_url': f'https://calypsosun.com/products/{self.variant.product.slug}?sku={self.variant.sku}',
             'product_description': f'{plain_description[:200]}...',
         }
 
