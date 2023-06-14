@@ -110,7 +110,7 @@ class ProductEditor:
                     'position': data['position'],
                 }
             )
-            if variant.inventory_quantity > 5:
+            if variant.inventory_quantity > 10:
                 self.in_stock_variants.append(variant)
 
     def edit_product(self):
