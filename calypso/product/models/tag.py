@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -20,6 +21,7 @@ class Tag(models.Model):
         max_length=512,
         null=True,
         blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
     )
 
     name = models.CharField(
@@ -31,7 +33,7 @@ class Tag(models.Model):
     slug = models.SlugField(
         default=get_slug,
         unique=True,
-        verbose_name=_("slug"),
+        verbose_name=_('slug'),
     )
 
     def __str__(self):
