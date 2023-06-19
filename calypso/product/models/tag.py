@@ -15,6 +15,13 @@ class Tag(models.Model):
         blank=True,
     )
 
+    svg_icon = models.FileField(
+        upload_to='tag-svg-icons',
+        max_length=512,
+        null=True,
+        blank=True,
+    )
+
     name = models.CharField(
         max_length=200,
         blank=True,
