@@ -5,8 +5,8 @@ from review.models import Review
 from review.services import ReviewNotificationFailureEmail
 
 
-class ManagerNotificationEmail(ManagerEmailService):
-    service_name = 'Manager Notification Email'
+class ReviewNotificationEmail(ManagerEmailService):
+    service_name = 'Review Notification Email'
     subject = 'A new review has been submitted on {review_source}'
     message = '''
 Please check and approve the latest review by visiting {review_admin_url}
