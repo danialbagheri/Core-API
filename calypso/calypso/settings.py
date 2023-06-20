@@ -35,6 +35,7 @@ else:
         from .development import *
     except ImportError:
         pass
+
 # Email configs
 EMAIL_USE_TLS = True
 EMAIL_HOST = env('EMAIL_HOST')
@@ -42,17 +43,22 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'Calypso Sun <info@calypsosun.com>'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+
 SHOPIFY_API_KEY = env('SHOPIFY_API_KEY')
 SHOPIFY_PASSWORD = env('SHOPIFY_PASSWORD')
 SHOPIFY_SHARED_SECRET_KEY = env('SHOPIFY_SHARED_SECRET_KEY')
-API_VERSION = "2020-10"
-SHOPIFY_URL = "https://%s:%s@lincocare.myshopify.com/admin/api/%s" % (
-    SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION)
+API_VERSION = '2023-04'
+SHOPIFY_URL = 'https://%s:%s@lincocare.myshopify.com/admin/api/%s' % (
+    SHOPIFY_API_KEY, SHOPIFY_PASSWORD, API_VERSION
+)
+
 DRF_RECAPTCHA_SECRET_KEY = env('DRF_RECAPTCHA_SECRET_KEY')
 # DRF_RECAPTCHA_DOMAIN = "127.0.0.1:8000"
 DRF_RECAPTCHA_PROXY = env.dict("DRF_RECAPTCHA_PROXY")
+
 # Instagram API keys
 INSTAGRAM_INSTANT_TOKEN_API = env('INSTAGRAM_INSTANT_TOKEN_API')
 INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
@@ -62,7 +68,6 @@ INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
-
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 WEBSITE_ADDRESS = env('WEBSITE_ADDRESS')
@@ -99,6 +104,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django.contrib.sites',
     'django_cleanup.apps.CleanupConfig',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -134,12 +140,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'calypso.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'user.User'
@@ -158,7 +158,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -192,13 +191,9 @@ DJOSER = {
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'GB'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
@@ -207,12 +202,13 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static_root",
-    # '/var/www/static/',
+    BASE_DIR / 'static_root',
 ]
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / 'media'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
