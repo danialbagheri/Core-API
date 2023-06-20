@@ -37,7 +37,10 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         subject = f"A new review has been submitted on {review.source}"
         message = f"""
             Please check and approve the latest review by visiting https://service.calypsosun.com/dashboard/reviews/{review.id}/
-            user ip: {review.ip_address}
+            User IP: {review.ip_address}
+            User name: {review.customer_name}
+            User email: {review.email}
+            Review score: {review.score}
             Product: {product_name}
             Subject: {review.title}
             Review:
