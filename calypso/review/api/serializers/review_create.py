@@ -5,7 +5,7 @@ from rest_framework import serializers
 from product.models import Product
 from . import ReplySerializer, ReviewImageSerializer
 from ...models import Review, ReviewImage, ReviewAnswer
-from ...services import ManagerNotificationEmail
+from ...services import ReviewNotificationEmail
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
@@ -62,5 +62,5 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             id__in=image_ids,
         ).update(review=review)
         self.create_review_answers(answers, review)
-        ManagerNotificationEmail(review).send_email()
+        ReviewNotificationEmail(review).send_email()
         return review
