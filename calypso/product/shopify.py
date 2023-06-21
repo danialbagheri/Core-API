@@ -1,16 +1,12 @@
 import requests
 from django.conf import settings
 
-base_url = settings.SHOPIFY_URL
-api_key = settings.SHOPIFY_API_KEY
-password = settings.SHOPIFY_PASSWORD
-graphql_url = 'https://lincocare.myshopify.com/admin/api/2023-04/graphql.json'
 #  shopify.ShopifyResource.set_site(base_url)
 # shopify.Customer.search(query="bagheri.danial@gmail.com")
 
 
 def get_variant_info_by_restVariantId(restVariantId):
-    headers = {"X-Shopify-Access-Token": password}
+    headers = {"X-Shopify-Access-Token": settings.SHOPIFY_PASSWORD}
     query = '''
 {
     productVariant (id: "gid://shopify/ProductVariant/%s") {
@@ -21,12 +17,12 @@ def get_variant_info_by_restVariantId(restVariantId):
     }
 }
     ''' % restVariantId
-    r = requests.post(url=graphql_url, json={'query': query}, headers=headers)
+    r = requests.post(url=settings.SHOPIFY_URL, json={'query': query}, headers=headers)
     return r.json()['data']['productVariant']
 
 
 def get_variant_info_by_sku(sku):
-    headers = {"X-Shopify-Access-Token": password}
+    headers = {"X-Shopify-Access-Token": settings.SHOPIFY_PASSWORD}
     query = '''
 {
   productVariants(first: 1, query: "sku:%s") {
@@ -59,5 +55,5 @@ def get_variant_info_by_sku(sku):
   }
 }   
     ''' % sku
-    r = requests.post(url=graphql_url, json={'query': query}, headers=headers)
+    r = requests.post(url=settings.SHOPIFY_URL, json={'query': query}, headers=headers)
     return r.json()['data']['productVariants']['edges'][0]['node']
