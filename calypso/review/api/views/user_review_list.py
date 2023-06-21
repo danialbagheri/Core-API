@@ -1,4 +1,5 @@
-from django.db.models import F
+from django.db.models import F, BigIntegerField
+from django.db.models.functions import Cast
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -19,4 +20,8 @@ class UserReviewListAPIView(ListAPIView):
     def get_queryset(self):
         return Review.objects.filter(
             user=self.request.user,
-        ).annotate(helpfulness=F('like') - F('dislike'))
+        ).annotate(
+            helpfulness=
+                Cast(F('like'),output_field=BigIntegerField()) - 
+                Cast(F('dislike'), output_field=BigIntegerField()), 
+        )

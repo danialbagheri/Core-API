@@ -1,11 +1,11 @@
 from django.core.exceptions import ValidationError
-from django.core.mail import mail_managers, mail_admins
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from product.models import Product
 from . import ReplySerializer, ReviewImageSerializer
 from ...models import Review, ReviewImage, ReviewAnswer
+from ...services import ReviewNotificationEmail
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
@@ -31,22 +31,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         if x_forwarded_for:
             return x_forwarded_for.split(',')[0]
         return request.META.get('REMOTE_ADDR')
-
-    @staticmethod
-    def notify_the_admin(review, product_name):
-        subject = f"A new review has been submitted on {review.source}"
-        message = f"""
-            Please check and approve the latest review by visiting https://service.calypsosun.com/dashboard/reviews/{review.id}/
-            user ip: {review.ip_address}
-            Product: {product_name}
-            Subject: {review.title}
-            Review:
-            {review.comment}
-            """
-        try:
-            mail_managers(subject, message)
-        except Exception as e:
-            mail_admins("New Review Email notification failed", f"{e}")
 
     @staticmethod
     def create_review_answers(answers, review):
@@ -77,9 +61,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         ReviewImage.objects.filter(
             id__in=image_ids,
         ).update(review=review)
-        self.notify_the_admin(
-            review=review,
-            product_name=product_instance.name,
-        )
         self.create_review_answers(answers, review)
+        ReviewNotificationEmail(review).send_email()
         return review

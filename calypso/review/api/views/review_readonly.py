@@ -1,4 +1,5 @@
-from django.db.models import F
+from django.db.models import F, BigIntegerField
+from django.db.models.functions import Cast
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
@@ -19,4 +20,8 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return Review.objects.filter(
             approved=True
-        ).annotate(helpfulness=F('like') - F('dislike'))
+        ).annotate(
+            helpfulness=
+                Cast(F('like'),output_field=BigIntegerField()) - 
+                Cast(F('dislike'), output_field=BigIntegerField()), 
+        )

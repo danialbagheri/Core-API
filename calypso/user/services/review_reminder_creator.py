@@ -13,19 +13,22 @@ class ReviewReminderCreatorService:
 
     def _create_order_bought_variants(self, review_reminder):
         line_items = self._order_data['line_items']
-        variants_map = {variant.shopify_rest_variant_id: variant.id for variant in ProductVariant.objects.all()}
+        variants_map = {int(variant.shopify_rest_variant_id): variant.id for variant in ProductVariant.objects.all()}
         review_reminder_bought_variants = []
+        bought_variant_ids = set()
 
         for line_item in line_items:
             shopify_variant_id = line_item['variant_id']
             variant_id = variants_map.get(shopify_variant_id)
             if not variant_id:
                 continue
+            bought_variant_ids.add(variant_id)
             review_reminder_bought_variants.append(ReviewReminderBoughtVariant(
                 review_reminder=review_reminder,
                 variant_id=variant_id,
                 quantity=line_item['quantity'],
             ))
+        review_reminder.bought_variants.add(*bought_variant_ids)
         ReviewReminderBoughtVariant.objects.bulk_create(review_reminder_bought_variants)
 
     def create_review_reminder(self):
