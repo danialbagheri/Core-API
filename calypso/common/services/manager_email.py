@@ -12,7 +12,7 @@ class ManagerEmailService(InternalEmailService):
         return settings.SERVER_EMAIL
 
     def get_recipient_emails(self):
-        manager_emails_config = Configuration.objects.filter(key='manager-emails').value
+        manager_emails_config = Configuration.objects.get(key='manager-emails').value
         manager_emails = manager_emails_config.split(',')
         return manager_emails
 
