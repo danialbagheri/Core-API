@@ -1,6 +1,7 @@
 import ast
 from typing import Dict
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from product.models import ProductVariant
@@ -17,8 +18,12 @@ class ImageRequestFiltersValidator:
         self.image_formats = request_filters['image_formats']
 
     def validate_email(self):
-        if '@lincocare.com' not in self.email:
-            raise ValidationError({'email': 'Email must be from the domain "lincocare.com"'})
+        valid_staff_email_domains = settings.VALID_STAFF_EMAIL_DOMAINS
+        for valid_staff_email_domain in valid_staff_email_domains:
+            if f'@{valid_staff_email_domain}' in self.email:
+                return
+        domains = ','.join(valid_staff_email_domains)
+        raise ValidationError({'email': f'Email must be from one of the domains "{domains}"'})
 
     def validate_sku_list(self):
         self.sku_list = ast.literal_eval(self.sku_list)
