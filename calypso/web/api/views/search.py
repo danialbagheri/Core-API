@@ -33,7 +33,7 @@ class Search(generics.ListAPIView):
 
     def get_queryset(self):
         is_valid_query = False
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(is_public=True)
         full_query = self.request.query_params.get('q', '')
         query_parts = full_query.split(' ')
         db_query = Q()
