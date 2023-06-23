@@ -61,6 +61,7 @@ INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
 SECRET_KEY = env("SECRET_KEY")
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+BACKEND_ADDRESS = env('BACKEND_ADDRESS')
 WEBSITE_ADDRESS = env('WEBSITE_ADDRESS')
 
 # Application definition
@@ -168,9 +169,9 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/password-reset/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/username-reset/{uid}/{token}',
-    'ACTIVATION_URL': WEBSITE_ADDRESS + '/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': BACKEND_ADDRESS + '/password-reset/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': BACKEND_ADDRESS + '/username-reset/{uid}/{token}',
+    'ACTIVATION_URL': BACKEND_ADDRESS + '/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,

@@ -26,11 +26,11 @@ class ReviewReminderMailjetEmail(TransactionalMailJetEmailService):
         for variant in self.variants:
             variant_image = variant.variant_images.first()
             image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-            image_url = f'{settings.WEBSITE_ADDRESS}{image_url}'
+            image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
             variants_data.append({
                 'product_title': variant.product.name,
                 'variant_title': variant.name,
-                'review_url': f'https://calypsosun.com/products/write-review?slug={variant.product.slug}',
+                'review_url': f'{settings.WEBSITE_ADDRESS}/products/write-review?slug={variant.product.slug}',
                 'variant_image': image_url,
             })
         return {

@@ -27,7 +27,7 @@ Review:
     def get_variables(self):
         return {
             'review_source': self.review.source,
-            'review_admin_url': f'{settings.WEBSITE_ADDRESS}/admin/review/review/{self.review.id}/change/',
+            'review_admin_url': f'{settings.BACKEND_ADDRESS}/admin/review/review/{self.review.id}/change/',
             'review_score': self.review.score,
             'review_title': self.review.title,
             'review_message': self.review.comment,

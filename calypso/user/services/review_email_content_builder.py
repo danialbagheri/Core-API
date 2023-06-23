@@ -28,7 +28,7 @@ class ReviewEmailContentBuilder:
     def _build_variant_content(self, variant):
         variant_image = variant.variant_images.first()
         image_url = variant_image.image.url if variant_image else '/media/email-images/lost-image.svg'
-        image_url = f'{settings.WEBSITE_ADDRESS}{image_url}'
+        image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
         product_name = f'{variant.product.name} {variant.name}'
         review_link = f'https://calypsosun.com/products/{variant.product.slug}/review'
         return self.CONTENT_BASE\

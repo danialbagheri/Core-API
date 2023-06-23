@@ -25,13 +25,13 @@ class InStockMailjetEmail(TransactionalMailJetEmailService):
     def _get_variables(self) -> Dict[str, Any]:
         variant_image = self.variant.variant_images.first()
         image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-        image_url = f'{settings.WEBSITE_ADDRESS}{image_url}'
+        image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
         plain_description = BeautifulSoup(self.variant.product.description, features='html.parser').text
         return {
             'product_title': self.variant.product.name,
             'variant_title': self.variant.name,
             'variant_image': image_url,
-            'shop_url': f'https://calypsosun.com/products/{self.variant.product.slug}?sku={self.variant.sku}',
+            'shop_url': f'{settings.WEBSITE_ADDRESS}/products/{self.variant.product.slug}?sku={self.variant.sku}',
             'product_description': f'{plain_description[:200]}...',
         }
 
