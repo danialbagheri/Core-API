@@ -75,16 +75,20 @@ class ContactFormSerializer(serializers.ModelSerializer):
                 contact_form.receivers_email = reason_config.value
                 contact_form.save()
                 return contact_form
-            customer_service_emails, created = Configuration.objects.get_or_create(key='customer_service_emails')
-            if created:
-                customer_service_emails.name = 'Customer Service emails'
-                customer_service_emails.value = 'info@calypsosun.com'
-                customer_service_emails.save()
-            marketing_emails, marketing_created = Configuration.objects.get_or_create(key='marketing_emails')
-            if marketing_created:
-                marketing_emails.name = 'Marketing Emails'
-                marketing_emails.value = 'pr@lincocare.com'
-                marketing_emails.save()
+            customer_service_emails, created = Configuration.objects.get_or_create(
+                key='customer_service_emails',
+                defaults={
+                    'name': 'Customer Service Emails',
+                    'value': settings.DEFAULT_CUSTOMER_SERVICE_EMAIL,
+                },
+            )
+            marketing_emails, marketing_created = Configuration.objects.get_or_create(
+                key='marketing_emails',
+                defaults={
+                    'name': 'Marketing Emails',
+                    'value': settings.DEFAULT_MARKETING_EMAIL,
+                },
+            )
 
             if contact_form.reason in REASON_CHOICES[:3]:
                 send_mail(contact_form.reason, message, email_from, marketing_emails.value.split(','), )

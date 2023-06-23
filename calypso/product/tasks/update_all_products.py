@@ -32,7 +32,7 @@ class UpdateAllProductsTask(Task):
     def run(self):
         from product.tasks import ProductEditTask
         response = requests.post(
-            url='https://lincocare.myshopify.com/admin/api/2023-04/graphql.json',
+            url=settings.SHOPIFY_URL,
             json={
                 'query': VARIANTS_LIST_QUERY,
             },

@@ -63,7 +63,7 @@ class ProductEditor:
     def _retrieve_product_data(self):
         logger.info(f'Retrieving {self.product_id}')
         response = requests.post(
-            url='https://lincocare.myshopify.com/admin/api/2023-04/graphql.json',
+            url=settings.SHOPIFY_URL,
             json={
                 'query': PRODUCT_RETRIEVE_QUERY % self.product_id,
             },

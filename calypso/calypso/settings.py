@@ -34,6 +34,8 @@ EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX')
 SERVER_EMAIL = env('SERVER_EMAIL')
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
+DEFAULT_CUSTOMER_SERVICE_EMAIL = env('DEFAULT_CUSTOMER_SERVICE_EMAIL')
+DEFAULT_MARKETING_EMAIL = env('DEFAULT_MARKETING_EMAIL')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
