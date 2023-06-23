@@ -7,16 +7,10 @@ class Reply(models.Model):
     """
     user_name = models.CharField(
         max_length=200,
-        blank=True,
-        null=True,
-        default="Linco Care",
     )
 
     user_email = models.EmailField(
         max_length=254,
-        blank=True,
-        null=True,
-        default="",
     )
 
     comment = models.TextField()
