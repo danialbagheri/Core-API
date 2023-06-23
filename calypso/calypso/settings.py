@@ -36,7 +36,7 @@ ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 MANAGERS = [x.split(':') for x in env.list('DJANGO_MANAGERS')]
 DEFAULT_CUSTOMER_SERVICE_EMAIL = env('DEFAULT_CUSTOMER_SERVICE_EMAIL')
 DEFAULT_MARKETING_EMAIL = env('DEFAULT_MARKETING_EMAIL')
-VALID_STAFF_EMAIL_DOMAINS = env.list('STAFF_EMAIL_DOMAIN')
+VALID_STAFF_EMAIL_DOMAINS = env.list('VALID_STAFF_EMAIL_DOMAINS')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'calypso.wsgi.application'
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'user.User'
-LOGIN_REDIRECT_URL='/dashboard'
+LOGIN_REDIRECT_URL = '/admin'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
