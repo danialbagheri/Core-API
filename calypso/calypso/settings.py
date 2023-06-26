@@ -184,14 +184,20 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/password-reset/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': WEBSITE_ADDRESS + '/username-reset/{uid}/{token}',
-    'ACTIVATION_URL': WEBSITE_ADDRESS + '/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'username-reset/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
 }
+
+DOMAIN = 'calypsosun.com'
+SITE_NAME = 'CalypsoSun'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

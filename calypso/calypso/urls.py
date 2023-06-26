@@ -34,7 +34,6 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('api/users/', include('user.api.urls', namespace='user')),
-    path('', include('djoser.urls')),
 ]
 
 if settings.DEBUG:
