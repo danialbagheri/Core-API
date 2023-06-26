@@ -1,4 +1,4 @@
-from .user import UserCreateAPIView
+from .user import UserViewSet
 from .order import OrderAPIView
 from .address import AddressAPIView
 from .push_subscriber import PushSubscriberCreateAPIView

@@ -1,7 +1,6 @@
-from rest_framework.generics import CreateAPIView
+from djoser.views import UserViewSet as DjoserUserViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from ..serializers import UserSerializer
 
-
-class UserCreateAPIView(CreateAPIView):
-    serializer_class = UserSerializer
+class UserViewSet(DjoserUserViewSet):
+    authentication_classes = (JWTAuthentication,)
