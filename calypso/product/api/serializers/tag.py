@@ -6,7 +6,7 @@ from product.models import Tag
 
 
 class TagSerializer(serializers.ModelSerializer):
-    svg_icon = serializers.SerializerMethodField()
+    svg_icon_base64 = serializers.SerializerMethodField()
 
     class Meta:
         model = Tag
@@ -14,11 +14,13 @@ class TagSerializer(serializers.ModelSerializer):
             'id',
             'icon',
             'svg_icon',
+            'svg_icon_base64',
             'name',
             'slug',
         )
 
-    def get_svg_icon(self, tag: Tag):
+    @staticmethod
+    def get_svg_icon_base64(tag: Tag):
         svg_icon = tag.svg_icon
         if not svg_icon:
             return None
