@@ -109,7 +109,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'calypso.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -128,7 +128,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'calypso.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -155,10 +155,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %y',
     'DEFAULT_THROTTLE_CLASSES': [
-        'calypso.throttling.SafeCacheAnonRateThrottle',
-        'calypso.throttling.SafeCacheUserRateThrottle',
-        # 'calypso.throttling.PostAnonymousRateThrottle',
-        'calypso.throttling.PutAnonymousRateThrottle'
+        'core.throttling.SafeCacheAnonRateThrottle',
+        'core.throttling.SafeCacheUserRateThrottle',
+        # 'core.throttling.PostAnonymousRateThrottle',
+        'core.throttling.PutAnonymousRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '10000/day',
@@ -180,8 +180,8 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
 }
 
-DOMAIN = 'calypsosun.com'
-SITE_NAME = 'CalypsoSun'
+DOMAIN = env('DOMAIN')
+SITE_NAME = env('SITE_NAME')
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -326,3 +326,4 @@ MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')
 
 LOST_PRODUCT_IMAGE_PATH = env('LOST_PRODUCT_IMAGE_PATH')
 INSTAGRAM_IMAGES_PATH = env('INSTAGRAM_IMAGES_PATH')
+REVIEW_RATE_COOKIE_KEY = env('REVIEW_RATE_COOKIE_KEY')

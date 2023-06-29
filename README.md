@@ -1,4 +1,4 @@
-## Calypso Django website project 2020
+## core Django website project 2020
 
 DISCLAIMER: All rights of this project are reserved for Linco Care limited.
 

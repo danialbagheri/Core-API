@@ -30,7 +30,7 @@ class ReviewEmailContentBuilder:
         image_url = variant_image.image.url if variant_image else '/media/email-images/lost-image.svg'
         image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
         product_name = f'{variant.product.name} {variant.name}'
-        review_link = f'https://calypsosun.com/products/{variant.product.slug}/review'
+        review_link = f'{settings.WEBSITE_ADDRESS}/products/{variant.product.slug}/review'
         return self.CONTENT_BASE\
             .replace('{{image_url}}', image_url)\
             .replace('{{product_name}}', product_name)\

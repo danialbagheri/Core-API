@@ -1,5 +1,3 @@
-
-
 # Save the following environment variable in your environment
 # export DB_USER = "my_db_user"
 # export DB_PASS = "my_db_password"
@@ -10,7 +8,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env()
-CSRF_COOKIE_DOMAIN = '.calypsosun.com'
+CSRF_COOKIE_DOMAIN = env('CSRF_COOKIE_DOMAIN')
 SESSION_COOKIE_SAMESITE = None
 # Whether the session cookie should be secure (https:// only).
 SESSION_COOKIE_SECURE = False

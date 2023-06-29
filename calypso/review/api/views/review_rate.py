@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from rest_framework import generics
 
 from ..serializers import ReviewRateSerializer
@@ -20,10 +21,10 @@ class RateReview(generics.UpdateAPIView):
         return context
 
     def patch(self, request, *args, **kwargs):
-        self._cookie = request.COOKIES.get('calypsosun_token', None)
+        self._cookie = request.COOKIES.get(settings.REVIEW_RATE_COOKIE_KEY, None)
         if not self._cookie:
             self._cookie = uuid.uuid4()
             response = super().patch(request, *args, **kwargs)
-            response.set_cookie('calypsosun_token', self._cookie)
+            response.set_cookie(settings.REVIEW_RATE_COOKIE_KEY, self._cookie)
             return response
         return super().patch(request, *args, **kwargs)

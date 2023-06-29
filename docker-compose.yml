@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: gunicorn calypso.wsgi:application --bind 0.0.0.0:8000 --workers=2 -t 40 --access-logfile -  --access-logformat '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(M)s'
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=2 -t 40 --access-logfile -  --access-logformat '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(M)s'
     volumes:
       - api-static:/usr/src/app/static
       - api-media:/usr/src/app/media
@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: celery -A calypso worker -l info -c 2
+    command: celery -A core worker -l info -c 2
     volumes:
       - api-static:/usr/src/app/static
       - api-media:/usr/src/app/media
@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: celery -A calypso beat -l info
+    command: celery -A core beat -l info
     volumes:
       - api-static:/usr/src/app/static
       - api-media:/usr/src/app/media
