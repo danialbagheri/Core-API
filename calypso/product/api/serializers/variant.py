@@ -1,7 +1,7 @@
 from django.db.models import F
 from rest_framework import serializers
 
-from product.models import ProductVariant
+from product.models import ProductVariant, VariantIngredientThrough
 from product.utils import get_ml_number
 from web.api.serializers import InstagramSerializer
 from . import ProductImageSerializer, WhereToBuySerializer
@@ -62,4 +62,10 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_ingredients(variant: ProductVariant):
-        return list(variant.ingredients.all().values_list('name', flat=True))
+        if not VariantIngredientThrough.objects.exists():
+            return list(variant.ingredients.all().values_list('name', flat=True))
+        variant_ingredients = VariantIngredientThrough.objects.filter(
+            variant=variant,
+        ).select_related('ingredient').order_by('priority')
+        ingredient_names = [variant_ingredient.ingredient.name for variant_ingredient in variant_ingredients]
+        return ingredient_names

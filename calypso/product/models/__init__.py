@@ -11,3 +11,4 @@ from .collection import Collection
 from .collection_item import CollectionItem
 from .review_question import ReviewQuestion
 from .question_choice import QuestionChoice
+from .variant_ingredient_through import VariantIngredientThrough
