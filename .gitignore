@@ -1,11 +1,11 @@
 db.sqlite3
 venv/
 .pro-env
-calypso/static/
-calypso/static-root/*
+src/static/
+src/static-root/*
 static_root/*
-calypso/media/*
-calypso/media/
+src/media/*
+src/media/
 .DS_Store
 venv
 .pyc
@@ -22,8 +22,8 @@ node_modules
 .env
 *.env
 .env*
-calypso/static_root/
-calypso/static_root/*
+src/static_root/
+src/static_root/*
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
