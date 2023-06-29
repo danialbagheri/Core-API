@@ -1,6 +1,7 @@
 import uuid
 from typing import Set
 
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
@@ -35,7 +36,7 @@ If you have not requested this email please ignore this email.
     def send_email(self, all_sku_without_image: Set[str]):
         zip_file_url = self._save_zip_file()
         message = self._get_message(zip_file_url, all_sku_without_image)
-        from_email = 'admin@calypsosun.com'
+        from_email = settings.SERVER_EMAIL
         send_mail(
             subject='Image Files',
             message=message,

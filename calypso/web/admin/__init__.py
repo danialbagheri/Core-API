@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 
 from .configuration import ConfigurationAdmin
@@ -8,4 +9,4 @@ from .slide import SlideAdmin
 from .slider import SliderAdmin
 from .top_bar import TopBarAdmin
 
-admin.site.site_header = 'Calypso'
+admin.site.site_header = settings.BRAND_NAME

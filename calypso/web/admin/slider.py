@@ -1,9 +1,10 @@
+from django.conf import settings
 from django.contrib import admin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
 from web.models import SliderSlidesThroughModel, Slider
 
-admin.site.site_header = 'Calypso'
+admin.site.site_header = settings.BRAND_NAME
 
 
 class SlidesThroughOrderedStackedInline(OrderedTabularInline):

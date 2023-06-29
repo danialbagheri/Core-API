@@ -10,6 +10,7 @@ env = environ.Env(
 environ.Env.read_env()
 
 DEBUG = env.bool('DEBUG')
+BRAND_NAME = env('BRAND_NAME')
 PRODUCTION_ENVIRONMENT = env.bool('PRODUCTION_ENVIRONMENT')
 if PRODUCTION_ENVIRONMENT:
     try:

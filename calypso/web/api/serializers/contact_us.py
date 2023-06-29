@@ -54,7 +54,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         contact_form = super().create(validated_data)
-        email_from = "admin@calypsosun.com"
+        email_from = settings.SERVER_EMAIL
         message = f'''
 
         From: {contact_form.email}
@@ -63,7 +63,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
 
         {contact_form.message}
         ________
-        This email is sent via Calypsosun.com contact us page.
+        This email is sent via {settings.SITE_NAME} contact us page.
 
                     '''
 
