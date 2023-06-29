@@ -1,5 +1,4 @@
 db.sqlite3
-venv/
 .pro-env
 src/static/
 src/static-root/*
@@ -9,19 +8,12 @@ src/media/
 .DS_Store
 venv
 .pyc
-*.pyc
 .DOCS
 ### Django ###
-*.log
-*.pot
-*.pyc
 .dev-env.sh
 .production-env.sh
 dist
 node_modules
-.env
-*.env
-.env*
 src/static_root/
 src/static_root/*
 # Created by https://www.toptal.com/developers/gitignore/api/django
@@ -33,7 +25,6 @@ src/static_root/*
 *.pyc
 __pycache__/
 local_settings.py
-db.sqlite3
 db.sqlite3-journal
 media
 
@@ -143,6 +134,8 @@ celerybeat.pid
 
 # Environments
 .env
+*.env
+.env*
 .venv
 env/
 venv/

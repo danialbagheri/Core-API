@@ -30,7 +30,7 @@ RUN apk update \
 RUN pip install --upgrade pip
 
 # copy project
-COPY calypso/ /usr/src/app/
+COPY src/ /usr/src/app/
 COPY requirements.txt /usr/src/app/requirements.txt
 
 RUN pip install -r /usr/src/app/requirements.txt
