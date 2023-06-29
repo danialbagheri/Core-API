@@ -34,4 +34,8 @@ class Migration(migrations.Migration):
                 ('variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.productvariant')),
             ],
         ),
+        migrations.RunPython(
+            code=init_through_instances,
+            reverse_code=migrations.RunPython.noop,
+        ),
     ]
