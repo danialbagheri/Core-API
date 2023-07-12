@@ -18,50 +18,16 @@ services:
     depends_on:
       - postgres
 
-  celery_worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: celery -A core worker -l info -c 2
-    volumes:
-      - /var/volumes/calypso/static/:/usr/src/app/static
-      - /var/volumes/calypso/media/:/usr/src/app/media
-    expose:
-      - 8000
-    links:
-      - redis:redis
-    env_file: .env
-    restart: unless-stopped
-    depends_on:
-      - postgres
-
-  beat:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: celery -A core beat -l info
-    volumes:
-      - /var/volumes/calypso/static/:/usr/src/app/static
-      - /var/volumes/calypso/media/:/usr/src/app/media
-    expose:
-      - 8000
-    links:
-      - redis:redis
-    env_file: .env
-    restart: unless-stopped
-    depends_on:
-      - postgres
-
   postgres:
     image: postgres
     shm_size: 512mb
     ports:
-      - 5432:5432
+      - 5432
     env_file:
       - .env.postgres
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
-      - ./postgres/:/docker-entrypoint-initdb.d/
+      - /var/volumes/calypso/postgres/:/docker-entrypoint-initdb.d/
     restart: unless-stopped
 
   redis:
