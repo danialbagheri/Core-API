@@ -33,4 +33,6 @@ RUN pip install --upgrade pip
 COPY src/ /usr/src/app/
 COPY requirements.txt /usr/src/app/requirements.txt
 
+RUN mkdir /usr/src/app/static_root
+RUN mv /usr/src/app/dashboard_static /usr/src/app/static_root
 RUN pip install -r /usr/src/app/requirements.txt
