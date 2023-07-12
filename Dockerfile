@@ -6,33 +6,22 @@ FROM python:3.9.14-alpine
 WORKDIR /usr/src/app
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# RUN apk add --no-cache --virtual .build-deps gcc musl-dev
-
-# # install python3-dev
-# RUN apk update \
-#     && apk add --virtual .build-deps gcc libc-dev
-
-# RUN apk update && apk add postgresql-dev python3-dev
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 RUN apk update \
     && apk add --virtual build-deps gcc python3-dev musl-dev libc-dev \
-    && apk add postgresql \
-    && apk add postgresql-dev \
-#     && pip install psycopg2 \
+    && apk add postgresql postgresql-dev \
+    && apk add mariadb-dev \
     && apk add jpeg-dev zlib-dev libjpeg libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
-#     && pip install Pillow \
 #     && apk del build-deps
 
 # install dependencies
 RUN pip install --upgrade pip
 
 # copy project
-COPY src/ /usr/src/app/
-COPY requirements.txt /usr/src/app/requirements.txt
+COPY src/ requirements.txt /usr/src/app/
 
-RUN mkdir /usr/src/app/static_root
-RUN mv /usr/src/app/dashboard_static /usr/src/app/static_root
-RUN pip install -r /usr/src/app/requirements.txt
+RUN mkdir /usr/src/app/static_root \
+    && mv /usr/src/app/dashboard_static /usr/src/app/static_root \
+    && pip install -r /usr/src/app/requirements.txt
