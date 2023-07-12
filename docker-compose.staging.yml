@@ -1,0 +1,46 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=2 -t 40 --access-logfile -  --access-logformat '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(M)s'
+    volumes:
+      - /var/volumes/calypso/static/:/usr/src/app/static
+      - /var/volumes/calypso/media/:/usr/src/app/media
+    ports:
+      - 8000
+    expose:
+      - 8000
+    links:
+      - redis:redis
+    env_file: .env
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    shm_size: 512mb
+    ports:
+      - 5432
+    env_file:
+      - .env.postgres
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data/
+      - /var/volumes/calypso/postgres/:/docker-entrypoint-initdb.d/
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    expose:
+      - 5672
+    restart: unless-stopped
+
+volumes:
+  postgres-volume:
