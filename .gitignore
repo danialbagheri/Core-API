@@ -1,3 +1,5 @@
+.idea
+.vscode
 db.sqlite3
 .pro-env
 src/static/
