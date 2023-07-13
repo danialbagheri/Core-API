@@ -206,10 +206,11 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
+REDIS_HOST = env('REDIS_HOST')
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': f'redis://{REDIS_HOST}:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
         },
@@ -314,7 +315,7 @@ SUMMERNOTE_CONFIG = {
     ),
 }
 
-RABBITMQ_HOST = env('RABBITMQ_HOST', default='localhost')
+RABBITMQ_HOST = env('RABBITMQ_HOST')
 CELERY_BROKER_URL = f'amqp://{RABBITMQ_HOST}'
 
 IP_INFO_TOKEN = env('IP_INFO_TOKEN')
