@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=2 -t 40 --access-logfile -  --access-logformat '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(M)s'
     volumes:
-      - /var/volumes/calypso/static/:/usr/src/app/static
-      - /var/volumes/calypso/media/:/usr/src/app/media
+      - /var/volumes/${BRAND_DIR_NAME}/static/:/usr/src/app/static
+      - /var/volumes/${BRAND_DIR_NAME}/media/:/usr/src/app/media
     ports:
       - 8000
     expose:
@@ -24,8 +24,8 @@ services:
       dockerfile: Dockerfile
     command: celery -A core worker -l info -c 2
     volumes:
-      - /var/volumes/calypso/static/:/usr/src/app/static
-      - /var/volumes/calypso/media/:/usr/src/app/media
+      - /var/volumes/${BRAND_DIR_NAME}/static/:/usr/src/app/static
+      - /var/volumes/${BRAND_DIR_NAME}/media/:/usr/src/app/media
     expose:
       - 8000
     links:
@@ -41,8 +41,8 @@ services:
       dockerfile: Dockerfile
     command: celery -A core beat -l info
     volumes:
-      - /var/volumes/calypso/static/:/usr/src/app/static
-      - /var/volumes/calypso/media/:/usr/src/app/media
+      - /var/volumes/${BRAND_DIR_NAME}/static/:/usr/src/app/static
+      - /var/volumes/${BRAND_DIR_NAME}/media/:/usr/src/app/media
     expose:
       - 8000
     links:
@@ -61,7 +61,7 @@ services:
       - .env.postgres
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
-      - ./postgres/:/docker-entrypoint-initdb.d/
+      - /var/volumes/${BRAND_DIR_NAME}/postgres/:/docker-entrypoint-initdb.d/
     restart: unless-stopped
 
   redis:
