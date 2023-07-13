@@ -15,6 +15,6 @@ app.conf.beat_schedule = {
     },
     'send review reminder emails': {
         'task': 'users.tasks.SendReviewReminderTask',
-        'schedule': crontab(hour=18, minute=0),
+        'schedule': crontab(hour=9, minute=0),
     }
 }

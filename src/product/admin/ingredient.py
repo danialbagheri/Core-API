@@ -8,7 +8,7 @@ from django.contrib import admin, messages
 from django.shortcuts import redirect, render
 from django.urls import path
 
-from product.models import Ingredient, ProductVariant
+from product.models import Ingredient, ProductVariant, VariantIngredientThrough
 
 
 class CsvImportForm(forms.Form):
@@ -46,7 +46,7 @@ class IngredientAdmin(admin.ModelAdmin):
         variants_map = {}
         ingredients_map = {}
         ingredients_set = set()
-        variant_ingredients = defaultdict(set)
+        variant_ingredients = defaultdict(list)
         for row in reader:
             count += 1
             if row[0] == '#':
@@ -69,7 +69,7 @@ class IngredientAdmin(admin.ModelAdmin):
             for ingredient in ingredients:
                 if not ingredient:
                     continue
-                variant_ingredients[sku].add(ingredient)
+                variant_ingredients[sku].append(ingredient)
                 ingredients_set.add(ingredient)
         if not is_valid:
             return False
@@ -81,6 +81,16 @@ class IngredientAdmin(admin.ModelAdmin):
             ingredients = [ingredients_map[ingredient_name] for ingredient_name in ingredient_names if ingredient_name]
             variant.ingredients.clear()
             variant.ingredients.add(*ingredients)
+            priority = 0
+            for ingredient in ingredients:
+                VariantIngredientThrough.objects.update_or_create(
+                    ingredient=ingredient,
+                    variant=variant,
+                    defaults={
+                        'priority': priority
+                    },
+                )
+                priority += 1
         return True
 
     def import_csv(self, request):
