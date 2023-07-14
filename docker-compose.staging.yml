@@ -28,7 +28,6 @@ services:
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
       - /var/volumes/${BRAND_DIR_NAME}/postgres/:/docker-entrypoint-initdb.d/
-      - /var/backups/${BRAND_DIR_NAME}/postgres/:/var/backups/
     restart: unless-stopped
 
   redis:
