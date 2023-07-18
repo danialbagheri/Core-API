@@ -32,9 +32,9 @@ def get_user_feed():
         access_token = refresh_instagram_access_token(access_token)
 
     instagram_user_id = settings.INSTAGRAM_USER_ID
-    instagram_media_feed_url = f"https://graph.instagram.com/{instagram_user_id}/media?" \
-                               f"fields=media_url,caption,permalink,media_type&" \
-                               f"access_token={access_token}"
+    instagram_media_feed_url = f'https://graph.instagram.com/{instagram_user_id}/media?' \
+                               'fields=media_url,caption,permalink,media_type&' \
+                               f'access_token={access_token}'
     r = requests.get(instagram_media_feed_url)
     response = r.json()['data']
     return response
