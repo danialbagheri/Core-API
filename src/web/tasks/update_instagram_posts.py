@@ -4,7 +4,7 @@ from django.db import transaction
 from product.models import ProductVariant
 from web.instagram import get_user_feed
 from web.models import InstagramPost
-from web.utils import InstagramUtils
+from web.services import InstagramImageThumbnailCreatorFactory
 
 
 class UpdateInstagramPostsTask(Task):
@@ -37,13 +37,17 @@ class UpdateInstagramPostsTask(Task):
             for image_data in images_data:
                 if image_data['media_type'] not in ['IMAGE', 'CAROUSEL_ALBUM']:
                     continue
-                thumbnail, webp = InstagramUtils.reduce_photo_size(image_data['media_url'], image_data['id'])
+                thumbnail_creator = InstagramImageThumbnailCreatorFactory.create_thumbnail_creator(
+                    image_url=image_data['media_url'],
+                    image_id=image_data['id'],
+                )
+                png_url, webp_url = thumbnail_creator.get_image_thumbnails()
                 instagram_post = InstagramPost.objects.create(
                     instagram_id=image_data['id'],
                     media_type=image_data['media_type'],
                     media_url=image_data['media_url'],
-                    thumbnail=thumbnail,
-                    webp=webp,
+                    thumbnail=png_url,
+                    webp=webp_url,
                     caption=image_data['caption'],
                     permalink=image_data['permalink'],
                 )
