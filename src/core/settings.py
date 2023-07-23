@@ -58,7 +58,7 @@ DRF_RECAPTCHA_SECRET_KEY = env('DRF_RECAPTCHA_SECRET_KEY')
 DRF_RECAPTCHA_PROXY = env.dict("DRF_RECAPTCHA_PROXY")
 
 # Instagram settings
-INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID')
+INSTAGRAM_USER_ID = env('INSTAGRAM_USER_ID', default=None)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 BACKEND_ADDRESS = env('BACKEND_ADDRESS')
@@ -196,7 +196,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-USE_S3 = env.bool('USE_S3')
+USE_S3 = env.bool('USE_S3', default=False)
 
 if USE_S3:
     # aws settings
