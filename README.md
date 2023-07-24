@@ -27,6 +27,14 @@ Backend project for linco care brands.
   - [Instagram](#instagram-optional)
   - [IP Info](#ip-info-optional)
 - [Deployment](#deployment)
+  - [Clone the Project](#clone-the-project)
+  - [Set Environment Variables](#set-environment-variables)
+  - [Setup Postgres](#setup-postgres)
+  - [Build All the Containers](#build-all-the-containers)
+  - [Apply Migrations](#apply-migrations)
+  - [Collect Statics](#collect-statics)
+  - [Nginx](#nginx)
+- [Configuration Model](#configuration-model)
 
 ---
 
