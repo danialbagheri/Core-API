@@ -7,7 +7,30 @@ Backend project for linco care brands.
 
 ---
 
-# Prerequisites[](#prerequisites)
+# Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Settings](#settings)
+  - [Security and Debug](#security-and-debug)
+  - [Host and Website](#host-and-website)
+  - [Database](#database)
+  - [Email Service](#email-service)
+  - [Redis and Celery](#redis-and-celery)
+  - [Shopify](#shopify)
+  - [Mailjet](#mailjet)
+  - [File or Directory Locations](#file-or-directory-locations)
+  - [Google reCAPTCHA](#google-recaptcha)
+  - [Cookie Keys](#cookie-keys)
+  - [AWS](#aws-optional)
+    - [Setup](#setup)
+    - [Environment Variables](#environment-variables)
+  - [Instagram](#instagram-optional)
+  - [IP Info](#ip-info-optional)
+- [Deployment](#deployment)
+
+---
+
+# Prerequisites
 Before deploying the project you have to make sure that you have the following pre-requisites installed:
 
 - Docker
@@ -381,5 +404,147 @@ set the following environment variable:
 
 - `IP_INFO_TOKEN`
   - Found in ipinfo admin.
+
+---
+
+# Deployment
+### Clone the Project
+Clone the project and cd into the project directory.
+```shell
+git clone git@github.com:danialbagheri/Core-API.git
+cd Core-API/
+```
+
+### Set Environment Variables
+Add the `.env` file created in the [settings](#settings) section to this directory.
+<br>
+Also add a `.env.postgres` file with only one field, `POSTGRES_PASSWORD`,
+which is the password for the user `postgres`.
+
+### Setup Postgres
+
+First create the postgres container. You should use `docker-compse.staging.yml`
+if you are setting up the staging server.
+<details>
+<summary>Main server</summary>
+
+```shell
+docker-compose build postgres && docker-compose up -d postgres
+```
+</details>
+
+<details>
+<summary>Staging server</summary>
+
+```shell
+docker-compose -f docker-compose.staging.yml build postgres && docker-compose -f docker-compose.staging.yml up -d postgres
+```
+</details>
+
+Next connect to the postgres container bash. You can check the container
+name by using `docker ps`.
+
+```shell
+docker exec -it <CONTAINER_NAME> bash
+```
+
+Create the postgres user for your project.
+
+```shell
+createuser -U postgres --interactive -P
+```
+
+Enter the username, password and set the user to superuser. For now, we work with a superuser,
+on the later versions of this readme file, other approaches should be added for more security.
+<br>
+Now create the database.
+
+```shell
+createdb -U postgres <DB_NAME>
+```
+
+### Build All the Containers
+
+Now that we created the user and the database of the project, we can build all the containers.
+Similar to before, we will use `docker-compose.staging.yml` for our staging server.
+
+<details>
+<summary>Main server</summary>
+
+```shell
+docker-compose build && docker-compose up -d
+```
+</details>
+
+<details>
+<summary>Staging server</summary>
+
+```shell
+docker-compose -f docker-compose.staging.yml build && docker-compose -f docker-compose.staging.yml up -d
+```
+</details>
+
+### Apply Migrations
+
+To apply project migrations, we must connect to the api container shell.
+
+```shell
+docker exec -it <CONTAINER_NAME> sh
+```
+
+And then use the `migrate` command.
+
+```shell
+python manage.py migrate
+```
+
+### Collect Statics
+
+For your django admin to work properly, you need to collect static files used in the admin
+in a certain location. The `collectstatic` command does this for you. You
+must also enter this command in the api container shell.
+
+```shell
+python manage.py collectstatic
+```
+
+Note: If you are using AWS for your static files, this might take a very long time, so you also
+can consider manually uploading your static files in the `static` directory in your bucket.
+
+### Nginx
+
+Now all of your containers are up and running, all you need to do is to connect the api container
+to your Nginx. This part should be added to this readme file in more detail later.
+
+---
+
+# Configuration Model
+
+After deploying your project, for your project to work properly, you must set some more configurations.
+There is a model named `Configuration`. It has two main fields, `key`, and `value`. You should
+set the following keys through your django admin:
+
+- `admin-emails`
+  - Emails related to project admins will be sent to these emails.
+  - Comma separated.
+- `manager-emails`
+  - Emails related to project managers will be sent to these emails.
+  - Comma separated.
+- `customer_service_emails`
+  - Emails related to customer service will be sent to these emails.
+- `marketing_emails`
+  - Emails related to the marketing team will be sent to these emails.
+- `review-approval-email-template-id`
+  - Mailjet template id for the review approval email.
+- `in-stock-email-template-id`
+  - Mailjet template id for the in-stock email.
+- `review-reminder-email-template-id`
+  - Mailjet template id for the review reminder email.
+- `instagram_access_token`
+  - Current Instagram access token.
+- `instagram_access_token_timestamp`
+  - Time that Instagram access token was refreshed.
+
+---
 
 DISCLAIMER: All rights of this project are reserved for Linco Care limited.
