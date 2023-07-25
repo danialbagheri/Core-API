@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 VARIANTS_LIST_QUERY = '''
 {
-  productVariants(first: 100) {
+  productVariants(first: 100 query:"vendor:%s") {
     edges {
       node {
         product {
@@ -34,7 +34,7 @@ class UpdateAllProductsTask(Task):
         response = requests.post(
             url=settings.SHOPIFY_URL,
             json={
-                'query': VARIANTS_LIST_QUERY,
+                'query': VARIANTS_LIST_QUERY % settings.BRAND_NAME,
             },
             headers={'X-Shopify-Access-Token': settings.SHOPIFY_PASSWORD}
         )

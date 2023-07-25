@@ -14,7 +14,7 @@ class ImageConvertor:
             image = Image.open(file_path)
             if image_format in ['JPG', 'JPEG']:
                 image = image.convert('RGB')
-            image.save(image_bytes, image_format)
+            image.save(image_bytes, image_format if image_format != 'JPG' else 'JPEG')
             image_bytes.seek(0)
             images[image_format] = image_bytes
         return images
