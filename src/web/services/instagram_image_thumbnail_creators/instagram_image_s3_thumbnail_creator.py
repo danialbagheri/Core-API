@@ -1,6 +1,5 @@
 from io import BytesIO
 from typing import Tuple
-from urllib.parse import urljoin
 
 import boto3
 import requests
@@ -19,7 +18,7 @@ class InstagramImageS3ThumbnailCreator(InstagramImageThumbnailCreator):
     def get_image_path(self) -> str:
         media_url = settings.MEDIA_URL
         path = settings.INSTAGRAM_IMAGES_PATH
-        return f'{urljoin(media_url, path)}{self.image_id}.jpg'
+        return f'{media_url}{path}{self.image_id}.jpg'
 
     def image_exists(self, full_path: str) -> bool:
         response = requests.get(self.image_url)
