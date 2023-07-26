@@ -25,7 +25,8 @@ class InStockMailjetEmail(TransactionalMailJetEmailService):
     def _get_variables(self) -> Dict[str, Any]:
         variant_image = self.variant.variant_images.first()
         image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-        image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
+        if not settings.USE_S3:
+            image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
         plain_description = BeautifulSoup(self.variant.product.description, features='html.parser').text
         return {
             'product_title': self.variant.product.name,
