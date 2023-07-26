@@ -41,6 +41,7 @@ Backend project for linco care brands.
 # Prerequisites
 Before deploying the project you have to make sure that you have the following pre-requisites installed:
 
+- Nginx
 - Docker
 - Docker Compose
 - Git
@@ -519,10 +520,184 @@ python manage.py collectstatic
 Note: If you are using AWS for your static files, this might take a very long time, so you also
 can consider manually uploading your static files in the `static` directory in your bucket.
 
+### Cloudflare
+
+The only step left to deploy the project, is to connect it to Nginx.
+We want our requests to be secure (use https), to handle this, we use Cloudflare.
+So before setting up our Nginx, we have to set up our Cloudflare settings.
+Take the following steps to set up your Cloudflare account.
+
+- Register your site.
+- Go to the "DNS" tab in the left menu and add a record for your domain.
+  - The type of the record should be A.
+- Go to the "Overview" section of "SSL/TLS" tab in the left menu 
+and select the "Full (strict)" mode.
+- Go to the "Origin Server" section of "SSL/TLS" tab.
+- Create a certificate. NOTE: Only create it for the exact hosts you are using.
+Using for all the subdomains might break another website.
+  - Save the "Origin Certificate" at `/etc/ssl/<brand>-cert.pem`.
+  - Save the "Private key" at `/etc/ssl/<brand>-key.pem`.
+- Add the Cloudflare certificate below to `/etc/ssl/cloudflare.crt`.
+  - This will set up authenticated origin pulls.
+
+```
+-----BEGIN CERTIFICATE-----
+MIIGCjCCA/KgAwIBAgIIV5G6lVbCLmEwDQYJKoZIhvcNAQENBQAwgZAxCzAJBgNV
+BAYTAlVTMRkwFwYDVQQKExBDbG91ZEZsYXJlLCBJbmMuMRQwEgYDVQQLEwtPcmln
+aW4gUHVsbDEWMBQGA1UEBxMNU2FuIEZyYW5jaXNjbzETMBEGA1UECBMKQ2FsaWZv
+cm5pYTEjMCEGA1UEAxMab3JpZ2luLXB1bGwuY2xvdWRmbGFyZS5uZXQwHhcNMTkx
+MDEwMTg0NTAwWhcNMjkxMTAxMTcwMDAwWjCBkDELMAkGA1UEBhMCVVMxGTAXBgNV
+BAoTEENsb3VkRmxhcmUsIEluYy4xFDASBgNVBAsTC09yaWdpbiBQdWxsMRYwFAYD
+VQQHEw1TYW4gRnJhbmNpc2NvMRMwEQYDVQQIEwpDYWxpZm9ybmlhMSMwIQYDVQQD
+ExpvcmlnaW4tcHVsbC5jbG91ZGZsYXJlLm5ldDCCAiIwDQYJKoZIhvcNAQEBBQAD
+ggIPADCCAgoCggIBAN2y2zojYfl0bKfhp0AJBFeV+jQqbCw3sHmvEPwLmqDLqynI
+42tZXR5y914ZB9ZrwbL/K5O46exd/LujJnV2b3dzcx5rtiQzso0xzljqbnbQT20e
+ihx/WrF4OkZKydZzsdaJsWAPuplDH5P7J82q3re88jQdgE5hqjqFZ3clCG7lxoBw
+hLaazm3NJJlUfzdk97ouRvnFGAuXd5cQVx8jYOOeU60sWqmMe4QHdOvpqB91bJoY
+QSKVFjUgHeTpN8tNpKJfb9LIn3pun3bC9NKNHtRKMNX3Kl/sAPq7q/AlndvA2Kw3
+Dkum2mHQUGdzVHqcOgea9BGjLK2h7SuX93zTWL02u799dr6Xkrad/WShHchfjjRn
+aL35niJUDr02YJtPgxWObsrfOU63B8juLUphW/4BOjjJyAG5l9j1//aUGEi/sEe5
+lqVv0P78QrxoxR+MMXiJwQab5FB8TG/ac6mRHgF9CmkX90uaRh+OC07XjTdfSKGR
+PpM9hB2ZhLol/nf8qmoLdoD5HvODZuKu2+muKeVHXgw2/A6wM7OwrinxZiyBk5Hh
+CvaADH7PZpU6z/zv5NU5HSvXiKtCzFuDu4/Zfi34RfHXeCUfHAb4KfNRXJwMsxUa
++4ZpSAX2G6RnGU5meuXpU5/V+DQJp/e69XyyY6RXDoMywaEFlIlXBqjRRA2pAgMB
+AAGjZjBkMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgECMB0GA1Ud
+DgQWBBRDWUsraYuA4REzalfNVzjann3F6zAfBgNVHSMEGDAWgBRDWUsraYuA4REz
+alfNVzjann3F6zANBgkqhkiG9w0BAQ0FAAOCAgEAkQ+T9nqcSlAuW/90DeYmQOW1
+QhqOor5psBEGvxbNGV2hdLJY8h6QUq48BCevcMChg/L1CkznBNI40i3/6heDn3IS
+zVEwXKf34pPFCACWVMZxbQjkNRTiH8iRur9EsaNQ5oXCPJkhwg2+IFyoPAAYURoX
+VcI9SCDUa45clmYHJ/XYwV1icGVI8/9b2JUqklnOTa5tugwIUi5sTfipNcJXHhgz
+6BKYDl0/UP0lLKbsUETXeTGDiDpxZYIgbcFrRDDkHC6BSvdWVEiH5b9mH2BON60z
+0O0j8EEKTwi9jnafVtZQXP/D8yoVowdFDjXcKkOPF/1gIh9qrFR6GdoPVgB3SkLc
+5ulBqZaCHm563jsvWb/kXJnlFxW+1bsO9BDD6DweBcGdNurgmH625wBXksSdD7y/
+fakk8DagjbjKShYlPEFOAqEcliwjF45eabL0t27MJV61O/jHzHL3dknXeE4BDa2j
+bA+JbyJeUMtU7KMsxvx82RmhqBEJJDBCJ3scVptvhDMRrtqDBW5JShxoAOcpFQGm
+iYWicn46nPDjgTU0bX1ZPpTpryXbvciVL5RkVBuyX2ntcOLDPlZWgxZCBp96x07F
+AnOzKgZk4RzZPNAxCXERVxajn/FLcOhglVAKo5H0ac+AitlQ0ip55D2/mf8o72tM
+fVQ6VpyjEXdiIXWUq/o=
+-----END CERTIFICATE-----
+```
+
 ### Nginx
 
-Now all of your containers are up and running, all you need to do is to connect the api container
-to your Nginx. This part should be added to this readme file in more detail later.
+At this moment, all of your containers are up and running, and 
+the connection between your server and Cloudflare is configured.
+all you need to do is to set up your Nginx. Take the following steps
+to set up your nginx:
+
+- Get the api container ip address with the following command:
+
+```shell
+docker inspect <API_CONTAINER_ID> | grep IPAddress
+```
+
+- Add the config file below to `/etc/nginx/available-sites/`.
+  - The file should be named after the project's url, eg: `api.cabanasun.co.uk`.
+  - Config differs depending on the approach chosen for serving static files.
+  - Use the ip retrieved in the previous step as `API_CONTAINER_IP`
+
+<details>
+<summary>Local static and media files</summary>
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name <ENTER_URL_HERE>;
+    return 302 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    ssl_certificate         /etc/ssl/<BRAND_NAME>-cert.pem;
+    ssl_certificate_key     /etc/ssl/<BRAND_NAME>-key.pem;
+    ssl_client_certificate /etc/ssl/cloudflare.crt;
+    ssl_verify_client on;
+
+    error_log /var/log/nginx/<ENTER_LOG_FILE_NAME_HERE>.log;
+    server_name <ENTER_URL_HERE>;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/admin/fonts/ {
+        add_header Access-Control-Allow-Origin *;
+        alias /var/volumes/<BRAND_NAME>/static/admin/fonts/;
+    }
+
+    location /static/summernote/font/ {
+        add_header Access-Control-Allow-Origin *;
+        alias /var/volumes/<BRAND_NAME>/static/summernote/font/;
+    }
+
+    location /static/ {
+        alias /var/volumes/<BRAND_NAME>/static/;
+    }
+
+    location /media/ {
+        alias /var/volumes/<BRAND_NAME>/media;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://<API_CONTAINER_IP>:8000;
+    }
+}
+```
+</details>
+
+<details>
+<summary>S3 static and media files</summary>
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name <ENTER_URL_HERE>;
+    return 302 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    ssl_certificate         /etc/ssl/<BRAND_NAME>-cert.pem;
+    ssl_certificate_key     /etc/ssl/<BRAND_NAME>-key.pem;
+    ssl_client_certificate /etc/ssl/cloudflare.crt;
+    ssl_verify_client on;
+
+    error_log /var/log/nginx/<ENTER_LOG_FILE_NAME_HERE>.log;
+    server_name <ENTER_URL_HERE>;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://<API_CONTAINER_IP>:8000;
+    }
+}
+```
+</details>
+
+- If you are hosting more than one website, add
+this line to the `http` bracket of `/etc/nginx/nginx.conf`:
+
+```
+server_names_hash_bucket_size 64;
+```
+
+- Check validity of your nginx configurations with:
+
+```shell
+sudo nginx -t
+```
+
+- If everything is ok, start nginx:
+
+```shell
+sudo systemctl reload nginx
+```
+
+This is it! You have successfully deployed your project ^_^
 
 ---
 
