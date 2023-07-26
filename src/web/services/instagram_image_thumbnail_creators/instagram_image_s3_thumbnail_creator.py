@@ -11,23 +11,19 @@ from . import InstagramImageThumbnailCreator
 
 
 class InstagramImageS3ThumbnailCreator(InstagramImageThumbnailCreator):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.image_content = None
-
     def get_image_path(self) -> str:
         media_url = settings.MEDIA_URL
         path = settings.INSTAGRAM_IMAGES_PATH
         return f'{media_url}{path}{self.image_id}.jpg'
 
     def image_exists(self, full_path: str) -> bool:
-        response = requests.get(self.image_url)
-        if response.ok:
-            self.image_content = response.content
+        response = requests.get(full_path)
         return response.ok
 
     def upload_image(self, full_path: str) -> None:
-        image_bytes = BytesIO(self.image_content)
+        response = requests.get(self.image_url)
+        image_content = response.content
+        image_bytes = BytesIO(image_content)
         path = f'{settings.INSTAGRAM_IMAGES_PATH}{self.image_id}.jpg'
         s3_client = boto3.client('s3')
         try:
