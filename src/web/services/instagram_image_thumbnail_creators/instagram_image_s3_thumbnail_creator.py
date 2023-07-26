@@ -24,7 +24,7 @@ class InstagramImageS3ThumbnailCreator(InstagramImageThumbnailCreator):
         response = requests.get(self.image_url)
         image_content = response.content
         image_bytes = BytesIO(image_content)
-        path = f'{settings.INSTAGRAM_IMAGES_PATH}{self.image_id}.jpg'
+        path = f'{settings.PUBLIC_MEDIA_LOCATION}/{settings.INSTAGRAM_IMAGES_PATH}{self.image_id}.jpg'
         s3_client = boto3.client('s3')
         try:
             s3_client.upload_fileobj(
