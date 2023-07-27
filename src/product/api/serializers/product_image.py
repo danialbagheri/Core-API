@@ -1,4 +1,3 @@
-from django.contrib.sites.models import Site
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
@@ -26,7 +25,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
         request = self.context.get("request")
         resize_w, resize_h = check_request_image_size_params(request)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = RESIZE_W
         if resize_w is None:
@@ -36,7 +34,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     def get_webp(self, obj):
         if self._is_gif(obj.image):
@@ -44,7 +42,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
         request = self.context.get("request")
         resize_w, resize_h = check_request_image_size_params(request)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = "100"
         if resize_w is None:
@@ -54,4 +51,4 @@ class ProductImageSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
+            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
