@@ -28,8 +28,6 @@ class ReviewApprovalMailjetEmail(TransactionalMailJetEmailService):
         variant = self.review.variant
         variant_image = variant.variant_images.first() if variant else None
         image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-        if not settings.USE_S3:
-            image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
         variables = {
             'variant_image': image_url,
             'product_title': product.name,
@@ -41,8 +39,6 @@ class ReviewApprovalMailjetEmail(TransactionalMailJetEmailService):
             variant = related_product.variants.filter(is_public=True).first()
             variant_image = variant.variant_images.first() if variant else None
             image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-            if not settings.USE_S3:
-                image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
             variables.update({
                 f'recommended_variant_image_{number}': image_url,
                 f'recommended_product_title_{number}': related_product.name,
