@@ -38,12 +38,12 @@ class ProductSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_main_image(product: Product):
         if product.main_image:
-            return product.main_image.get_absolute_image_url
+            return product.main_image.image.url
 
     @staticmethod
     def get_secondary_image(product: Product):
         if product.secondary_image:
-            return product.secondary_image.get_absolute_image_url
+            return product.secondary_image.image.url
 
     def edit_image(self, image: ProductImage, image_format):
         request = self.context.get('request')
@@ -57,7 +57,7 @@ class ProductSerializer(serializers.ModelSerializer):
             height = ''
         else:
             height = f'x{resize_height}'
-        image_url = image.get_absolute_image_url
+        image_url = image.image.url
         return domain + get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
 
     @staticmethod
