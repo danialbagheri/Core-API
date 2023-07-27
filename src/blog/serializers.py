@@ -1,8 +1,8 @@
-from django.contrib.sites.models import Site
 from rest_framework import serializers
-from .models import BlogPost, BlogCollection, BlogCollectionItem
 from sorl.thumbnail import get_thumbnail
+
 from product.api.serializers import ProductSerializer
+from .models import BlogPost, BlogCollection, BlogCollectionItem
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
@@ -15,7 +15,6 @@ class BlogPostSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w',None)
         resize_h = request.query_params.get('resize_h',None)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = "100"
         if resize_w is None:
@@ -25,7 +24,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return domain+get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     class Meta:
         model = BlogPost
