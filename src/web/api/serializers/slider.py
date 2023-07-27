@@ -1,4 +1,3 @@
-from django.contrib.sites.models import Site
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
@@ -43,8 +42,7 @@ class SlideSerializer(serializers.ModelSerializer):
         resize_h = request.query_params.get('resize_h')
         if not resize_w or not resize_h:
             return None
-        domain = Site.objects.get_current().domain
-        return domain + get_thumbnail(image, f'{resize_w}x{resize_h}', quality=100, format=image_format).url
+        return get_thumbnail(image, f'{resize_w}x{resize_h}', quality=100, format=image_format).url
 
     def get_image_png(self, instance: SliderSlidesThroughModel):
         slide = instance.slide
@@ -60,7 +58,6 @@ class SlideSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w', None)
         resize_h = request.query_params.get('resize_h', None)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = "1440"
         if resize_w is None:
@@ -70,13 +67,12 @@ class SlideSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.slide.lg_image:
-            return domain + get_thumbnail(obj.slide.lg_image, f'{resize_w}{height}', quality=100, format="PNG").url
+            return get_thumbnail(obj.slide.lg_image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     def get_desktop_webp(self, obj):
         request = self.context.get("request")
         resize_w = request.query_params.get('resize_w', None)
         resize_h = request.query_params.get('resize_h', None)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = "1440"
         if resize_w is None:
@@ -86,15 +82,14 @@ class SlideSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.slide.lg_image:
-            return domain + get_thumbnail(
+            return get_thumbnail(
                 obj.slide.lg_image, f'{resize_w}{height}', quality=100, format="WEBP"
             ).url
 
     @staticmethod
     def get_mobile_webp(obj):
-        domain = Site.objects.get_current().domain
         if obj.slide.sm_image:
-            return domain + get_thumbnail(obj.slide.sm_image, f"640", quality=100, format="WEBP").url
+            return get_thumbnail(obj.slide.sm_image, f"640", quality=100, format="WEBP").url
 
     class Meta:
         model = SliderSlidesThroughModel

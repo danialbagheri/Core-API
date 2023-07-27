@@ -26,8 +26,6 @@ class ReviewReminderMailjetEmail(TransactionalMailJetEmailService):
         for variant in self.variants:
             variant_image = variant.variant_images.first()
             image_url = variant_image.image.url if variant_image else settings.LOST_PRODUCT_IMAGE_PATH
-            if not settings.USE_S3:
-                image_url = f'{settings.BACKEND_ADDRESS}{image_url}'
             variants_data.append({
                 'product_title': variant.product.name,
                 'variant_title': variant.name,
