@@ -1,5 +1,7 @@
 import base64
 
+import requests
+from django.conf import settings
 from rest_framework import serializers
 
 from product.models import Tag
@@ -25,9 +27,13 @@ class TagSerializer(serializers.ModelSerializer):
         if not svg_icon:
             return None
 
-        svg_path = svg_icon.path
-        with open(svg_path, 'rb') as svg_file:
-            svg_contents = svg_file.read()
-            encoded_svg = base64.b64encode(svg_contents).decode('utf-8')
-            data_uri = 'data:image/svg+xml;base64,' + encoded_svg
+        if not settings.USE_S3:
+            svg_path = svg_icon.path
+            with open(svg_path, 'rb') as svg_file:
+                svg_contents = svg_file.read()
+        else:
+            response = requests.get(svg_icon.url)
+            svg_contents = response.content
+        encoded_svg = base64.b64encode(svg_contents).decode('utf-8')
+        data_uri = 'data:image/svg+xml;base64,' + encoded_svg
         return data_uri
