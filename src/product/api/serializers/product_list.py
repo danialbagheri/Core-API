@@ -37,12 +37,12 @@ class ProductSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_main_image(product: Product):
         if product.main_image:
-            return product.main_image.image.url
+            return f'https://service.calypsosun.com/media/{product.main_image.image.name}'
 
     @staticmethod
     def get_secondary_image(product: Product):
         if product.secondary_image:
-            return product.secondary_image.image.url
+            return f'https://service.calypsosun.com/media/{product.secondary_image.image.name}'
 
     def edit_image(self, image: ProductImage, image_format):
         request = self.context.get('request')
@@ -56,7 +56,9 @@ class ProductSerializer(serializers.ModelSerializer):
         else:
             height = f'x{resize_height}'
         image_url = image.image.url
-        return get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
+        url = get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
+        name = url.split('/media/')[1]
+        return f'https://service.calypsosun.com/media/{name}'
 
     @staticmethod
     def _is_gif(image):

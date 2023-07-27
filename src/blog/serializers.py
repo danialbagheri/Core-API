@@ -24,7 +24,9 @@ class BlogPostSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            url = get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            name = url.split('/media/')[1]
+            return f'https://service.calypsosun.com/media/{name}'
 
     class Meta:
         model = BlogPost
@@ -36,6 +38,13 @@ class BlogPostSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return False
         return user.bookmarked_blogposts.all().filter(id=blog_post.id).exists()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        image = representation['image']
+        name = image.split('/media/')[1]
+        representation['image'] = f'https://service.calypsosun.com/media/{name}'
+        return representation
 
 
 class CollectionItemSerializer(serializers.ModelSerializer):

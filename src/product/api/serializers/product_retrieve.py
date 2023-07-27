@@ -36,13 +36,19 @@ class SingleProductSerializer(ProductSerializer):
         related_products = []
         for product in related_products_filter:
             main_image = product.main_image
+            main_image_url_name = None
+            if main_image:
+                main_image_url_name = main_image.image.url.split('/media/')[1]
             secondary_image = product.secondary_image
+            secondary_image_name = None
+            if secondary_image:
+                secondary_image_name = secondary_image.image.url.split('/media/')[1]
             related_products.append({
                 'name': product.name,
                 'slug': product.slug,
                 'sub_title': product.sub_title,
-                'main_image': main_image.image.url if main_image else None,
-                'secondary_image': secondary_image.image.url if secondary_image else None,
+                'main_image': f'https://service.calypsosun.com/media/{main_image_url_name}' if main_image else None,
+                'secondary_image': f'https://service.calypsosun.com/media/{secondary_image_name}' if secondary_image else None,
                 'img_height': f'{main_image.height if main_image else 0}',
                 'img_width': f'{main_image.width if main_image else 0}',
                 'secondary_image_height': secondary_image.height if secondary_image else 0,

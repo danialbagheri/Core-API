@@ -34,7 +34,9 @@ class ProductImageSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            url = get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            name = url.split('/media/')[1]
+            return f'https://service.calypsosun.com/media/{name}'
 
     def get_webp(self, obj):
         if self._is_gif(obj.image):
@@ -51,4 +53,13 @@ class ProductImageSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
+            url = get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="WEBP").url
+            name = url.split('/media/')[1]
+            return f'https://service.calypsosun.com/media/{name}'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        image = representation['image']
+        name = image.split('/media/')[1]
+        representation['image'] = f'https://service.calypsosun.com/media/{name}'
+        return representation
