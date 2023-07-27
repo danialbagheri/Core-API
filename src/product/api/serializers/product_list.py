@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from django.contrib.sites.models import Site
 from django.db.models import Avg
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
@@ -48,7 +47,6 @@ class ProductSerializer(serializers.ModelSerializer):
     def edit_image(self, image: ProductImage, image_format):
         request = self.context.get('request')
         resize_width, resize_height = check_request_image_size_params(request)
-        domain = Site.objects.get_current().domain
         if resize_height is None and resize_width is None:
             resize_width = '400'
         if resize_width is None:
@@ -58,7 +56,7 @@ class ProductSerializer(serializers.ModelSerializer):
         else:
             height = f'x{resize_height}'
         image_url = image.image.url
-        return domain + get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
+        return get_thumbnail(image_url, f'{resize_width}{height}', quality=100, format=image_format).url
 
     @staticmethod
     def _is_gif(image):

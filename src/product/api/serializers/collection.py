@@ -25,7 +25,6 @@ class CollectionSerializer(serializers.ModelSerializer):
     def get_resized(self, obj):
         request = self.context.get("request")
         resize_w, resize_h = check_request_image_size_params(request)
-        domain = Site.objects.get_current().domain
         if resize_h is None and resize_w is None:
             resize_w = RESIZE_W
         if resize_w is None:
@@ -35,7 +34,7 @@ class CollectionSerializer(serializers.ModelSerializer):
         else:
             height = f"x{resize_h}"
         if obj.image:
-            return domain + get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
+            return get_thumbnail(obj.image, f'{resize_w}{height}', quality=100, format="PNG").url
 
     def get_webp(self, obj):
         request = self.context.get("request")
