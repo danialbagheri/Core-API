@@ -1,8 +1,9 @@
 import os
 import random
 from base64 import b64encode
-from datetime import datetime
 
+import requests
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.images import get_image_dimensions
 from django.db import models
@@ -120,8 +121,12 @@ class ProductImage(models.Model):
 
     @property
     def image_base64(self):
-        img = open(self.image.path, "rb")
-        data = img.read()
+        if not settings.USE_S3:
+            img = open(self.image.path, "rb")
+            data = img.read()
+        else:
+            response = requests.get(self.image.url)
+            data = response.content
         return str(b64encode(data).decode('utf-8'))
 
     def __str__(self):
