@@ -1,5 +1,6 @@
 import io
 
+import requests
 from PIL import Image
 
 
@@ -10,8 +11,10 @@ class ImageConvertor:
     def convert_image(self, file_path):
         images = {}
         for image_format in self.image_formats:
+            response = requests.get(file_path)
+            image_data = response.content
             image_bytes = io.BytesIO()
-            image = Image.open(file_path)
+            image = Image.open(io.BytesIO(image_data))
             if image_format in ['JPG', 'JPEG']:
                 image = image.convert('RGB')
             image.save(image_bytes, image_format if image_format != 'JPG' else 'JPEG')

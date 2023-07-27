@@ -18,7 +18,7 @@ class VariantImageZipper:
             count += 1
             image_type = image.get_image_type_display()
             image_angle = image.get_image_angle_display()
-            image_path = image.image.path
+            image_path = image.image.url
             converted_images = self.image_convertor.convert_image(image_path)
             for image_format, image_bytes in converted_images.items():
                 zip_file.writestr(f'{sku}/{sku}-{image_type}-{image_angle}-{count}.{image_format}', image_bytes.read())
