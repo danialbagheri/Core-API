@@ -8,11 +8,11 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env()
-# CSRF_COOKIE_DOMAIN = env('CSRF_COOKIE_DOMAIN')
+CSRF_COOKIE_DOMAIN = env('CSRF_COOKIE_DOMAIN')
 SESSION_COOKIE_SAMESITE = None
 # Whether the session cookie should be secure (https:// only).
 SESSION_COOKIE_SECURE = False
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES = {
     'default': {
         'ENGINE': env('DB_ENGINE'),
