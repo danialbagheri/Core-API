@@ -3,6 +3,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 from common.admin_mixins import ExportableAdminMixin
 from product.models import Product, ProductImage
+from .actions import make_public
 
 
 class ReviewQuestionInlineAdmin(admin.StackedInline):
@@ -27,6 +28,7 @@ class ProductAdmin(ExportableAdminMixin,
     filter_horizontal = ('keyword', 'tags', 'types')
     search_fields = ['name']
     ordering = ('-updated',)
+    actions = (make_public,)
     inlines = (ReviewQuestionInlineAdmin,)
     save_as = True
 
