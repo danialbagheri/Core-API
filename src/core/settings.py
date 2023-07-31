@@ -223,7 +223,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static_root',
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REDIS_HOST = env('REDIS_HOST')
 CACHES = {
