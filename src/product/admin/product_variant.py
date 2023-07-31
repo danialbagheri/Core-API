@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 
 from common.admin_mixins import ExportableAdminMixin
-from product.admin.actions import apply_discounts, remove_discounts
+from product.admin.actions import apply_discounts, remove_discounts, make_public
 from product.models import ProductVariant
 
 
@@ -22,7 +22,7 @@ class ProductVariantAdmin(ExportableAdminMixin,
     filter_horizontal = ('ingredients',)
     search_fields = ('sku', )
     ordering = ('-date_last_modified',)
-    actions = (apply_discounts, remove_discounts,)
+    actions = (apply_discounts, remove_discounts, make_public,)
     save_as = True
 
     def changelist_view(self, request, extra_context=None):
