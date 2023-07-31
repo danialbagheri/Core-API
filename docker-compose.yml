@@ -56,7 +56,7 @@ services:
     image: postgres
     shm_size: 512mb
     ports:
-      - 5432:5432
+      - 5432
     env_file:
       - .env.postgres
     volumes:

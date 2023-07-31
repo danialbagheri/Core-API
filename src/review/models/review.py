@@ -74,7 +74,8 @@ class Review(models.Model):
         blank=True,
     )
 
-    ip_address = models.GenericIPAddressField(
+    ip_address = models.CharField(
+        max_length=64,
         blank=True,
         null=True,
     )
