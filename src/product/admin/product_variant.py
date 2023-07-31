@@ -4,6 +4,7 @@ from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from common.admin_mixins import ExportableAdminMixin
 from product.admin.actions import apply_discounts, remove_discounts, make_public
 from product.models import ProductVariant
+from product.services import AmazonLinkGenerator
 
 
 @admin.register(ProductVariant)
@@ -38,3 +39,7 @@ class ProductVariantAdmin(ExportableAdminMixin,
             post.update({ACTION_CHECKBOX_NAME: str(variant.pk)})
         request._set_post(post)
         return super().changelist_view(request, extra_context)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        AmazonLinkGenerator(variant=obj).generate_amazon_link()

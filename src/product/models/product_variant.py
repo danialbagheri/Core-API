@@ -13,6 +13,11 @@ class ProductVariant(models.Model):
         unique=True,
     )
 
+    ASIN = models.CharField(
+        max_length=64,
+        blank=True,
+    )
+
     product = models.ForeignKey(
         to=Product,
         null=True,
