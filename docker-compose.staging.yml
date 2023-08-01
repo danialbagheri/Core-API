@@ -17,6 +17,9 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
+    networks:
+      default:
+        ipv4_address: ${NETWORK_ADDRESS}.2
 
   postgres:
     image: postgres
@@ -29,18 +32,26 @@ services:
       - postgres-volume:/var/lib/postgresql/data/
       - /var/volumes/${BRAND_DIR_NAME}/postgres/:/docker-entrypoint-initdb.d/
     restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: ${NETWORK_ADDRESS}.3
 
   redis:
     image: redis:latest
     expose:
       - 6379
     restart: unless-stopped
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    expose:
-      - 5672
-    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: ${NETWORK_ADDRESS}.4
 
 volumes:
   postgres-volume:
+networks:
+  default:
+    name: ${BRAND_DIR_NAME}_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${NETWORK_ADDRESS}.0/24
