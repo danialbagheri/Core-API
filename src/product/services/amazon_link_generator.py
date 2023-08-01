@@ -34,7 +34,7 @@ class AmazonLinkGenerator(BaseService):
         if not self.variant.ASIN or not link_slug:
             return
 
-        stockist = Stockist.objects.get_or_create(name=self.STOCKIST_NAME)
+        stockist, _ = Stockist.objects.get_or_create(name=self.STOCKIST_NAME)
         with transaction.atomic():
             where_to_buy = WhereToBuy.objects.filter(
                 variant=self.variant,
