@@ -14,7 +14,7 @@ class SurveyAnswerInlineAdmin(admin.TabularInline):
 class SurveySubmissionAdmin(admin.ModelAdmin):
     list_display = ('id', 'survey_name', 'email', 'submitted_at', 'started_at', 'finished_at', 'ip')
     readonly_fields = ('id', 'survey', 'email', 'user', 'ip', 'submitted_at', 'started_at', 'finished_at')
-    list_filter = ('survey',)
+    list_filter = ('survey__name',)
     search_fields = ('email', 'ip',)
     inlines = (SurveyAnswerInlineAdmin,)
 
