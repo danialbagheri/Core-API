@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'page',
     'review',
     'faq',
+    'surveys',
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
@@ -96,6 +97,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_cleanup.apps.CleanupConfig',
     'storages',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [
