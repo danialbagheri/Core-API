@@ -16,9 +16,8 @@ class SurveyAnswer(models.Model):
         related_name='answers',
     )
 
-    choice = models.ForeignKey(
+    choices = models.ManyToManyField(
         to=SurveyQuestionChoice,
-        on_delete=models.CASCADE,
         related_name='answers',
     )
 

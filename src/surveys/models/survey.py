@@ -13,3 +13,6 @@ class Survey(models.Model):
     )
 
     email_required = models.BooleanField()
+
+    def __str__(self):
+        return self.name

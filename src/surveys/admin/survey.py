@@ -31,6 +31,6 @@ class SurveyQuestionInlineAdmin(SortableHiddenMixin,
 
 @admin.register(Survey)
 class SurveyAdmin(NestedModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('name',)
 
     inlines = (SurveyQuestionInlineAdmin,)
