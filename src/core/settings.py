@@ -95,9 +95,9 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_filters',
     'django.contrib.sites',
-    'django_cleanup.apps.CleanupConfig',
     'storages',
     'nested_admin',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -342,9 +342,6 @@ RABBITMQ_HOST = env('RABBITMQ_HOST')
 CELERY_BROKER_URL = f'amqp://{RABBITMQ_HOST}'
 
 IP_INFO_TOKEN = env('IP_INFO_TOKEN', default='')
-MAILCHIMP_TRANSACTIONAL_API_KEY = env('MAILCHIMP_TRANSACTIONAL_API_KEY', default='')
-MAILCHIMP_MARKETING_API_KEY = env('MAILCHIMP_MARKETING_API_KEY', default='')
-MAILCHIMP_SERVER_PREFIX = env('MAILCHIMP_SERVER_PREFIX', default='')
 
 MAILJET_API_KEY = env('MAILJET_API_KEY')
 MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')
