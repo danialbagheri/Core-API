@@ -10,6 +10,7 @@ urlpatterns = [
     path('_nested_admin/', include('nested_admin.urls')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
     path('api/reviews/', include('review.api.urls', namespace='review_api')),
+    path('api/surveys/', include('surveys.api.urls', namespace='surveys_api')),
     path('api/web/', include('web.api.urls', namespace='web_api')),
     path('api/page/', include('page.urls', namespace='page')),
     path('api/faq/', include('faq.urls', namespace='faq')),

@@ -1,20 +1,22 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from surveys.models import SurveySubmission
+from common.services import RequestIPRetriever
+from surveys.models import SurveySubmission, Survey
 from .survey_answer import SurveyAnswerSerializer
 
 
 class SurveySubmissionSerializer(serializers.ModelSerializer):
-    survey = serializers.SlugRelatedField(slug_field='slug')
+    survey = serializers.SlugRelatedField(slug_field='slug', queryset=Survey.objects.all())
+    answers = serializers.ListSerializer(child=serializers.DictField(), write_only=True)
 
     class Meta:
         model = SurveySubmission
         fields = (
             'id',
             'survey',
+            'answers',
             'email',
-            'ip',
             'started_at',
             'finished_at',
         )
@@ -30,6 +32,7 @@ class SurveySubmissionSerializer(serializers.ModelSerializer):
             serializer.save()
 
     def create(self, validated_data):
+        validated_data['ip'] = RequestIPRetriever(request=self.context['request']).get_ip()
         user = self.context['request'].user
         if user.is_authenticated:
             validated_data['user'] = user
