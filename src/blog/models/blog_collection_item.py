@@ -23,6 +23,7 @@ class BlogCollectionItem(OrderedModel):
 
     class Meta:
         index_together = ('item', 'order')
+        ordering = ('order',)
 
     def __str__(self):
         return f'{self.item.title}'
