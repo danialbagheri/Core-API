@@ -178,8 +178,11 @@ which are as following:
 - `LOST_PRODUCT_IMAGE_PATH`
   - If a product doesn't have a product image, this image will be used.
   - It should be manually uploaded somewhere inside the media directory.
-  - If its path is `media/foo/bar.jpg`, this variable should be set to
-`/media/foo/bar.jpg`.
+  - If media files are being served locally and
+its path is `media/foo/bar.jpg`, this variable
+should be set to `/media/foo/bar.jpg`.
+  - If media files are being served by AWS, this variable should be
+the complete url of the image.
 - `INSTAGRAM_IMAGES_PATH`
   - This is the directory containing all the instagram images.
   - It should be manually uploaded somewhere inside the media directory.
@@ -668,7 +671,21 @@ server {
     error_log /var/log/nginx/<ENTER_LOG_FILE_NAME_HERE>.log;
     server_name <ENTER_URL_HERE>;
 
+    set $bucket "<BUCKET_NAME>.s3.amazonaws.com";
+
     location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+        resolver 8.8.8.8;
+        proxy_set_header Host $bucket;
+        proxy_pass https://$bucket;
+    }
+
+    location /media/ {
+        resolver 8.8.8.8;
+        proxy_set_header Host $bucket;
+        proxy_pass https://$bucket;
+    }
 
     location / {
         include proxy_params;
