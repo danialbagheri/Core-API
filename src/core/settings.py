@@ -17,7 +17,7 @@ BRAND_NAME = env('BRAND_NAME')
 PRODUCTION_ENVIRONMENT = env.bool('PRODUCTION_ENVIRONMENT')
 if PRODUCTION_ENVIRONMENT:
     try:
-        # this production_settings.py is kept off github to keep the secret key secret
+        # this production_settings.py is kept off GitHub to keep the secret key secret
         from .production import *
     except ImportError:
         pass
@@ -98,6 +98,11 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'storages',
     'nested_admin',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +131,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -254,6 +261,7 @@ CORS_ALLOWED_ORIGINS = (
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 DATA_UPLOAD_MAX_MEMORY_SIZE = 9437184
 
@@ -352,3 +360,20 @@ MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')
 LOST_PRODUCT_IMAGE_PATH = env('LOST_PRODUCT_IMAGE_PATH')
 INSTAGRAM_IMAGES_PATH = env('INSTAGRAM_IMAGES_PATH')
 REVIEW_RATE_COOKIE_KEY = env('REVIEW_RATE_COOKIE_KEY', default='review-rate')
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_STORE_TOKENS = True

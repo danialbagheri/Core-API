@@ -6,7 +6,7 @@ from django_grapesjs.views import GetTemplate
 
 
 urlpatterns = [
-    path('', include('web.urls', namespace='web')),
+    path('accounts/', include('allauth.urls')),
     path('_nested_admin/', include('nested_admin.urls')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
     path('api/reviews/', include('review.api.urls', namespace='review_api')),
@@ -20,6 +20,7 @@ urlpatterns = [
     path('get_template/', GetTemplate.as_view(), name='dgjs_get_template'),
     path('summernote/', include('django_summernote.urls')),
     path('api/users/', include('user.api.urls', namespace='user')),
+    path('', include('web.urls', namespace='web')),
 ]
 
 if settings.DEBUG:
