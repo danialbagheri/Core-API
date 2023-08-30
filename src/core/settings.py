@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'review',
     'faq',
     'surveys',
+    'oauth2',
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
@@ -377,3 +378,5 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_STORE_TOKENS = True
+
+SOCIAL_LOGIN_REDIRECT_URL = env('SOCIAL_LOGIN_REDIRECT_URL')

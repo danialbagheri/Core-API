@@ -7,6 +7,7 @@ from django_grapesjs.views import GetTemplate
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
+    path('oauth2/', include('oauth2.api.urls')),
     path('_nested_admin/', include('nested_admin.urls')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
     path('api/reviews/', include('review.api.urls', namespace='review_api')),

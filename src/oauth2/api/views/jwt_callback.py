@@ -47,11 +47,14 @@ class JWTOAuth2CallbackView(OAuth2CallbackView):
         return social_login
 
     def dispatch(self, request, *args, **kwargs):
+        if request.method != 'GET':
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
         error_response = self.handle_errors(request)
         if error_response:
             return error_response
 
-        app = self.adapter.get_provider().get_app(self.request)
+        app = self.adapter.get_provider().app
         client = self.get_client(self.request, app)
 
         try:
@@ -72,4 +75,4 @@ class JWTOAuth2CallbackView(OAuth2CallbackView):
         })
 
 
-oauth2_callback = JWTOAuth2CallbackView.adapter_view(GoogleOAuth2Adapter)
+google_oauth2_callback = JWTOAuth2CallbackView.adapter_view(GoogleOAuth2Adapter)
