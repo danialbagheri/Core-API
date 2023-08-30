@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.microsoft',
 ]
 
 MIDDLEWARE = [
@@ -378,7 +379,10 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     'facebook': {
         'EXCHANGE_TOKEN': True,
-    }
+    },
+    'microsoft': {
+        'TENANT': 'organizations',
+    },
 }
 
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
