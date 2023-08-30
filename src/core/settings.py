@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'storages',
     'nested_admin',
+    'crispy_bootstrap4',
 
     'allauth',
     'allauth.account',
@@ -275,7 +276,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
-SITE_ID = 1
+SITE_ID = 2
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'GB'
 SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
@@ -383,4 +384,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_STORE_TOKENS = True
 
-SOCIAL_LOGIN_REDIRECT_URL = env('SOCIAL_LOGIN_REDIRECT_URL')
+SOCIAL_LOGIN_REDIRECT_URLS = {
+    'google': env('GOOGLE_SOCIAL_LOGIN_REDIRECT_URL'),
+    'facebook': env('FACEBOOK_SOCIAL_LOGIN_REDIRECT_URL'),
+}

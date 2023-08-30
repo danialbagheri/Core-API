@@ -28,7 +28,7 @@ class OAuth2LoginView(DefaultOAuth2LoginView):
             request.session['pkce_code_verifier'] = code_verifier
 
         client.state = SocialLogin.stash_state(request)
-        auth_params['redirect_uri'] = settings.SOCIAL_LOGIN_REDIRECT_URL
+        auth_params['redirect_uri'] = settings.SOCIAL_LOGIN_REDIRECT_URLS[app.provider]
         try:
             print(auth_url, auth_params)
             return HttpResponseRedirect(client.get_redirect_url(auth_url, auth_params))
