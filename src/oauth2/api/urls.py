@@ -1,9 +1,14 @@
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 
-from .views import google_oauth2_callback, google_oauth2_login
+from . import views
 
 urlpatterns = [
-    path('google/callback/', csrf_exempt(google_oauth2_callback), name='oauth2-google-callback'),
-    path('google/login/', csrf_exempt(google_oauth2_login), name='oauth2-google-login'),
+    # Google urls
+    path('google/login/', csrf_exempt(views.google_oauth2_login), name='oauth2-google-login'),
+    path('google/callback/', csrf_exempt(views.google_oauth2_callback), name='oauth2-google-callback'),
+
+    # Facebook urls
+    path('facebook/login/', csrf_exempt(views.facebook_oauth2_login), name='oauth2-facebook-login'),
+    path('facebook/callback/', csrf_exempt(views.facebook_oauth2_callback), name='oauth2-facebook-callback'),
 ]

@@ -1,5 +1,6 @@
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.providers.base import AuthAction
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView as DefaultOAuth2LoginView
@@ -36,3 +37,4 @@ class OAuth2LoginView(DefaultOAuth2LoginView):
 
 
 google_oauth2_login = OAuth2LoginView.adapter_view(GoogleOAuth2Adapter)
+facebook_oauth2_login = OAuth2LoginView.adapter_view(FacebookOAuth2Adapter)

@@ -1,6 +1,7 @@
 from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.providers.base import AuthError, ProviderException
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
@@ -76,3 +77,4 @@ class JWTOAuth2CallbackView(OAuth2CallbackView):
 
 
 google_oauth2_callback = JWTOAuth2CallbackView.adapter_view(GoogleOAuth2Adapter)
+facebook_oauth2_callback = JWTOAuth2CallbackView.adapter_view(FacebookOAuth2Adapter)
