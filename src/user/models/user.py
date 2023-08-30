@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
@@ -74,6 +75,8 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.id:
             self.date_joined = timezone.now()
+            if self.email.endswith(settings.VALID_STAFF_EMAIL_DOMAINS):
+                self.is_staff = True
         self.email = self.email.lower()
         return super(User, self).save(*args, **kwargs)
 
