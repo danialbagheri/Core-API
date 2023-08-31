@@ -7,12 +7,14 @@ from django_grapesjs.views import GetTemplate
 
 urlpatterns = [
     path('', include('web.urls', namespace='web')),
+    path('_nested_admin/', include('nested_admin.urls')),
     path('api/products/', include('product.api.urls', namespace='products_api')),
     path('api/reviews/', include('review.api.urls', namespace='review_api')),
+    path('api/surveys/', include('surveys.api.urls', namespace='surveys_api')),
     path('api/web/', include('web.api.urls', namespace='web_api')),
     path('api/page/', include('page.urls', namespace='page')),
     path('api/faq/', include('faq.urls', namespace='faq')),
-    path('api/blogs/', include('blog.urls', namespace='blogs_api')),
+    path('api/blogs/', include('blog.api.urls', namespace='blogs_api')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('get_template/', GetTemplate.as_view(), name='dgjs_get_template'),
