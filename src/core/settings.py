@@ -99,7 +99,7 @@ INSTALLED_APPS = [
     'storages',
     'nested_admin',
     'django_cleanup.apps.CleanupConfig',
-    'crispy-bootstrap4',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [

@@ -37,7 +37,7 @@ class ReviewImageInlineAdmin(admin.StackedInline):
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_filter = ('score', 'product')
-    list_display = [
+    list_display = (
         'name',
         'title',
         'score',
@@ -47,7 +47,8 @@ class ReviewAdmin(admin.ModelAdmin):
         'dislike',
         'approved',
         'date_created',
-    ]
+    )
+    readonly_fields = ('date_created',)
     search_fields = ['customer_name']
     raw_id_fields = ('product', 'variant', 'user')
     inlines = (ReviewAnswerInlineAdmin, ReviewImageInlineAdmin)
