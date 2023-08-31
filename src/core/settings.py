@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'review',
     'faq',
     'surveys',
+
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
@@ -98,6 +99,7 @@ INSTALLED_APPS = [
     'storages',
     'nested_admin',
     'django_cleanup.apps.CleanupConfig',
+    'crispy-bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -251,7 +253,10 @@ CORS_ALLOWED_ORIGINS = (
     'http://127.0.0.1:8000',
     'http://localhost:3000',
 )
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
