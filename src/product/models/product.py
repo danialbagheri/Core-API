@@ -2,10 +2,12 @@ from django.db import models
 from django.db.models import Avg, Min
 from django.utils.translation import gettext as _
 
+from common.model_mixins import AutoSlugifyMixin
 from product.models import Tag, Keyword, ProductType
 
 
-class Product(models.Model):
+class Product(AutoSlugifyMixin,
+              models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )

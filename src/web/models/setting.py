@@ -1,8 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
 
+from common.model_mixins import AutoSlugifyMixin
 
-class Setting(models.Model):
+
+class Setting(AutoSlugifyMixin,
+              models.Model):
     name = models.CharField(
         max_length=150,
         verbose_name='name',

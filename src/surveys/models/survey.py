@@ -1,7 +1,10 @@
 from django.db import models
 
+from common.model_mixins import AutoSlugifyMixin
 
-class Survey(models.Model):
+
+class Survey(AutoSlugifyMixin,
+             models.Model):
     name = models.CharField(
         max_length=32,
         unique=True,
