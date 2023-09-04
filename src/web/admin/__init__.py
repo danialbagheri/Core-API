@@ -8,5 +8,6 @@ from .setting import SettingAdmin
 from .slide import SlideAdmin
 from .slider import SliderAdmin
 from .top_bar import TopBarAdmin
+from .icon_group import IconGroupAdmin
 
 admin.site.site_header = settings.BRAND_NAME
