@@ -11,6 +11,10 @@ class IconGroupItem(models.Model):
         related_name='items',
     )
 
+    name = models.CharField(
+        max_length=128,
+    )
+
     icon = models.ImageField(
         upload_to='icon-groups/',
         max_length=512,
@@ -34,3 +38,6 @@ class IconGroupItem(models.Model):
     is_active = models.BooleanField()
 
     position = models.IntegerField()
+
+    class Meta:
+        ordering = ('position',)
