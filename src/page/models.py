@@ -8,6 +8,7 @@ class Page(AutoSlugifyMixin,
     slug = models.SlugField(
         unique=True,
         max_length=255,
+        blank=True,
     )
 
     title = models.CharField(

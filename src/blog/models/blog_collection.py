@@ -15,6 +15,7 @@ class BlogCollection(AutoSlugifyMixin,
         max_length=255,
         unique=True,
         allow_unicode=True,
+        blank=True,
     )
 
     description = models.TextField(

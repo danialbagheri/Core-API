@@ -11,7 +11,9 @@ class Slider(AutoSlugifyMixin,
         verbose_name='name',
     )
 
-    slug = models.SlugField()
+    slug = models.SlugField(
+        blank=True,
+    )
 
     slides = models.ManyToManyField(
         to='web.Slide',

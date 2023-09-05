@@ -19,6 +19,7 @@ class ProductType(AutoSlugifyMixin,
         max_length=256,
         null=True,
         allow_unicode=True,
+        blank=True,
     )
 
     class Meta:

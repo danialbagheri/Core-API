@@ -13,6 +13,7 @@ class Survey(AutoSlugifyMixin,
     slug = models.SlugField(
         max_length=32,
         unique=True,
+        blank=True,
     )
 
     email_required = models.BooleanField()

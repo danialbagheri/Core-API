@@ -8,5 +8,5 @@ class AutoSlugifyMixin:
     def save(self, *args, **kwargs):
         if not self.slug:
             name = getattr(self, self.slug_name_field)
-            self.slug = slugify(name)
+            self.slug = slugify(name[:50])
         super().save(*args, **kwargs)

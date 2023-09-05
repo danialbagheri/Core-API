@@ -14,6 +14,7 @@ class Setting(AutoSlugifyMixin,
     slug = models.SlugField(
         default='',
         editable=False,
+        blank=True,
     )
 
     description = models.CharField(

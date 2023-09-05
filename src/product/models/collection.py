@@ -15,6 +15,7 @@ class Collection(AutoSlugifyMixin,
         max_length=255,
         unique=True,
         allow_unicode=True,
+        blank=True,
     )
 
     background_image_alt = models.CharField(

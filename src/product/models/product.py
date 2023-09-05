@@ -36,6 +36,7 @@ class Product(AutoSlugifyMixin,
     slug = models.SlugField(
         unique=True,
         verbose_name=_("slug"),
+        blank=True,
     )
 
     description = models.TextField(

@@ -17,6 +17,7 @@ class BlogPost(AutoSlugifyMixin,
 
     slug = models.SlugField(
         max_length=300,
+        blank=True,
     )
 
     excerpt = models.TextField(

@@ -11,6 +11,7 @@ class IconGroup(AutoSlugifyMixin,
 
     slug = models.SlugField(
         max_length=64,
+        blank=True,
     )
 
     is_active = models.BooleanField()

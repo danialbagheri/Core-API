@@ -35,6 +35,7 @@ class Tag(AutoSlugifyMixin,
     slug = models.SlugField(
         default=get_slug,
         unique=True,
+        blank=True,
         verbose_name=_('slug'),
     )
 
