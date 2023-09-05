@@ -35,8 +35,8 @@ class Product(AutoSlugifyMixin,
 
     slug = models.SlugField(
         unique=True,
-        verbose_name=_("slug"),
         blank=True,
+        verbose_name=_('slug'),
     )
 
     description = models.TextField(
@@ -52,19 +52,19 @@ class Product(AutoSlugifyMixin,
     tags = models.ManyToManyField(
         to=Tag,
         blank=True,
-        verbose_name=_("tags"),
+        verbose_name=_('tags'),
     )
 
     keyword = models.ManyToManyField(
         to=Keyword,
         blank=True,
-        verbose_name=_("keywords"),
+        verbose_name=_('keywords'),
     )
 
     types = models.ManyToManyField(
         to=ProductType,
-        verbose_name=_("types"),
         blank=True,
+        verbose_name=_('categories'),
     )
 
     is_public = models.BooleanField(
@@ -117,7 +117,7 @@ class Product(AutoSlugifyMixin,
             approved=True,
         ).aggregate(Avg('score'))['score__avg']
         if average_score is not None:
-            return f"{average_score:.1f}"
+            return f'{average_score:.1f}'
         return 0
 
     @property

@@ -8,3 +8,4 @@ from .product_type import ProductTypeListAPIView
 from .favorites_list import FavoriteProductListAPIView
 from .favorite import FavoriteProductUpdateAPIView
 from .product_edit import ProductEditWebhookAPI
+from .spf_recommendation import SPFRecommendationListAPIView

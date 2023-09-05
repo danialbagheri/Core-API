@@ -47,4 +47,6 @@ urlpatterns = [
     path('favorites/', views.FavoriteProductListAPIView.as_view(), name='user-favorites'),
     path('favorites/<slug:slug>/', views.FavoriteProductUpdateAPIView.as_view(), name='set-favorite'),
     path('edit/', views.ProductEditWebhookAPI.as_view(), name='product-edit'),
+    path('variants/spf-recommendations/<int:survey_submission_id>/',
+         views.SPFRecommendationListAPIView.as_view(), name='spf-recommendations'),
 ]
