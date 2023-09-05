@@ -1,14 +1,19 @@
 from django.db import models
 from ordered_model.models import OrderedModel
 
+from common.model_mixins import AutoSlugifyMixin
 
-class Slider(models.Model):
+
+class Slider(AutoSlugifyMixin,
+             models.Model):
     name = models.CharField(
         max_length=150,
         verbose_name='name',
     )
 
-    slug = models.SlugField()
+    slug = models.SlugField(
+        blank=True,
+    )
 
     slides = models.ManyToManyField(
         to='web.Slide',

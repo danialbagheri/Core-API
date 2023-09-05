@@ -4,6 +4,7 @@ from .instagram_feed import InstagramFeed
 from .configuration import ConfigurationView
 from .search import Search
 from .top_bar import TopBarListAPIView
+from .icon_group import IconGroupRetrieveAPIView
 from .instagram import InstagramListAPIView
 
 from web.tasks import UpdateInstagramPostsTask

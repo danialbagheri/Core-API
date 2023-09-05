@@ -4,16 +4,20 @@ from django.core.files.images import get_image_dimensions
 from django.db import models
 from django.utils.html import strip_tags
 
+from common.model_mixins import AutoSlugifyMixin
 from product.models import Tag, ProductType, Product
 
 
-class BlogPost(models.Model):
+class BlogPost(AutoSlugifyMixin,
+               models.Model):
     title = models.CharField(
         max_length=250,
     )
+    slug_name_field = 'title'
 
     slug = models.SlugField(
         max_length=300,
+        blank=True,
     )
 
     excerpt = models.TextField(

@@ -1,9 +1,11 @@
 from django.db import models
 
+from common.model_mixins import AutoSlugifyMixin
 from web.models import Slider
 
 
-class Collection(models.Model):
+class Collection(AutoSlugifyMixin,
+                 models.Model):
     name = models.CharField(
         max_length=250,
         unique=True,
@@ -13,6 +15,7 @@ class Collection(models.Model):
         max_length=255,
         unique=True,
         allow_unicode=True,
+        blank=True,
     )
 
     background_image_alt = models.CharField(
