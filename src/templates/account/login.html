@@ -1,4 +1,6 @@
 {% load static %}
+{% load socialaccount %}
+{% load i18n %}
 <!-- Loading crispy forms -->
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
@@ -57,7 +59,12 @@
                       Login
                     </button>
                     <hr>
-
+                  </form>
+                  <form method="post" action="/accounts/microsoft/login/">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                      {% trans "Login Through Microsoft" %}
+                    </button>
                   </form>
                   <hr>
                   <div class="text-center">
