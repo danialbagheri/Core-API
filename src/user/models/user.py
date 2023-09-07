@@ -73,11 +73,15 @@ class User(AbstractUser):
     objects = UserManager()
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.date_joined = timezone.now()
-            if self.email.endswith(settings.VALID_STAFF_EMAIL_DOMAINS):
+        if self.id:
+            self.email = self.email.lower()
+            return super().save(*args, **kwargs)
+
+        self.date_joined = timezone.now()
+        for valid_domain in settings.VALID_STAFF_EMAIL_DOMAINS:
+            if self.email.endswith(valid_domain):
                 self.is_staff = True
-        self.email = self.email.lower()
+                break
         return super(User, self).save(*args, **kwargs)
 
     def full_name(self):
