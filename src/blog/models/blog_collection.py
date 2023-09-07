@@ -1,9 +1,11 @@
 from django.db import models
 
+from common.model_mixins import AutoSlugifyMixin
 from web.models import Slider
 
 
-class BlogCollection(models.Model):
+class BlogCollection(AutoSlugifyMixin,
+                     models.Model):
     name = models.CharField(
         max_length=250,
         unique=True,
@@ -13,6 +15,7 @@ class BlogCollection(models.Model):
         max_length=255,
         unique=True,
         allow_unicode=True,
+        blank=True,
     )
 
     description = models.TextField(

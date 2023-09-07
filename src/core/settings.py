@@ -135,8 +135,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
-
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -262,7 +260,10 @@ CORS_ALLOWED_ORIGINS = (
     'http://127.0.0.1:8000',
     'http://localhost:3000',
 )
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -277,7 +278,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
-SITE_ID = 2
+SITE_ID = 1
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'GB'
 SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
@@ -354,9 +355,6 @@ RABBITMQ_HOST = env('RABBITMQ_HOST')
 CELERY_BROKER_URL = f'amqp://{RABBITMQ_HOST}'
 
 IP_INFO_TOKEN = env('IP_INFO_TOKEN', default='')
-MAILCHIMP_TRANSACTIONAL_API_KEY = env('MAILCHIMP_TRANSACTIONAL_API_KEY', default='')
-MAILCHIMP_MARKETING_API_KEY = env('MAILCHIMP_MARKETING_API_KEY', default='')
-MAILCHIMP_SERVER_PREFIX = env('MAILCHIMP_SERVER_PREFIX', default='')
 
 MAILJET_API_KEY = env('MAILJET_API_KEY')
 MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')

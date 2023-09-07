@@ -9,5 +9,9 @@ class Ingredient(models.Model):
         unique=True,
     )
 
+    description = models.TextField(
+        blank=True,
+    )
+
     def __str__(self):
         return self.name

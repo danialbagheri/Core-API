@@ -5,6 +5,8 @@ from io import StringIO
 
 from django import forms
 from django.contrib import admin, messages
+from django.db import transaction
+from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.urls import path
 
@@ -26,8 +28,19 @@ class ProductVariantInlineAdmin(admin.StackedInline):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     change_list_template = 'admin/product/ingredient_changelist.html'
+    list_display = ('name', 'products_count')
     inlines = (ProductVariantInlineAdmin,)
     search_fields = ('name',)
+
+    def products_count(self, ingredient: Ingredient):
+        return ingredient.products_count
+
+    products_count.short_description = 'Products Count'
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(products_count=Count('productvariant')).order_by('-products_count')
+        return queryset
 
     @staticmethod
     def clean_ingredient_names(ingredient_names):
@@ -37,6 +50,9 @@ class IngredientAdmin(admin.ModelAdmin):
             if cut_index >= 0:
                 ingredient_name = ingredient_name[:cut_index]
             clean_names.append(ingredient_name.strip())
+        last_name = clean_names[-1]
+        if last_name.endswith('.'):
+            clean_names[-1] = last_name[:-1]
         return clean_names
 
     def update_ingredients_with_csv(self, ingredients_file, request):
@@ -79,16 +95,15 @@ class IngredientAdmin(admin.ModelAdmin):
         for sku, ingredient_names in variant_ingredients.items():
             variant = variants_map[sku]
             ingredients = [ingredients_map[ingredient_name] for ingredient_name in ingredient_names if ingredient_name]
+            VariantIngredientThrough.objects.filter(variant=variant).delete()
             variant.ingredients.clear()
             variant.ingredients.add(*ingredients)
             priority = 0
             for ingredient in ingredients:
-                VariantIngredientThrough.objects.update_or_create(
+                VariantIngredientThrough.objects.create(
                     ingredient=ingredient,
                     variant=variant,
-                    defaults={
-                        'priority': priority
-                    },
+                    priority=priority,
                 )
                 priority += 1
         return True
@@ -99,7 +114,8 @@ class IngredientAdmin(admin.ModelAdmin):
             _, extension = os.path.splitext(file.name)
             if extension == '.csv':
                 csv_file = StringIO(file.read().decode())
-                imported = self.update_ingredients_with_csv(csv_file, request)
+                with transaction.atomic():
+                    imported = self.update_ingredients_with_csv(csv_file, request)
             else:
                 self.message_user(request, 'Invalid file extension.', level=messages.ERROR)
                 return redirect('..')

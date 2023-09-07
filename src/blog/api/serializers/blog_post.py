@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
@@ -10,6 +11,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
     related_products = ProductSerializer(many=True)
     resized = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
+    plain_body = serializers.SerializerMethodField()
 
     class Meta:
         model = BlogPost
@@ -36,3 +38,8 @@ class BlogPostSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return False
         return user.bookmarked_blogposts.all().filter(id=blog_post.id).exists()
+
+    @staticmethod
+    def get_plain_body(blog_post: BlogPost):
+        plain_description = BeautifulSoup(blog_post.body, features='html.parser').text
+        return plain_description[:200]

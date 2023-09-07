@@ -12,7 +12,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN apk update \
     && apk add --virtual build-deps gcc python3-dev musl-dev libc-dev \
     && apk add postgresql postgresql-dev \
-    && apk add mariadb-dev \
     && apk add jpeg-dev zlib-dev libjpeg libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
 #     && apk del build-deps
 

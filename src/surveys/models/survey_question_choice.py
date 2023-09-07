@@ -1,9 +1,11 @@
 from django.db import models
 
+from common.model_mixins import AutoSlugifyMixin
 from surveys.models import SurveyQuestion
 
 
-class SurveyQuestionChoice(models.Model):
+class SurveyQuestionChoice(AutoSlugifyMixin,
+                           models.Model):
     question = models.ForeignKey(
         to=SurveyQuestion,
         on_delete=models.CASCADE,
@@ -12,6 +14,12 @@ class SurveyQuestionChoice(models.Model):
 
     text = models.CharField(
         max_length=128,
+    )
+    slug_name_field = 'text'
+
+    slug = models.SlugField(
+        max_length=64,
+        blank=True,
     )
 
     position = models.PositiveIntegerField(

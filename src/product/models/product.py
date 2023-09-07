@@ -2,10 +2,12 @@ from django.db import models
 from django.db.models import Avg, Min
 from django.utils.translation import gettext as _
 
+from common.model_mixins import AutoSlugifyMixin
 from product.models import Tag, Keyword, ProductType
 
 
-class Product(models.Model):
+class Product(AutoSlugifyMixin,
+              models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
@@ -33,7 +35,8 @@ class Product(models.Model):
 
     slug = models.SlugField(
         unique=True,
-        verbose_name=_("slug"),
+        blank=True,
+        verbose_name=_('slug'),
     )
 
     description = models.TextField(
@@ -49,19 +52,19 @@ class Product(models.Model):
     tags = models.ManyToManyField(
         to=Tag,
         blank=True,
-        verbose_name=_("tags"),
+        verbose_name=_('tags'),
     )
 
     keyword = models.ManyToManyField(
         to=Keyword,
         blank=True,
-        verbose_name=_("keywords"),
+        verbose_name=_('keywords'),
     )
 
     types = models.ManyToManyField(
         to=ProductType,
-        verbose_name=_("types"),
         blank=True,
+        verbose_name=_('categories'),
     )
 
     is_public = models.BooleanField(
@@ -114,7 +117,7 @@ class Product(models.Model):
             approved=True,
         ).aggregate(Avg('score'))['score__avg']
         if average_score is not None:
-            return f"{average_score:.1f}"
+            return f'{average_score:.1f}'
         return 0
 
     @property
