@@ -4,6 +4,13 @@ from orders.models import AmazonOrder
 
 
 class AmazonOrderItem(models.Model):
+    ORDER_ITEM_STATUS_UNSHIPPED = 'Unshipped'
+    ORDER_ITEM_STATUS_SHIPPED = 'Shipped'
+    ORDER_ITEM_STATUS_CHOICES = (
+        (ORDER_ITEM_STATUS_UNSHIPPED, 'Unshipped'),
+        (ORDER_ITEM_STATUS_SHIPPED, 'Shipped'),
+    )
+
     amazon_order_item_id = models.CharField(
         max_length=128,
     )
@@ -20,6 +27,7 @@ class AmazonOrderItem(models.Model):
 
     order_item_status = models.CharField(
         max_length=128,
+        choices=ORDER_ITEM_STATUS_CHOICES,
         blank=True,
     )
 
