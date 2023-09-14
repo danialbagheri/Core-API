@@ -1,9 +1,17 @@
 from django.db import models
 
+from orders.models import AmazonOrder
+
 
 class AmazonOrderItem(models.Model):
     amazon_order_item_id = models.CharField(
         max_length=128,
+    )
+
+    amazon_order = models.ForeignKey(
+        to=AmazonOrder,
+        on_delete=models.CASCADE,
+        related_name='items',
     )
 
     sku = models.CharField(

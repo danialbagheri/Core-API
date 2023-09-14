@@ -11,7 +11,7 @@ class AmazonOrder(models.Model):
         max_length=128
     )
 
-    sellerId = models.CharField(
+    seller_id = models.CharField(
         max_length=128,
     )
 
