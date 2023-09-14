@@ -1,1 +1,2 @@
 from .webhook_permission import WebhookPermission
+from .event_bridge_permission import EventBridgePermission
