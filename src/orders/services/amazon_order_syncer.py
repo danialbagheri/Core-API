@@ -3,7 +3,7 @@ from orders.models import AmazonOrder, AmazonOrderItem
 from .amazon_review_reminder_creator import AmazonReviewReminderEditor
 
 
-class OrderSyncer(BaseService):
+class AmazonOrderSyncer(BaseService):
     service_name = 'Order Syncer'
 
     def __init__(self, order_data):
