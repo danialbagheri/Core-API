@@ -12,6 +12,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
     resized = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
     plain_body = serializers.SerializerMethodField()
+    plain_excerpt = serializers.SerializerMethodField()
 
     class Meta:
         model = BlogPost
@@ -43,3 +44,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
     def get_plain_body(blog_post: BlogPost):
         plain_description = BeautifulSoup(blog_post.body, features='html.parser').text
         return plain_description[:200]
+
+    @staticmethod
+    def get_plain_excerpt(blog_post: BlogPost):
+        return BeautifulSoup(blog_post.excerpt, features='html.parser').text
