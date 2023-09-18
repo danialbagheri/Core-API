@@ -1,1 +1,2 @@
 from .order_change_notification import OrderChangeNotificationTask
+from .send_amazon_review_reminder import SendAmazonReviewReminderTask

@@ -21,4 +21,3 @@ class AmazonReviewReminderSender(BaseService):
             )
             review_reminder.email_sent = True
             review_reminder.save(update_fields=['email_sent'])
-
