@@ -37,6 +37,7 @@ class Configuration(models.Model):
         to='web.Setting',
         blank=True,
         related_name='configuations',
+        verbose_name='Categories',
     )
 
     def save(self, *args, **kwargs):
