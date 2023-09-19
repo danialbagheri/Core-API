@@ -9,7 +9,8 @@ from .serializers import FaqSerializer
 class FaqViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Faq.objects.filter(public=True)
     serializer_class = FaqSerializer
-    lookup_field = "pk"
+    lookup_field = 'pk'
+    pagination_class = None
 
     def get_queryset(self):
         queryset = super().get_queryset()
