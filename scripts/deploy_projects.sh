@@ -13,6 +13,7 @@ for project in $projects; do
     cd "$project_dir" || exit
     git pull
     docker-compose build && docker-compose up -d
+    docker exec "${project}_api_1" python manage.py migrate
 
     echo "Deployment of $project is complete."
   else
