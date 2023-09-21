@@ -14,7 +14,7 @@ class SurveyQuestion(models.Model):
         max_length=1024,
     )
 
-    image = models.ImageField(
+    image = models.FileField(
         upload_to='survey_questions/',
         max_length=1024,
         null=True,
