@@ -8,3 +8,4 @@ from .product_retrieve import SingleProductSerializer
 from .collection_item import CollectionItemSerializer
 from .collection import CollectionSerializer
 from .product_type import ProductTypeSerializer
+from .spf_recommendation_variant import SPFRecommendationVariantSerializer
