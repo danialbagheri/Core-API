@@ -13,8 +13,7 @@ class ProductVariantListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
-        if hasattr(data, 'filter'):
-            data = data.filter(is_public=True).order_by(F('position').asc(nulls_last=True))
+        data = data.filter(is_public=True).order_by(F('position').asc(nulls_last=True))
         return super().to_representation(data)
 
 
