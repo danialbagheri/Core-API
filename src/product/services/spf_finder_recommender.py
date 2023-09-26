@@ -21,11 +21,11 @@ class SPFFinderRecommender(BaseService):
             excludes['types__slug'] = 'kids'
 
         if 'lotion' in self.chosen_choices:
-            filters['keywords__name'] = 'lotion'
+            filters['keyword__name'] = 'lotion'
         elif 'spray' in self.chosen_choices:
-            filters['keywords__name'] = 'spray'
+            filters['keyword__name'] = 'spray'
         elif 'oil' in self.chosen_choices:
-            filters['keywords__name'] = 'oil'
+            filters['keyword__name'] = 'oil'
         return set(Product.objects.filter(**filters).exclude(**excludes))
 
     def _get_valid_variants(self):
