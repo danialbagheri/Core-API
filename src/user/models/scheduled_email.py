@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from user.models import SentEmail
@@ -10,6 +9,10 @@ class ScheduledEmail(models.Model):
     TEMPLATE_CHOICES = (
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
         (TEMPLATE_SUBSCRIBE_INVITATION, 'Subscribe Invitation'),
+    )
+
+    created = models.DateTimeField(
+        auto_now_add=True,
     )
 
     recipient_email = models.EmailField()
