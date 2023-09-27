@@ -7,4 +7,4 @@ from .variant_image_zipper import VariantImageZipper
 from .variant_request_email import VariantRequestEmailService
 from .variant_images_retriever import VariantImagesRetriever
 from .in_stock_mailjet_email import InStockMailjetEmail
-from .subscribe_invitation_mailjet_email import SubscribeInvitationMailjetEmail
+from .subscription import SubscribeInvitationMailjetEmail, SubscriptionVerifier
