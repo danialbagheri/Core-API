@@ -1,20 +1,16 @@
+from datetime import timedelta
+
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
+from django.utils import timezone
 from ipware import get_client_ip
 from rest_framework import serializers
 
-from web.models import ContactForm, Configuration
-
-REASON_CHOICES = [
-    'Urgent: Change Order detail or Address',
-    'Question about order or Delivery',
-    'Press Contact & Media',
-    'Wholesale, Discount, promo code query',
-    'Product Question',
-    'Other'
-]
+from user.models import ScheduledEmail
+from user.services import SubscriptionVerifier
+from web.models import ContactForm
+from web.services import ContactUsEmailSender
 
 
 class ContactFormSerializer(serializers.ModelSerializer):
@@ -54,52 +50,13 @@ class ContactFormSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         contact_form = super().create(validated_data)
-        email_from = settings.SERVER_EMAIL
-        message = f'''
-
-        From: {contact_form.email}
-        Address: {contact_form.address}
-        Subject: {contact_form.reason}
-
-        {contact_form.message}
-        ________
-        This email is sent via {settings.SITE_NAME} contact us page.
-
-                    '''
-
-        try:
-            reason_config = Configuration.objects.filter(key=contact_form.reason).first()
-            if reason_config:
-                send_mail(contact_form.reason, message, email_from, reason_config.value.split(','))
-                contact_form.email_sent = True
-                contact_form.receivers_email = reason_config.value
-                contact_form.save()
-                return contact_form
-            customer_service_emails, created = Configuration.objects.get_or_create(
-                key='customer_service_emails',
+        ContactUsEmailSender(contact_form).send_email()
+        if contact_form.email_sent and SubscriptionVerifier(contact_form.email).is_subscribed():
+            ScheduledEmail.objects.get_or_create(
+                recipient_email=contact_form.email_sent,
+                template_name=ScheduledEmail.TEMPLATE_SUBSCRIBE_INVITATION,
                 defaults={
-                    'name': 'Customer Service Emails',
-                    'value': settings.DEFAULT_CUSTOMER_SERVICE_EMAIL,
+                    'send_time': timezone.now() + timedelta(weeks=2),
                 },
             )
-            marketing_emails, marketing_created = Configuration.objects.get_or_create(
-                key='marketing_emails',
-                defaults={
-                    'name': 'Marketing Emails',
-                    'value': settings.DEFAULT_MARKETING_EMAIL,
-                },
-            )
-
-            if contact_form.reason in REASON_CHOICES[:3]:
-                send_mail(contact_form.reason, message, email_from, marketing_emails.value.split(','), )
-                contact_form.receivers_email = marketing_emails.value
-            else:
-                send_mail(
-                    contact_form.reason, message, email_from, customer_service_emails.value.split(',')
-                )
-                contact_form.receivers_email = customer_service_emails.value
-            contact_form.email_sent = True
-            contact_form.save()
-        except:
-            pass
         return contact_form
