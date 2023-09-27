@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from product.models import Product
+from user.models import SentEmail
+from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier
 from . import ReplySerializer, ReviewImageSerializer
 from ...models import Review, ReviewImage, ReviewAnswer
 from ...services import ReviewNotificationEmail
@@ -63,4 +65,14 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         ).update(review=review)
         self.create_review_answers(answers, review)
         ReviewNotificationEmail(review).send_email()
+        if (
+            review.customer_email and
+            review.score >= 4 and
+            not SentEmail.objects.filter(
+                email=review.customer_email,
+                template_name=SentEmail.TEMPLATE_SUBSCRIBE_INVITATION,
+            ).exists() and
+            not SubscriptionVerifier(review.customer_email).is_subscribed()
+        ):
+            SubscribeInvitationMailjetEmail([review.customer_email]).send_emails()
         return review
