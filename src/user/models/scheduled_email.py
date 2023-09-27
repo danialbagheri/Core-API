@@ -19,7 +19,13 @@ class ScheduledEmail(models.Model):
         choices=TEMPLATE_CHOICES,
     )
 
-    send_time = models.DateTimeField()
+    send_time = models.DateTimeField(
+        db_index=True,
+    )
+
+    email_sent = models.BooleanField(
+        default=False,
+    )
 
     extra_data = JSONField(
         null=True,

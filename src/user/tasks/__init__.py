@@ -1,3 +1,4 @@
 from .webhooks import OrderPaidWebhookTask, OrderRefundWebhookTask
 from .send_review_reminder import SendReviewReminderTask
 from .send_variant_images_email import SendVariantImagesEmailTask
+from .send_scheduled_emails import SendScheduledEmailsTask
