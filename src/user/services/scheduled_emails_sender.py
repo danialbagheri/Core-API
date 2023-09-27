@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from common.services import BaseService
 from user.models import ScheduledEmail
-from user.services import SubscribeInvitationMailjetEmail
+from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier
 
 
 class ScheduledEmailsSender(BaseService):
@@ -16,7 +16,11 @@ class ScheduledEmailsSender(BaseService):
         )
         for scheduled_email in emails_to_send:
             template = scheduled_email.template_name
-            if template == ScheduledEmail.TEMPLATE_SUBSCRIBE_INVITATION:
-                SubscribeInvitationMailjetEmail([scheduled_email.recipient_email]).send_emails()
+            email = scheduled_email.recipient_email
+            if (
+                template == ScheduledEmail.TEMPLATE_SUBSCRIBE_INVITATION and
+                not SubscriptionVerifier(email).is_subscribed()
+            ):
+                SubscribeInvitationMailjetEmail([email]).send_emails()
             scheduled_email.email_sent = True
             scheduled_email.save()

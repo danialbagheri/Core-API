@@ -8,7 +8,6 @@ from ipware import get_client_ip
 from rest_framework import serializers
 
 from user.models import ScheduledEmail
-from user.services import SubscriptionVerifier
 from web.models import ContactForm
 from web.services import ContactUsEmailSender
 
@@ -51,7 +50,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         contact_form = super().create(validated_data)
         ContactUsEmailSender(contact_form).send_email()
-        if contact_form.email_sent and SubscriptionVerifier(contact_form.email).is_subscribed():
+        if contact_form.email_sent:
             ScheduledEmail.objects.get_or_create(
                 recipient_email=contact_form.email_sent,
                 template_name=ScheduledEmail.TEMPLATE_SUBSCRIBE_INVITATION,

@@ -27,7 +27,7 @@ class ScheduledEmail(models.Model):
         default=False,
     )
 
-    extra_data = JSONField(
+    extra_data = models.JSONField(
         null=True,
         blank=True,
     )
