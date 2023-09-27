@@ -1,8 +1,7 @@
-from .review_reminder_creator import ReviewReminderCreatorService
-from .review_reminder_undo import ReviewReminderUndoService
+from .review_reminder import (
+    ReviewReminderCreatorService, ReviewReminderUndoService, ReviewReminderMailjetEmail, ReviewReminderSender,
+)
 from .ip_location_finder import IPLocationFinderService
-from .review_reminder_mailjet_email import ReviewReminderMailjetEmail
-from .review_reminder_sender import ReviewReminderSender
 from .variant_image_zipper import VariantImageZipper
 from .variant_request_email import VariantRequestEmailService
 from .variant_images_retriever import VariantImagesRetriever
