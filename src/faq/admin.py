@@ -4,7 +4,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 
 class FaqAdmin(SummernoteModelAdmin):
-    list_filter = ('product',)
+    list_filter = ('product', 'category')
     list_display = (
         'question',
         'public',
