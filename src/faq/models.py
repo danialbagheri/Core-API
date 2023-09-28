@@ -19,6 +19,11 @@ class Faq(models.Model):
         default=True,
     )
 
+    category = models.CharField(
+        max_length=128,
+        blank=True,
+    )
+
     product = models.ManyToManyField(
         to='product.Product',
         blank=True,
