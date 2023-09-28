@@ -1,20 +1,14 @@
-from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 
-from product.models import Product
+from .filters import FAQFilter
 from .models import Faq
 from .serializers import FaqSerializer
 
 
 class FaqViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Faq.objects.filter(public=True)
     serializer_class = FaqSerializer
+    queryset = Faq.objects.filter(public=True)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = FAQFilter
     lookup_field = 'pk'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        product_slug = self.request.GET.get('slug', False)
-        if product_slug:
-            product_instance = get_object_or_404(Product, slug=product_slug)  # will break
-            queryset = queryset.filter(product=product_instance)
-        return queryset
