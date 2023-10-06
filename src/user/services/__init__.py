@@ -7,3 +7,5 @@ from .in_stock_mailjet_email import InStockMailjetEmail
 from .subscription import SubscribeInvitationMailjetEmail, SubscriptionVerifier
 from .scheduled_emails_sender import ScheduledEmailsSender
 from .welcome_discount_email import WelcomeDiscountEmail
+from .email_order_verifier import EmailOrderVerifier
+from .welcome_discount_reminder_email import WelcomeDiscountReminderEmail

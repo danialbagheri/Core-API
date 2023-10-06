@@ -1,7 +1,10 @@
+from datetime import timedelta
 from typing import Any, Dict
 
+from django.utils import timezone
+
 from common.services import TransactionalMailJetEmailService
-from user.models import SentEmail
+from user.models import SentEmail, ScheduledEmail
 
 
 class WelcomeDiscountEmail(TransactionalMailJetEmailService):
@@ -16,3 +19,13 @@ class WelcomeDiscountEmail(TransactionalMailJetEmailService):
         return {
             'discount_code': self.discount_code,
         }
+
+    def send_emails(self) -> None:
+        super().send_emails()
+        ScheduledEmail.objects.get_or_create(
+            recipient_email=self.emails[0],
+            template_name=ScheduledEmail.TEMPLATE_WELCOME_DISCOUNT_REMINDER,
+            defaults={
+                'send_time': timezone.now() + timedelta(days=2),
+            },
+        )

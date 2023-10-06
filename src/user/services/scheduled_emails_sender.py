@@ -2,7 +2,9 @@ from django.utils import timezone
 
 from common.services import BaseService
 from user.models import ScheduledEmail, SentEmail
-from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier
+from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier, EmailOrderVerifier, \
+    WelcomeDiscountReminderEmail
+from web.models import Configuration
 
 
 class ScheduledEmailsSender(BaseService):
@@ -26,5 +28,16 @@ class ScheduledEmailsSender(BaseService):
                 not SubscriptionVerifier(email).is_subscribed()
             ):
                 SubscribeInvitationMailjetEmail([email]).send_emails()
+            if (
+                template == ScheduledEmail.TEMPLATE_WELCOME_DISCOUNT_REMINDER and
+                not SentEmail.objects.filter(
+                    email=email,
+                    template_name=SentEmail.TEMPLATE_WELCOME_DISCOUNT_REMINDER,
+                ).exists() and
+                not EmailOrderVerifier(email).verify_email_order()
+            ):
+                discount_code = Configuration.objects.filter(key='welcome-discount-code').first()
+                if discount_code:
+                    WelcomeDiscountReminderEmail(discount_code.value).send_emails()
             scheduled_email.email_sent = True
             scheduled_email.save()

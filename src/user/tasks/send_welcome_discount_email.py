@@ -16,7 +16,7 @@ class SendWelcomeDiscountEmailTask(Task):
         if not discount_code:
             logger.exception('Welcome discount code not created yet.')
             return
-        WelcomeDiscountEmail(discount_code, [email]).send_emails()
+        WelcomeDiscountEmail(discount_code.value, [email]).send_emails()
 
 
 current_app.register_task(SendWelcomeDiscountEmailTask())

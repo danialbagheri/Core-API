@@ -6,9 +6,11 @@ from user.models import SentEmail
 class ScheduledEmail(models.Model):
     TEMPLATE_REVIEW_REMINDER = SentEmail.TEMPLATE_REVIEW_REMINDER
     TEMPLATE_SUBSCRIBE_INVITATION = SentEmail.TEMPLATE_SUBSCRIBE_INVITATION
+    TEMPLATE_WELCOME_DISCOUNT_REMINDER = SentEmail.TEMPLATE_WELCOME_DISCOUNT_REMINDER
     TEMPLATE_CHOICES = (
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
         (TEMPLATE_SUBSCRIBE_INVITATION, 'Subscribe Invitation'),
+        (TEMPLATE_WELCOME_DISCOUNT_REMINDER, 'Welcome Discount Reminder')
     )
 
     created = models.DateTimeField(
