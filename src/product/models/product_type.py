@@ -22,6 +22,13 @@ class ProductType(AutoSlugifyMixin,
         blank=True,
     )
 
+    image = models.ImageField(
+        upload_to='categories/',
+        max_length=None,
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         verbose_name = 'Product Category'
         verbose_name_plural = 'Product Categories'

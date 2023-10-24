@@ -3,7 +3,7 @@ from django.utils import timezone
 from common.services import BaseService
 from user.models import ScheduledEmail, SentEmail
 from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier, EmailOrderVerifier, \
-    WelcomeDiscountReminderEmail
+    WelcomeDiscountReminderEmail, CategoriesIntroEmail
 from web.models import Configuration
 
 
@@ -38,6 +38,11 @@ class ScheduledEmailsSender(BaseService):
             ):
                 discount_code = Configuration.objects.filter(key='welcome-discount-code').first()
                 if discount_code:
-                    WelcomeDiscountReminderEmail(discount_code.value).send_emails()
+                    WelcomeDiscountReminderEmail(discount_code.value, [email]).send_emails()
+                if not SentEmail.objects.filter(
+                    email=email,
+                    template_name=SentEmail.TEMPLATE_CATEGORIES_INTRO,
+                ).exists():
+                    CategoriesIntroEmail([email]).send_emails()
             scheduled_email.email_sent = True
             scheduled_email.save()
