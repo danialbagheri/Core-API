@@ -13,7 +13,7 @@ class ProductEditWebhookAPI(APIView):
 
     def post(self, request, *args, **kwargs):
         vendor = request.data.get('vendor', None)
-        if vendor != settings.BRAND_NAME:
+        if vendor and vendor != settings.BRAND_NAME:
             return Response(data={}, status=status.HTTP_200_OK)
         graphql_id = request.data.get('admin_graphql_api_id', None)
         ProductEditTask().delay(graphql_id)
