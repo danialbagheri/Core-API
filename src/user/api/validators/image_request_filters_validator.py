@@ -27,11 +27,12 @@ class ImageRequestFiltersValidator:
         raise ValidationError({'email': f'Email must be from one of the domains "{domains}"'})
 
     def validate_sku_list(self):
-        self.sku_list = ast.literal_eval(self.sku_list)
-        self.sku_list = [sku.upper() for sku in self.sku_list]
-        existing_sku_set = set(ProductVariant.objects.filter(sku__in=self.sku_list).values_list('sku', flat=True))
-        invalid_sku_set = set(self.sku_list) - existing_sku_set
+        input_sku_list = ast.literal_eval(self.sku_list)
+        input_sku_list = [sku.upper() for sku in input_sku_list]
+        existing_sku_set = set(ProductVariant.objects.filter(sku__in=input_sku_list).values_list('sku', flat=True))
+        invalid_sku_set = set(input_sku_list) - existing_sku_set
         self.invalid_sku_list += list(invalid_sku_set)
+        self.sku_list = list(existing_sku_set)
 
     def validate_image_types(self):
         self.image_types = ast.literal_eval(self.image_types)

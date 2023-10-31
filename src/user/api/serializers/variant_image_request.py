@@ -47,6 +47,7 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         validator = ImageRequestFiltersValidator(attrs)
         validator.validate()
         self.invalid_sku_list = validator.invalid_sku_list
+        attrs['sku_list'] = validator.sku_list
 
         if not self.recaptcha_value:
             raise ValidationError('Recaptcha data not sent.')
