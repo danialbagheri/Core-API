@@ -21,15 +21,16 @@ class Search(generics.ListAPIView):
     def _affect_query(query):
         tag = Tag.objects.filter(Q(name__icontains=query)).first()
         keyword = Keyword.objects.filter(Q(name__icontains=query)).first()
-        if tag is not None:
-            return Q(tags=tag)
-        elif keyword is not None:
-            return Q(keyword=keyword)
-        return (
+        query = (
             Q(name__icontains=query) |
             Q(sub_title__icontains=query) |
             Q(variants__sku__icontains=query)
         )
+        if tag is not None:
+            query |= Q(tags=tag)
+        if keyword is not None:
+            query |= Q(keyword=keyword)
+        return query
 
     def get_queryset(self):
         is_valid_query = False
