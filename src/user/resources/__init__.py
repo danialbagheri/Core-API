@@ -1,0 +1,1 @@
+from .abandoned_checkout import AbandonedCheckoutResource
