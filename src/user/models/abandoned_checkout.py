@@ -4,7 +4,9 @@ from django.db import models
 class AbandonedCheckout(models.Model):
     created_at = models.DateTimeField()
 
-    legacy_id = models.BigIntegerField()
+    legacy_id = models.BigIntegerField(
+        unique=True,
+    )
 
     abandoned_checkout_url = models.URLField(
         max_length=512,
@@ -29,4 +31,8 @@ class AbandonedCheckout(models.Model):
     customer_last_name = models.CharField(
         max_length=64,
         blank=True,
+    )
+
+    email_sent = models.BooleanField(
+        default=False,
     )

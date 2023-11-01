@@ -9,6 +9,7 @@ class SentEmail(models.Model):
     TEMPLATE_WELCOME_DISCOUNT = 'welcome-discount'
     TEMPLATE_WELCOME_DISCOUNT_REMINDER = 'welcome-discount-reminder'
     TEMPLATE_CATEGORIES_INTRO = 'categories-intro'
+    TEMPLATE_ABANDONED_CHECKOUT = 'abandoned-checkout'
     TEMPLATE_CHOICES = (
         (TEMPLATE_IN_STOCK, 'In Stock'),
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
@@ -17,6 +18,7 @@ class SentEmail(models.Model):
         (TEMPLATE_WELCOME_DISCOUNT, 'Welcome Discount'),
         (TEMPLATE_WELCOME_DISCOUNT_REMINDER, 'Welcome Discount Reminder'),
         (TEMPLATE_CATEGORIES_INTRO, 'Categories Introduction'),
+        (TEMPLATE_ABANDONED_CHECKOUT, 'Abandoned Checkout'),
     )
 
     email = models.EmailField()

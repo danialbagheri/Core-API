@@ -11,3 +11,4 @@ from .welcome_discount_reminder_email import WelcomeDiscountReminderEmail
 from .categories_intro_email import CategoriesIntroEmail
 from .scheduled_emails_sender import ScheduledEmailsSender
 from .abandoned_checkout_email import AbandonedCheckoutEmail
+from .abandoned_checkout_retriever import AbandonedCheckoutRetriever
