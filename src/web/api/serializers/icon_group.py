@@ -18,6 +18,7 @@ class IconGroupItemSerializer(serializers.ModelSerializer):
         list_serializer_class = IconGroupItemListSerializer
         fields = (
             'id',
+            'name',
             'icon',
             'svg_icon',
             'url',
