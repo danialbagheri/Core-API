@@ -16,7 +16,7 @@ class VariantRequestEmailService:
         zip_file_name = f'{uuid.uuid4()}.zip'
         self.variant_image_request.zip_file.save(zip_file_name, ContentFile(self.zip_buffer.read()), save=False)
         self.variant_image_request.save()
-        return f'{get_current_site(None).domain}{self.variant_image_request.zip_file.url}'
+        return f'{self.variant_image_request.zip_file.url}'
 
     @staticmethod
     def _get_message(zip_file_url: str, all_sku_without_image: Set[str]):
