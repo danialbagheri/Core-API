@@ -21,4 +21,8 @@ app.conf.beat_schedule = {
         'task': 'users.tasks.SendScheduledEmailsTask',
         'schedule': crontab(hour=9, minute=0),
     },
+    'send abandoned checkout emails': {
+        'task': 'users.tasks.SendAbandonedCheckoutEmailTask',
+        'schedule': crontab(hour=9, minute=30),
+    },
 }

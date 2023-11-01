@@ -3,3 +3,4 @@ from .send_review_reminder import SendReviewReminderTask
 from .send_variant_images_email import SendVariantImagesEmailTask
 from .send_scheduled_emails import SendScheduledEmailsTask
 from .send_welcome_discount_email import SendWelcomeDiscountEmailTask
+from .send_abandoned_checkout_emails import SendAbandonedCheckoutEmailTask

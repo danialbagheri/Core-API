@@ -7,8 +7,8 @@ from user.models import AbandonedCheckout
 
 
 class AbandonedCheckoutEmail(TransactionalMailJetEmailService):
-    def __init__(self, checkout: AbandonedCheckout, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, checkout: AbandonedCheckout):
+        super().__init__(emails=[checkout.email])
         self.checkout = checkout
 
     def _get_variables(self) -> Dict[str, Any]:
