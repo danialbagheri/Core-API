@@ -1,6 +1,6 @@
 from django.contrib import admin
 from nested_admin.forms import SortableHiddenMixin
-from nested_admin.nested import NestedModelAdmin, NestedStackedInline, NestedTabularInline
+from nested_admin.nested import NestedModelAdmin, NestedStackedInline
 
 from web.models import Menu
 
@@ -30,6 +30,8 @@ class MenuInlineAdmin(SortableHiddenMixin,
     extra = 0
     inlines = (SubMenuInlineAdmin,)
     show_change_link = True
+    verbose_name = 'Item'
+    verbose_name_plural = 'Items'
 
 
 @admin.register(Menu)
