@@ -38,6 +38,14 @@ class Menu(AutoSlugifyMixin,
         validators=[FileExtensionValidator(allowed_extensions=['svg'])],
     )
 
+    is_mega_menu = models.BooleanField(
+        default=False,
+    )
+
+    is_active = models.BooleanField(
+        default=False,
+    )
+
     parent_menu = models.ForeignKey(
         to='web.Menu',
         on_delete=models.CASCADE,
