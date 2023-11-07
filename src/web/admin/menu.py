@@ -36,7 +36,7 @@ class MenuInlineAdmin(SortableHiddenMixin,
 
 @admin.register(Menu)
 class MenuAdmin(NestedModelAdmin):
-    fields = ('slug', 'name', 'text', 'url', 'image', 'svg_image', 'position')
+    fields = ('slug', 'name', 'text', 'url', 'image', 'svg_image', 'is_mega_menu', 'is_active')
     list_display = ('name',)
     inlines = (MenuInlineAdmin,)
 
