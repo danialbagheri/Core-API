@@ -9,7 +9,7 @@ class BlogSearchQueryBuilder(BaseService):
 
     def __init__(self, search_input):
         super().__init__(search_input=search_input)
-        self.input_parts = search_input.slpit(' ')
+        self.input_parts = search_input.split(' ')
 
     def _build_blog_title_query(self):
         query = Q()
