@@ -8,5 +8,6 @@ from .icon_group import IconGroupRetrieveAPIView
 from .instagram import InstagramListAPIView
 from .top_bar_retrieve import TopBarRetrieveAPIView
 from .menu import MenuRetrieveAPIView
+from .menu_search import MenuSearchListAPIView
 
 from web.tasks import UpdateInstagramPostsTask

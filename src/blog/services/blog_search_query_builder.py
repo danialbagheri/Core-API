@@ -8,7 +8,7 @@ class BlogSearchQueryBuilder(BaseService):
     service_name = 'Blog Search Query Builder'
 
     def __init__(self, search_input):
-        super().__init__(query=search_input)
+        super().__init__(search_input=search_input)
         self.input_parts = search_input.slpit(' ')
 
     def _build_blog_title_query(self):

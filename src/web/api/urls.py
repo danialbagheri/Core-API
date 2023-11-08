@@ -25,4 +25,5 @@ urlpatterns = [
     path('icon-groups/<slug:slug>/', views.IconGroupRetrieveAPIView.as_view(), name='icon-groups-retrieve'),
     path('instagram-posts/', views.InstagramListAPIView.as_view(), name='instagram-posts'),
     path('menus/<slug:slug>/', views.MenuRetrieveAPIView.as_view(), name='menus-retrieve'),
+    path('menus/search/', views.MenuSearchListAPIView.as_view(), name='menus-search'),
 ]
