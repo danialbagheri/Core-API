@@ -19,7 +19,8 @@ class Menu(AutoSlugifyMixin,
         blank=True,
     )
 
-    url = models.URLField(
+    url = models.CharField(
+        max_length=512,
         blank=True,
     )
 
