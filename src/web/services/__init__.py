@@ -1,1 +1,2 @@
 from .instagram_image_thumbnail_creators import InstagramImageThumbnailCreatorFactory, InstagramImageThumbnailCreator
+from .menu_search_query_builder import MenuSearchQueryBuilder
