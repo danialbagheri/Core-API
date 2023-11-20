@@ -30,6 +30,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
             'subject',
             'reason',
             'message',
+            'subscribe_sender',
         )
 
     def __init__(self, *args, **kwargs):
