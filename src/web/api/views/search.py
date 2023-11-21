@@ -24,7 +24,8 @@ class Search(generics.ListAPIView):
         query = (
             Q(name__icontains=query) |
             Q(sub_title__icontains=query) |
-            Q(variants__sku__icontains=query)
+            Q(variants__sku__icontains=query) |
+            Q(variants__name__icontains=query)
         )
         if tag is not None:
             query |= Q(tags=tag)
@@ -32,17 +33,25 @@ class Search(generics.ListAPIView):
             query |= Q(keyword=keyword)
         return query
 
+    def _get_phrase_search_results(self, search_input):
+        query = self._affect_query(search_input)
+        return list(Product.objects.filter(query, is_public=True))
+
     def get_queryset(self):
         is_valid_query = False
         queryset = Product.objects.filter(is_public=True)
-        full_query = self.request.query_params.get('q', '')
-        query_parts = full_query.split(' ')
-        db_query = Q()
-        for query in query_parts:
-            if query is not None and len(query) >= 2:
+        search_input = self.request.query_params.get('q', '')
+        phrase_search_products = self._get_phrase_search_results(search_input)
+        input_parts = search_input.split(' ')
+        query = Q()
+        for input_part in input_parts:
+            if input_part is not None and len(input_part) >= 2:
                 is_valid_query = True
-                self._update_search_query(query)
-                db_query |= self._affect_query(query)
+                self._update_search_query(input_part)
+                query |= self._affect_query(input_part)
         if not is_valid_query:
             return []
-        return queryset.filter(db_query).distinct()
+
+        word_search_products = list(queryset.filter(query).distinct())
+        products = phrase_search_products + word_search_products
+        return list(dict.fromkeys(products))
