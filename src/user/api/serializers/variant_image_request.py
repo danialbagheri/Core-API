@@ -25,6 +25,7 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.recaptcha_value = None
+        self.invalid_sku_list = []
 
     def to_internal_value(self, data):
         self.recaptcha_value = data.get('recaptcha')
@@ -41,7 +42,13 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        ImageRequestFiltersValidator(attrs).validate()
+        validator = ImageRequestFiltersValidator(attrs)
+        validator.validate()
+        self.invalid_sku_list = validator.invalid_sku_list
+        attrs['sku_list'] = validator.sku_list
+
+        if not validator.sku_list:
+            raise ValidationError('No valid sku.')
 
         if not self.recaptcha_value:
             raise ValidationError('Recaptcha data not sent.')
@@ -52,3 +59,10 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
         variant_image_request = super().create(validated_data)
         SendVariantImagesEmailTask().delay(variant_image_request.id)
         return variant_image_request
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return {
+            'invalid_sku_list': self.invalid_sku_list,
+            'image_request': representation,
+        }

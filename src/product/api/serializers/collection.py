@@ -7,7 +7,7 @@ from . import CollectionItemSerializer
 
 
 class CollectionSerializer(serializers.ModelSerializer):
-    items = CollectionItemSerializer(many=True, source="collection_items")
+    items = CollectionItemSerializer(many=True, source='collection_items')
     counts = serializers.SerializerMethodField()
     resized = serializers.SerializerMethodField()
     webp = serializers.SerializerMethodField()

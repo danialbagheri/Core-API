@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import serializers
 
-from common.services import RecaptchaValidator
+from common.services import MailjetEmailSubscriber, RecaptchaValidator
 from user.models import ScheduledEmail
-from web.models import ContactForm
+from web.models import ContactForm, Configuration
 from web.services import ContactUsEmailSender
 
 
@@ -22,6 +22,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
             'subject',
             'reason',
             'message',
+            'subscribe_sender',
         )
 
     def __init__(self, *args, **kwargs):
@@ -49,4 +50,6 @@ class ContactFormSerializer(serializers.ModelSerializer):
                     'send_time': timezone.now() + timedelta(weeks=2),
                 },
             )
+        if contact_form.subscribe_sender and contact_form.email:
+            MailjetEmailSubscriber(contact_form.email).subscribe_email()
         return contact_form
