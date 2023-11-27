@@ -285,6 +285,7 @@ PHONENUMBER_DEFAULT_REGION = 'GB'
 SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
 SUMMERNOTE_CONFIG = {
     'iframe': True,
+    'attachment_filesize_limit': 1024 * 1024 * 15,
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
