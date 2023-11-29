@@ -7,7 +7,7 @@ from web.models import Configuration
 
 class SubscriptionVerifier(BaseService):
     service_name = 'Subscription Verifier'
-    MAILJET_LIST_ID_CONFIG_KEY = 'main-mailjet-list-id'
+    MAILJET_LIST_ID_CONFIG_KEY = 'main-contact-list-id'
 
     def __init__(self, email: str):
         super().__init__(email=email)

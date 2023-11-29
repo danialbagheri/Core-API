@@ -6,7 +6,7 @@ from rest_framework import serializers
 
 from common.services import MailjetEmailSubscriber, RecaptchaValidator
 from user.models import ScheduledEmail
-from web.models import ContactForm, Configuration
+from web.models import ContactForm
 from web.services import ContactUsEmailSender
 
 
@@ -44,7 +44,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
         ContactUsEmailSender(contact_form).send_email()
         if contact_form.email_sent:
             ScheduledEmail.objects.get_or_create(
-                recipient_email=contact_form.email_sent,
+                recipient_email=contact_form.email,
                 template_name=ScheduledEmail.TEMPLATE_SUBSCRIBE_INVITATION,
                 defaults={
                     'send_time': timezone.now() + timedelta(weeks=2),
