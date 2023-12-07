@@ -6,11 +6,13 @@ class SentEmail(models.Model):
     TEMPLATE_REVIEW_REMINDER = 'review-reminder'
     TEMPLATE_REVIEW_APPROVAL = 'review-approval'
     TEMPLATE_SUBSCRIBE_INVITATION = 'subscribe-invitation'
+    TEMPLATE_SPF_RECOMMENDER = 'spf-recommender'
     TEMPLATE_CHOICES = (
         (TEMPLATE_IN_STOCK, 'In Stock'),
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
         (TEMPLATE_REVIEW_APPROVAL, 'Review Approval'),
         (TEMPLATE_SUBSCRIBE_INVITATION, 'Subscribe Invitation'),
+        (TEMPLATE_SPF_RECOMMENDER, 'SPF Recommender')
     )
 
     email = models.EmailField()
