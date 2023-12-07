@@ -49,4 +49,6 @@ urlpatterns = [
     path('edit/', views.ProductEditWebhookAPI.as_view(), name='product-edit'),
     path('variants/spf-recommendations/<int:survey_submission_id>/',
          views.SPFRecommendationListAPIView.as_view(), name='spf-recommendations'),
+    path('variants/email/spf-recommendations/',
+         views.EmailSPFRecommendationAPIView.as_view(), name='email-spf-recommendations'),
 ]

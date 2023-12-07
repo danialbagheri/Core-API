@@ -9,3 +9,4 @@ from .favorites_list import FavoriteProductListAPIView
 from .favorite import FavoriteProductUpdateAPIView
 from .product_edit import ProductEditWebhookAPI
 from .spf_recommendation import SPFRecommendationListAPIView
+from .email_spf_recommendation import EmailSPFRecommendationAPIView
