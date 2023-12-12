@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils import timezone
 from sp_api.api import Solicitations
 
@@ -16,8 +17,8 @@ class AmazonReviewReminderSender(BaseService):
             reminder_date__lt=now,
         )
         for review_reminder in review_reminders:
-            Solicitations().create_product_review_and_seller_feedback_solicitation(
-                review_reminder.amazon_order.amazon_order_id,
-            )
+            Solicitations(
+                credentials=settings.AMAZON_SP_API_CREDENTIALS
+            ).create_product_review_and_seller_feedback_solicitation(review_reminder.amazon_order.amazon_order_id)
             review_reminder.email_sent = True
             review_reminder.save(update_fields=['email_sent'])

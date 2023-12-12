@@ -356,3 +356,9 @@ INSTAGRAM_IMAGES_PATH = env('INSTAGRAM_IMAGES_PATH')
 REVIEW_RATE_COOKIE_KEY = env('REVIEW_RATE_COOKIE_KEY', default='review-rate')
 
 AMAZON_EVENTBRIDGE_SECRET = env('AMAZON_EVENTBRIDGE_SECRET', default='')
+
+AMAZON_SP_API_CREDENTIALS = {
+    'refresh_token': env('AMAZON_SP_API_REFRESH_TOKEN', default=''),
+    'lwa_app_id': env('AMAZON_SP_API_APP_ID', default=''),
+    'lwa_client_secret': env('AMAZON_SP_API_CLIENT_SECRET', default=''),
+}
