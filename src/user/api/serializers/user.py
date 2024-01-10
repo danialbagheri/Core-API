@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
 from user.models import User
@@ -31,3 +32,10 @@ class UserSerializer(serializers.ModelSerializer):
         new_user.set_password(password)
         new_user.save()
         return new_user
+
+
+class UserRetrieveSerializer(DjoserUserSerializer):
+    class Meta:
+        model = User
+        fields = DjoserUserSerializer.Meta.fields + ('mobile_number',)
+        read_only_fields = DjoserUserSerializer.Meta.read_only_fields

@@ -190,6 +190,10 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {
+        'user': 'user.api.serializers.UserRetrieveSerializer',
+        'current_user': 'user.api.serializers.UserRetrieveSerializer',
+    }
 }
 
 DOMAIN = env('DOMAIN')
