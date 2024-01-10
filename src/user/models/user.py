@@ -60,6 +60,11 @@ class User(AbstractUser):
         auto_now_add=True,
     )
 
+    mobile_number = models.CharField(
+        max_length=32,
+        blank=True,
+    )
+
     favorite_products = models.ManyToManyField(
         to=Product,
         blank=True,
