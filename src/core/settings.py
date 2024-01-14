@@ -362,3 +362,4 @@ AMAZON_SP_API_CREDENTIALS = {
     'lwa_app_id': env('AMAZON_SP_API_APP_ID', default=''),
     'lwa_client_secret': env('AMAZON_SP_API_CLIENT_SECRET', default=''),
 }
+AMAZON_MARKETPLACE_ID = env('AMAZON_MARKETPLACE_ID', default='')

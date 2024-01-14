@@ -17,7 +17,7 @@ class AmazonOrderSyncer(BaseService):
             defaults={
                 'seller_id': self.order_data['SellerId'],
                 'order_status': summary['OrderStatus'],
-                'fulfillment_type': summary['FulfillmentType'],
+                'fulfillment_type': summary['FulfillmentChannel'],
                 'order_type': summary['OrderType'],
             }
         )

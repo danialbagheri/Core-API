@@ -21,4 +21,8 @@ app.conf.beat_schedule = {
         'task': 'orders.tasks.SendAmazonReviewReminderTask',
         'schedule': crontab(hour=10, minute=0),
     },
+    'sync amazon orders': {
+        'task': 'orders.tasks.SyncAmazonOrdersTask',
+        'schedule': crontab(hour=15, minute=0),
+    },
 }
