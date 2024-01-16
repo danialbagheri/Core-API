@@ -16,9 +16,15 @@ class AmazonReviewReminderSender(BaseService):
             email_sent=False,
             reminder_date__lt=now,
         )
+        solicitations_resource = Solicitations(credentials=settings.AMAZON_SP_API_CREDENTIALS)
         for review_reminder in review_reminders:
-            Solicitations(
-                credentials=settings.AMAZON_SP_API_CREDENTIALS
-            ).create_product_review_and_seller_feedback_solicitation(review_reminder.amazon_order.amazon_order_id)
+            amazon_order_id = review_reminder.amazon_order.amazon_order_id
+            possible_actions = solicitations_resource.get_solicitation_actions_for_order(
+                amazonOrderId=amazon_order_id,
+            )._links['actions']
+            if possible_actions:
+                solicitations_resource.create_product_review_and_seller_feedback_solicitation(
+                    amazonOrderId=amazon_order_id,
+                )
             review_reminder.email_sent = True
             review_reminder.save(update_fields=['email_sent'])

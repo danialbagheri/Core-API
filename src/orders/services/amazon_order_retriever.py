@@ -11,15 +11,27 @@ class AmazonOrderRetriever(BaseService):
 
     def __init__(self, start_datetime=None, end_datetime=None):
         yesterday = datetime.now() - timedelta(days=1)
-        self.start_datetime = start_datetime or yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
+        self.start_datetime = start_datetime or yesterday
         self.end_datetime = end_datetime or (start_datetime + timedelta(days=1))
         super().__init__(start_datetime=self.start_datetime, end_datetime=self.end_datetime)
+        self.orders_resource = Orders(credentials=settings.AMAZON_SP_API_CREDENTIALS)
 
-    def retrieve_orders(self):
-        orders = Orders().get_orders(
-            MarketplaceIds=[settings.AMAZON_MARKETPLACE_ID],
-            LastUpdatedAfter=self.start_datetime,
-            LastUpdatedBefore=self.end_datetime,
+    def _retrieve_orders(self, next_token=None):
+        if next_token:
+            return self.orders_resource.get_orders(NextToken=next_token)
+        return self.orders_resource.get_orders(
+            LastUpdatedAfter=self.start_datetime.strftime('%Y-%m-%d'),
+            LastUpdatedBefore=self.end_datetime.strftime('%Y-%m-%d'),
             OrderStatuses=['Shipped', 'PartiallyShipped', 'InvoiceUnconfirmed'],
         )
-        return orders.payload['Orders']
+
+    def retrieve_orders(self):
+        orders = []
+        next_token = None
+        while True:
+            response = self._retrieve_orders(next_token)
+            orders += response.Orders
+            next_token = response.next_token
+            if next_token:
+                break
+        return orders

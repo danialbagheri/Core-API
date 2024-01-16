@@ -50,10 +50,6 @@ class AmazonOrder(models.Model):
         max_length=128
     )
 
-    seller_id = models.CharField(
-        max_length=128,
-    )
-
     order_status = models.CharField(
         max_length=128,
         choices=ORDER_STATUS_CHOICES,

@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'review',
     'faq',
     'surveys',
+    'orders',
 
     'django.contrib.sitemaps',
     'rest_framework',
@@ -354,8 +355,6 @@ MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')
 LOST_PRODUCT_IMAGE_PATH = env('LOST_PRODUCT_IMAGE_PATH')
 INSTAGRAM_IMAGES_PATH = env('INSTAGRAM_IMAGES_PATH')
 REVIEW_RATE_COOKIE_KEY = env('REVIEW_RATE_COOKIE_KEY', default='review-rate')
-
-AMAZON_EVENTBRIDGE_SECRET = env('AMAZON_EVENTBRIDGE_SECRET', default='')
 
 AMAZON_SP_API_CREDENTIALS = {
     'refresh_token': env('AMAZON_SP_API_REFRESH_TOKEN', default=''),
