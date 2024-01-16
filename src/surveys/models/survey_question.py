@@ -14,6 +14,13 @@ class SurveyQuestion(models.Model):
         max_length=1024,
     )
 
+    image = models.FileField(
+        upload_to='survey_questions/',
+        max_length=1024,
+        null=True,
+        blank=True,
+    )
+
     is_skippable = models.BooleanField()
 
     has_multiple_answers = models.BooleanField()

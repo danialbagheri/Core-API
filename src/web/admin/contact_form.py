@@ -5,5 +5,6 @@ from web.models import ContactForm
 
 @admin.register(ContactForm)
 class ContactFormAdmin(admin.ModelAdmin):
-    list_display = ('id', 'email', 'reason', 'email_sent')
+    readonly_fields = ('sent_date',)
+    list_display = ('id', 'email', 'reason', 'sent_date', 'email_sent')
     list_filter = ('email_sent',)

@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from ipware import get_client_ip
 from rest_framework import serializers
 
+from common.services import MailjetEmailSubscriber
 from web.models import ContactForm, Configuration
 
 REASON_CHOICES = [
@@ -29,6 +30,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
             'subject',
             'reason',
             'message',
+            'subscribe_sender',
         )
 
     def __init__(self, *args, **kwargs):
@@ -102,4 +104,6 @@ class ContactFormSerializer(serializers.ModelSerializer):
             contact_form.save()
         except:
             pass
+        if contact_form.subscribe_sender and contact_form.email:
+            MailjetEmailSubscriber(contact_form.email).subscribe_email()
         return contact_form

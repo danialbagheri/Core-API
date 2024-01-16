@@ -16,6 +16,7 @@ class ImageRequestFiltersValidator:
         self.image_types = request_filters['image_types']
         self.image_angles = request_filters['image_angles']
         self.image_formats = request_filters['image_formats']
+        self.invalid_sku_list = []
 
     def validate_email(self):
         valid_staff_email_domains = settings.VALID_STAFF_EMAIL_DOMAINS
@@ -26,12 +27,12 @@ class ImageRequestFiltersValidator:
         raise ValidationError({'email': f'Email must be from one of the domains "{domains}"'})
 
     def validate_sku_list(self):
-        self.sku_list = ast.literal_eval(self.sku_list)
-        self.sku_list = [sku.upper() for sku in self.sku_list]
-        existing_sku_set = set(ProductVariant.objects.filter(sku__in=self.sku_list).values_list('sku', flat=True))
-        invalid_sku_set = set(self.sku_list) - existing_sku_set
-        if invalid_sku_set:
-            raise ValidationError({'invalid_sku_list': list(invalid_sku_set)})
+        input_sku_list = ast.literal_eval(self.sku_list)
+        input_sku_list = [sku.upper() for sku in input_sku_list]
+        existing_sku_set = set(ProductVariant.objects.filter(sku__in=input_sku_list).values_list('sku', flat=True))
+        invalid_sku_set = set(input_sku_list) - existing_sku_set
+        self.invalid_sku_list += list(invalid_sku_set)
+        self.sku_list = list(existing_sku_set)
 
     def validate_image_types(self):
         self.image_types = ast.literal_eval(self.image_types)

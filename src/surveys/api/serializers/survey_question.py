@@ -12,6 +12,7 @@ class SurveyQuestionSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'text',
+            'image',
             'is_skippable',
             'has_multiple_answers',
             'choices',

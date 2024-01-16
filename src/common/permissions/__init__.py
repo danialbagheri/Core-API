@@ -1,2 +1,2 @@
 from .webhook_permission import WebhookPermission
-from .event_bridge_permission import EventBridgePermission
+from .is_jwt_user import IsJWTUser

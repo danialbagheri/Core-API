@@ -13,7 +13,7 @@ class BlogPostViewSet(ReadOnlyModelViewSet):
     lookup_field = 'slug'
 
     def get_queryset(self):
-        queryset = BlogPost.objects.all()
+        queryset = BlogPost.objects.filter(published=True)
         tag_q = self.request.query_params.get('tag', None)
         count = self.request.query_params.get('count', None)
         if tag_q:

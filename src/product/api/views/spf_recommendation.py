@@ -3,12 +3,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from product.services import SPFFinderRecommender
 from surveys.models import SurveySubmission
-from ..serializers import ProductVariantSerializer
+from ..serializers import SPFRecommendationVariantSerializer
 
 
 class SPFRecommendationListAPIView(ListAPIView):
     authentication_classes = (JWTAuthentication,)
-    serializer_class = ProductVariantSerializer
+    serializer_class = SPFRecommendationVariantSerializer
 
     def get_queryset(self):
         survey_submission_id = self.kwargs['survey_submission_id']

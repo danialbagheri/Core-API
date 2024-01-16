@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
@@ -59,6 +60,11 @@ class User(AbstractUser):
         auto_now_add=True,
     )
 
+    mobile_number = models.CharField(
+        max_length=32,
+        blank=True,
+    )
+
     favorite_products = models.ManyToManyField(
         to=Product,
         blank=True,
@@ -72,9 +78,15 @@ class User(AbstractUser):
     objects = UserManager()
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.date_joined = timezone.now()
-        self.email = self.email.lower()
+        if self.id:
+            self.email = self.email.lower()
+            return super().save(*args, **kwargs)
+
+        self.date_joined = timezone.now()
+        for valid_domain in settings.VALID_STAFF_EMAIL_DOMAINS:
+            if self.email.endswith(valid_domain):
+                self.is_staff = True
+                break
         return super(User, self).save(*args, **kwargs)
 
     def full_name(self):

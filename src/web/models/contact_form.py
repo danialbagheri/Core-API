@@ -26,7 +26,11 @@ class ContactForm(models.Model):
     )
 
     message = models.TextField(
-        blank=True
+        blank=True,
+    )
+
+    subscribe_sender = models.BooleanField(
+        default=False,
     )
 
     email_sent = models.BooleanField(

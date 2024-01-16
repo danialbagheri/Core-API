@@ -40,6 +40,16 @@ class SliderSlidesThroughModel(OrderedModel):
 
     order_with_respect_to = 'slider'
 
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+        super().save(*args, **kwargs)
+        if created:
+            self.slider.slides.add(self.slide)
+
+    def delete(self, *args, extra_update=None, **kwargs):
+        self.slider.slides.remove(self.slide)
+        return super().delete(*args, extra_update=extra_update, **kwargs)
+
     class Meta:
         ordering = ('slider', 'order')
 

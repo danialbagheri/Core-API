@@ -17,7 +17,7 @@ BRAND_NAME = env('BRAND_NAME')
 PRODUCTION_ENVIRONMENT = env.bool('PRODUCTION_ENVIRONMENT')
 if PRODUCTION_ENVIRONMENT:
     try:
-        # this production_settings.py is kept off github to keep the secret key secret
+        # this production_settings.py is kept off GitHub to keep the secret key secret
         from .production import *
     except ImportError:
         pass
@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'faq',
     'surveys',
     'orders',
+    'oauth2',
 
     'django.contrib.sitemaps',
     'rest_framework',
@@ -97,10 +98,17 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_filters',
     'django.contrib.sites',
+    'django_cleanup.apps.CleanupConfig',
     'storages',
     'nested_admin',
-    'django_cleanup.apps.CleanupConfig',
     'crispy_bootstrap4',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.microsoft',
 ]
 
 MIDDLEWARE = [
@@ -140,6 +148,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'user.User'
 LOGIN_REDIRECT_URL = '/admin'
+LOGIN_URL = '/login/'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -183,6 +192,10 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {
+        'user': 'user.api.serializers.UserRetrieveSerializer',
+        'current_user': 'user.api.serializers.UserRetrieveSerializer',
+    }
 }
 
 DOMAIN = env('DOMAIN')
@@ -260,6 +273,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 DATA_UPLOAD_MAX_MEMORY_SIZE = 9437184
 
@@ -277,6 +291,7 @@ PHONENUMBER_DEFAULT_REGION = 'GB'
 SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
 SUMMERNOTE_CONFIG = {
     'iframe': True,
+    'attachment_filesize_limit': 1024 * 1024 * 15,
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
@@ -355,6 +370,61 @@ MAILJET_SECRET_KEY = env('MAILJET_SECRET_KEY')
 LOST_PRODUCT_IMAGE_PATH = env('LOST_PRODUCT_IMAGE_PATH')
 INSTAGRAM_IMAGES_PATH = env('INSTAGRAM_IMAGES_PATH')
 REVIEW_RATE_COOKIE_KEY = env('REVIEW_RATE_COOKIE_KEY', default='review-rate')
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    },
+    'facebook': {
+        'EXCHANGE_TOKEN': True,
+    },
+    'microsoft': {
+        'TENANT': 'organizations',
+    },
+}
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_STORE_TOKENS = True
+
+SOCIAL_LOGIN_REDIRECT_URLS = {
+    'google': env('GOOGLE_SOCIAL_LOGIN_REDIRECT_URL'),
+    'facebook': env('FACEBOOK_SOCIAL_LOGIN_REDIRECT_URL'),
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        # 'django.request': {
+        #     'handlers': ['console'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
+    },
+}
 
 AMAZON_SP_API_CREDENTIALS = {
     'refresh_token': env('AMAZON_SP_API_REFRESH_TOKEN', default=''),

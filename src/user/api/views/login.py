@@ -25,5 +25,5 @@ class LoginAPIView(TokenObtainPairView):
             session_cookie = uuid.uuid4()
             expire_date = timezone.now() + timedelta(days=30)
             SessionCookie.objects.create(user=serializer.user, cookie=session_cookie, expire_date=expire_date)
-            response.set_cookie('login_token', session_cookie, expire_date)
+            response.set_cookie('login_token', session_cookie, expires=expire_date)
         return response

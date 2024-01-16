@@ -12,4 +12,5 @@ urlpatterns = [
     path('', include(blog_router.urls)),
     path('bookmarks/', views.BookmarkedBlogPostListAPIView.as_view(), name='user-bookmarks'),
     path('bookmarks/<slug:slug>/', views.BookmarkUpdateAPIView.as_view(), name='set-bookmark'),
+    path('search/', views.BlogSearchListAPIView.as_view(), name='blog-post-search'),
 ]
