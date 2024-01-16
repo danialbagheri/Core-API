@@ -22,7 +22,7 @@ class AmazonOrderRetriever(BaseService):
         return self.orders_resource.get_orders(
             LastUpdatedAfter=self.start_datetime.strftime('%Y-%m-%d'),
             LastUpdatedBefore=self.end_datetime.strftime('%Y-%m-%d'),
-            OrderStatuses=['Shipped', 'PartiallyShipped', 'InvoiceUnconfirmed'],
+            OrderStatuses=['Shipped', 'PartiallyShipped', 'InvoiceUnconfirmed', 'Canceled'],
         )
 
     def retrieve_orders(self):

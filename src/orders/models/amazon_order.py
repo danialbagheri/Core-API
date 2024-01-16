@@ -46,6 +46,11 @@ class AmazonOrder(models.Model):
         blank=True,
     )
 
+    earliest_delivery_date = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
     amazon_order_id = models.CharField(
         max_length=128
     )

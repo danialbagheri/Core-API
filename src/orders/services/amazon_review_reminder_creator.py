@@ -22,7 +22,7 @@ class AmazonReviewReminderEditor(BaseService):
             self._delete_review_reminder()
             return
 
-        reminder_date = self.amazon_order.purchase_date + timedelta(days=21)
+        reminder_date = self.amazon_order.earliest_delivery_date + timedelta(days=21)
         with transaction.atomic():
             review_reminder, _ = AmazonReviewReminder.objects.get_or_create(
                 amazon_order=self.amazon_order,
