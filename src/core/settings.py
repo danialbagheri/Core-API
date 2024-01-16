@@ -86,7 +86,9 @@ INSTALLED_APPS = [
     'review',
     'faq',
     'surveys',
+    'orders',
     'oauth2',
+
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
@@ -423,3 +425,10 @@ LOGGING = {
         # },
     },
 }
+
+AMAZON_SP_API_CREDENTIALS = {
+    'refresh_token': env('AMAZON_SP_API_REFRESH_TOKEN', default=''),
+    'lwa_app_id': env('AMAZON_SP_API_APP_ID', default=''),
+    'lwa_client_secret': env('AMAZON_SP_API_CLIENT_SECRET', default=''),
+}
+AMAZON_MARKETPLACE_ID = env('AMAZON_MARKETPLACE_ID', default='')
