@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 import environ
 import os
@@ -196,6 +197,11 @@ DJOSER = {
         'user': 'user.api.serializers.UserRetrieveSerializer',
         'current_user': 'user.api.serializers.UserRetrieveSerializer',
     }
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
 DOMAIN = env('DOMAIN')
