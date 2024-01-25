@@ -21,9 +21,10 @@ class Bundle(models.Model):
 
     description = models.TextField()
 
-    price = models.DecimalField(
-        max_digits=8,
+    base_discount_percentage = models.DecimalField(
+        max_digits=5,
         decimal_places=2,
+        default=10,
     )
 
     extra_discount_percentage = models.DecimalField(
