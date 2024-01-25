@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     'surveys',
     'orders',
     'oauth2',
+    'bundles',
 
     'django.contrib.sitemaps',
     'rest_framework',
