@@ -22,7 +22,7 @@ class ProductVariant(models.Model):
         to=Product,
         null=True,
         on_delete=models.CASCADE,
-        related_name="variants",
+        related_name='variants',
     )
 
     name = models.CharField(
