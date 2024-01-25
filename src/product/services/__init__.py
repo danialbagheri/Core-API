@@ -4,3 +4,4 @@ from .related_products_retriever import RelatedProductsRetriever
 from .amazon_link_generator import AmazonLinkGenerator
 from .spf_finder_recommender import SPFFinderRecommender
 from .variant_price_representative import VariantPriceRepresentative
+from .variant_ingredients_representative import VariantIngredientsRepresentative
