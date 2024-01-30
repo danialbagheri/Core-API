@@ -31,9 +31,10 @@ class ImageRequestVariantsCsvBuilder(BaseService):
         variants = ProductVariant.objects.filter(sku__in=self.variants_sku_list)
 
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        csv_writer.writerow(['SKU', 'Description', 'Ingredients'])
+        csv_writer.writerow(['SKU', 'Product Title', 'Product Subtitle', 'Variant Title', 'Description', 'Ingredients'])
         for variant in variants:
             ingredients = self.get_variant_ingredients(variant)
-            description = BeautifulSoup(variant.product.description, features='html.parser').text
-            csv_writer.writerow([variant.sku, description, ingredients])
+            product = variant.product
+            description = BeautifulSoup(product.description, features='html.parser').text
+            csv_writer.writerow([variant.sku, product.name, product.sub_title, variant.name, description, ingredients])
         return csv_file
