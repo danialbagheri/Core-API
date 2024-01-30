@@ -21,7 +21,7 @@ class VariantImageZipper:
             image_type = image.get_image_type_display()
             image_angle = image.get_image_angle_display()
             image_path = image.image.url
-            converted_images = self.image_convertor.convert_image('localhost' + image_path)
+            converted_images = self.image_convertor.convert_image(image_path)
             for image_format, image_bytes in converted_images.items():
                 if no_directories:
                     file_name = f'{sku}-{image_type}-{image_angle}-{count}.{image_format}'
