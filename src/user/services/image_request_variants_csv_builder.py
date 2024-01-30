@@ -2,6 +2,8 @@ import csv
 import io
 from typing import List
 
+from bs4 import BeautifulSoup
+
 from common.services import BaseService
 from product.models import ProductVariant, VariantIngredientThrough
 
@@ -32,6 +34,6 @@ class ImageRequestVariantsCsvBuilder(BaseService):
         csv_writer.writerow(['SKU', 'Description', 'Ingredients'])
         for variant in variants:
             ingredients = self.get_variant_ingredients(variant)
-            description = variant.product.description
+            description = BeautifulSoup(variant.product.description, features='html.parser').text
             csv_writer.writerow([variant.sku, description, ingredients])
         return csv_file
