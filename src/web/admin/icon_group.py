@@ -16,7 +16,7 @@ class IconGroupItemInlineAdmin(admin.StackedInline):
     def icon_preview(self, icon_group_item: IconGroupItem):
         icon = icon_group_item.icon
         if icon:
-            return mark_safe('<img src="{}" width="200" />'.format(icon.url))
+            return mark_safe('<img src="{}" width="100" />'.format(icon.url))
         return mark_safe('<p style="background-color:#c2c2c2;padding: 5px 10px;"> Please upload an image. </p>')
 
     icon_preview.short_description = 'Icon Preview'
@@ -24,7 +24,7 @@ class IconGroupItemInlineAdmin(admin.StackedInline):
     def icon_svg_preview(self, icon_group_item: IconGroupItem):
         icon = icon_group_item.svg_icon
         if icon:
-            return mark_safe('<img src="{}" width="200" />'.format(icon.url))
+            return mark_safe('<img src="{}" width="100" />'.format(icon.url))
         return mark_safe('<p style="background-color:#c2c2c2;padding: 5px 10px;"> Please upload an image. </p>')
 
     icon_svg_preview.short_description = 'SVG Icon Preview'
