@@ -11,9 +11,13 @@ environ.Env.read_env()
 CSRF_COOKIE_DOMAIN = env('CSRF_COOKIE_DOMAIN')
 SESSION_COOKIE_SAMESITE = None
 # Whether the session cookie should be secure (https:// only).
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://service.calypsosun.com',
+# ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES = {
