@@ -102,5 +102,14 @@ class SliderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Slider
-        fields = '__all__'
-        depth = 2
+        fields = (
+            'id',
+            'slider_slides',
+            'name',
+            'slug',
+        )
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['slides'] = representation['slider_slides']
+        return representation

@@ -4,7 +4,7 @@ from .product import ProductViewSet
 from .single_product import SingleProductViewSet
 from .collection import CollectionViewSet
 from .product_image import ProductImageViewSet
-from .product_type import ProductTypeListAPIView
+from .product_type import ProductTypeViewSet
 from .favorites_list import FavoriteProductListAPIView
 from .favorite import FavoriteProductUpdateAPIView
 from .product_edit import ProductEditWebhookAPI

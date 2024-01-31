@@ -11,7 +11,7 @@ class TopBarItemInlineAdmin(admin.StackedInline):
 
 @admin.register(TopBar)
 class TopBarAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'is_active', 'position')
+    list_display = ('id', 'name', 'slug', 'is_active', 'position')
     list_filter = ('is_active',)
     ordering = ('position',)
     list_editable = ('position',)
