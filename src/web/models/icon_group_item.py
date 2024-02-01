@@ -1,3 +1,4 @@
+from celery import signature
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
@@ -30,6 +31,10 @@ class IconGroupItem(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['svg'])],
     )
 
+    svg_icon_text = models.TextField(
+        blank=True,
+    )
+
     url = models.URLField(
         max_length=256,
         blank=True,
@@ -41,3 +46,11 @@ class IconGroupItem(models.Model):
 
     class Meta:
         ordering = ('position',)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.svg_icon:
+            signature(
+                varies='web.tasks.ProcessIconGroupSvgFileTask',
+                args=(self.id, 'svg_icon'),
+            ).delay()
