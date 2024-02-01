@@ -1,1 +1,2 @@
 from .update_instagram_posts import UpdateInstagramPostsTask
+from .process_icon_group_svg_file import ProcessIconGroupSvgFileTask
