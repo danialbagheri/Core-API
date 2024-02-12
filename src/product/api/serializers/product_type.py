@@ -12,5 +12,6 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'slug',
             'slider',
         )
