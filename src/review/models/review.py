@@ -27,7 +27,7 @@ class Review(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        verbose_name="user",
+        verbose_name='user',
     )
 
     customer_name = models.CharField(
@@ -99,8 +99,8 @@ class Review(models.Model):
     reply = models.ManyToManyField(
         to=Reply,
         blank=True,
-        related_name="review",
-        verbose_name="Replies",
+        related_name='review',
+        verbose_name='Replies',
     )
 
     opened = models.BooleanField(
@@ -108,7 +108,7 @@ class Review(models.Model):
     )
 
     class Meta:
-        ordering = ("-date_created",)
+        ordering = ('-date_created',)
 
     @ property
     def name(self):
@@ -118,7 +118,7 @@ class Review(models.Model):
         if self.user is not None and self.user.get_full_name() != "":
             return self.user.get_full_name()
         elif self.customer_name is None:
-            return "Anonymous"
+            return 'Anonymous'
         return self.customer_name
 
     @ property
