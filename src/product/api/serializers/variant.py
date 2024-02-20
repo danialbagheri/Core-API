@@ -18,10 +18,8 @@ class ProductVariantListSerializer(serializers.ListSerializer):
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    image_list = ProductImageSerializer(
-        many=True, read_only=True, source='variant_images')
-    where_to_buy = WhereToBuySerializer(
-        many=True, read_only=True, source='wheretobuy')
+    image_list = ProductImageSerializer(many=True, read_only=True, source='variant_images')
+    where_to_buy = WhereToBuySerializer(many=True, read_only=True, source='wheretobuy')
     price_per_100ml = serializers.SerializerMethodField()
     instagram_posts = InstagramSerializer(many=True, read_only=True)
     price = serializers.SerializerMethodField()

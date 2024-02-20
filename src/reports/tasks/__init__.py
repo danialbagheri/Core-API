@@ -1,0 +1,1 @@
+from .send_weekly_marketing_email import SendWeeklyMarketingEmailTask
