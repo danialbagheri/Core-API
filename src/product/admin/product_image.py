@@ -9,6 +9,7 @@ class ProductImageAdmin(admin.ModelAdmin):
     list_display = (
         'variant',
         'image_preview',
+        'main',
         'image_type',
         'image_angle',
         'alternate_text',
