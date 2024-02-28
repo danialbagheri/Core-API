@@ -140,7 +140,7 @@ class ProductImage(models.Model):
         if self.main:
             try:
                 ProductImage.objects.filter(
-                    variant__product=self.variant.product
+                    variant=self.variant
                 ).exclude(pk=self.pk).update(main=False)
             except:
                 pass
