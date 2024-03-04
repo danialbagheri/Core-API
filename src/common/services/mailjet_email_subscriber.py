@@ -25,7 +25,7 @@ class MailjetEmailSubscriber(BaseService):
             return
         data = {
             'ContactsLists': [
-                {'ListID': contact_list_id.value, 'Action': 'addforce'},
+                {'ListID': contact_list_id.value, 'Action': 'addnoforce'},
             ],
         }
         response = self.mailjet.contact_managecontactslists.create(id=self.email, data=data)

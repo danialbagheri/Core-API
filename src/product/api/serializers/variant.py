@@ -72,6 +72,8 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         return ingredient_names
 
     def get_is_favorite(self, variant: ProductVariant):
+        if 'request' not in self.context:
+            return False
         user = self.context['request'].user
         if not user.is_authenticated:
             return False
