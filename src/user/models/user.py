@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 from blog.models import BlogPost
-from product.models import Product
+from product.models import Product, ProductVariant
 
 
 class UserManager(BaseUserManager):
@@ -67,6 +67,11 @@ class User(AbstractUser):
 
     favorite_products = models.ManyToManyField(
         to=Product,
+        blank=True,
+    )
+
+    favorite_variants = models.ManyToManyField(
+        to=ProductVariant,
         blank=True,
     )
 

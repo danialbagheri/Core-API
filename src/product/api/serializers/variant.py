@@ -13,6 +13,8 @@ class ProductVariantListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
+        if not hasattr(data, 'filter'):
+            return super().to_representation(data)
         data = data.filter(is_public=True).order_by(F('position').asc(nulls_last=True))
         return super().to_representation(data)
 
@@ -27,6 +29,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     euro_price = serializers.SerializerMethodField()
     euro_compare_at_price = serializers.SerializerMethodField()
     ingredients = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductVariant
@@ -67,3 +70,9 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         ).select_related('ingredient').order_by('priority')
         ingredient_names = [variant_ingredient.ingredient.name for variant_ingredient in variant_ingredients]
         return ingredient_names
+
+    def get_is_favorite(self, variant: ProductVariant):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return user.favorite_variants.all().filter(id=variant.id).exists()
