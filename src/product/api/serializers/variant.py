@@ -30,6 +30,8 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     euro_compare_at_price = serializers.SerializerMethodField()
     ingredients = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
+    product_slug = serializers.CharField(source='product.slug', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
 
     class Meta:
         model = ProductVariant
