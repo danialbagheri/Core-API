@@ -39,7 +39,7 @@ class SurveyResultsMailjetEmail(TransactionalMailJetEmailService):
             "secondary_text_color": "white",
             "primary_background_color": "#ff6b00",
             "primary_text_color": "#ff6b00",
-            "discount_code": "P-FINDER5",
+            "discount_code": "P2HNMT42GKA1",
             "variants_data": variants_data
           }
 

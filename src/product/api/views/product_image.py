@@ -5,12 +5,12 @@ from ..serializers import ProductImageSerializer
 
 
 class ProductImageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductImage.objects.all()
+    queryset = ProductImage.objects.filter(is_public=True)
     serializer_class = ProductImageSerializer
-    lookup_field = "variant_sku"
+    lookup_field = 'variant_sku'
 
     def get_queryset(self):
-        queryset = ProductImage.objects.all()
+        queryset = ProductImage.objects.filter(is_public=True)
         image_type = self.request.query_params.get('image_type', None)
         sku = self.request.query_params.get('sku', None)
         if image_type is not None:

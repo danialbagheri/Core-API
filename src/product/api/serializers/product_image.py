@@ -10,7 +10,7 @@ class ProductImageListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
-        data = data.order_by('-main')
+        data = data.filter(is_public=True).order_by('-main')
         return super().to_representation(data)
 
 

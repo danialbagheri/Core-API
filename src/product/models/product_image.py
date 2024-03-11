@@ -98,6 +98,10 @@ class ProductImage(models.Model):
         default=False,
     )
 
+    is_public = models.BooleanField(
+        default=True,
+    )
+
     def image_preview(self):
         if self.image:
             return mark_safe('<img src="{}" width="50" />'.format(self.image.url))
