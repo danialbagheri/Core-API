@@ -12,6 +12,7 @@ class ProductImageAdmin(admin.ModelAdmin):
         'main',
         'image_type',
         'image_angle',
+        'is_public',
         'alternate_text',
     )
     search_fields = ('variant__sku', 'variant__name')
