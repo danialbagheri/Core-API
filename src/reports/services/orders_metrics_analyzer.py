@@ -48,11 +48,11 @@ class OrdersMetricsAnalyzer(BaseService):
             return '-'
         product_id = max(self.products_count, key=self.products_count.get)
         product = Product.objects.get(legacy_id=product_id)
-        return product.name
+        return f'{product.name} x {self.products_count.get(product_id)}'
 
     def get_most_popular_ordered_variant(self):
         if not self.variants_count:
             return '-'
         variant_id = max(self.variants_count, key=self.variants_count.get)
         variant = ProductVariant.objects.get(shopify_rest_variant_id=variant_id)
-        return f'{variant.product.name} - {variant.name}'
+        return f'{variant.product.name} - {variant.name} x {self.variants_count.get(variant_id)}'

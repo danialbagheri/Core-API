@@ -6,12 +6,13 @@ from django.utils import timezone
 from common.services import MarketingEmailService
 from reports.services import MailjetMetricsAnalyzer, OrdersMetricsAnalyzer
 from review.models import Review
-from user.models import ReviewReminder, SentEmail
+from user.models import ReviewReminder, SentEmail, ProductInStockReport
 
 
 class WeeklyMarketingEmailService(MarketingEmailService):
     subject = f'{settings.BRAND_NAME} Weekly Reports'
     message = '''
+Report Date: {start_date} - {end_date}
 Total new mailjet subscribers count: {new_mailjet_subscribers_count}
 Total mailjet unsubscribe count: {new_mailjet_unsubscribe_count}
 Total number of orders: {total_number_of_orders}
@@ -20,6 +21,7 @@ Most popular ordered product: {most_popular_ordered_product}
 Most popular ordered variant: {most_popular_ordered_variant}
 Reviews count: {reviews_count}
 Review reminder emails count: {review_reminder_emails_count}
+In-Stock requests count: {in_stock_requests_count}
 In-Stock emails count: {in_stock_emails_count}
 '''
     service_name = 'Weekly Marketing Email Service'
@@ -40,6 +42,7 @@ In-Stock emails count: {in_stock_emails_count}
             template_name=SentEmail.TEMPLATE_IN_STOCK,
             sent_date__gt=now - timedelta(days=7),
         ).count()
+        in_stock_requests_count = ProductInStockReport.objects.filter(created__gt=now - timedelta(days=7)).count()
         return {
             'new_mailjet_subscribers_count': mailjet_analyzer.new_subscribers_count,
             'new_mailjet_unsubscribe_count': mailjet_analyzer.new_unsubscribe_count,
@@ -49,5 +52,8 @@ In-Stock emails count: {in_stock_emails_count}
             'most_popular_ordered_variant': orders_analyzer.get_most_popular_ordered_variant(),
             'reviews_count': reviews_count,
             'review_reminder_emails_count': review_reminder_emails_count,
+            'in_stock_requests_count': in_stock_requests_count,
             'in_stock_emails_count': in_stock_emails_count,
+            'start_date': (now - timedelta(days=7)).date().strftime('%Y-%m-%d'),
+            'end_date': now.date().strftime('%Y-%m-%d'),
         }
