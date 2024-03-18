@@ -38,16 +38,18 @@ class MailjetMetricsAnalyzer(BaseService):
 
     def _get_mailjet_previous_metrics(self):
         previous_week = self.now - timezone.timedelta(days=7)
-        metrics = MailjetWeeklyAnalytics.objects.filter(date=previous_week).first()
+        metrics = MailjetWeeklyAnalytics.objects.filter(analytics_date=previous_week).first()
         if not metrics:
-            metrics = MailjetWeeklyAnalytics.objects.filter(date__lt=self.now).order_by('-date').first()
+            metrics = MailjetWeeklyAnalytics.objects.filter(
+                analytics_date__lt=self.now,
+            ).order_by('-analytics_date').first()
         return metrics
 
     def analyze_metrics(self):
         subscribers_count = self._get_subscribers_count()
         unsubscribe_count = self._get_unsubscribe_count()
         MailjetWeeklyAnalytics.objects.create(
-            date=self.now,
+            analytics_date=self.now,
             subscribers_count=subscribers_count,
             unsubscribe_count=unsubscribe_count,
         )
