@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from celery import signature
 from django.conf import settings
 
 from product.models import Product, ProductVariant
@@ -112,6 +113,11 @@ class ProductEditor:
             )
             if variant.inventory_quantity > 10:
                 self.in_stock_variants.append(variant)
+            if variant.out_of_stock:
+                signature(
+                    varies='products.tasks.SendVariantOutOfStockEmailTask',
+                    args=(variant.id,),
+                ).delay()
 
     def edit_product(self):
         product_data = self._retrieve_product_data()

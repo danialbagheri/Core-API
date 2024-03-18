@@ -1,1 +1,2 @@
 from .product_edit import ProductEditTask
+from .send_variant_out_of_stock_email import SendVariantOutOfStockEmailTask
