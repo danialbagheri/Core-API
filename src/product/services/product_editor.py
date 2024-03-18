@@ -113,7 +113,7 @@ class ProductEditor:
             )
             if variant.inventory_quantity > 10:
                 self.in_stock_variants.append(variant)
-            if variant.out_of_stock:
+            if getattr(variant, 'out_of_stock', False):
                 signature(
                     varies='products.tasks.SendVariantOutOfStockEmailTask',
                     args=(variant.id,),
