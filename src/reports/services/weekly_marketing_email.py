@@ -7,6 +7,7 @@ from common.services import MarketingEmailService
 from reports.services import MailjetMetricsAnalyzer, OrdersMetricsAnalyzer
 from review.models import Review
 from user.models import ReviewReminder, SentEmail, ProductInStockReport
+from web.models import Configuration
 
 
 class WeeklyMarketingEmailService(MarketingEmailService):
@@ -38,11 +39,19 @@ In-Stock emails count: {in_stock_emails_count}
             reminder_date__gt=now - timedelta(days=7),
             email_sent=True,
         ).count()
+
+        marketing_emails = Configuration.objects.get(key='marketing_team').value.split(',')
         in_stock_emails_count = SentEmail.objects.filter(
             template_name=SentEmail.TEMPLATE_IN_STOCK,
             sent_date__gt=now - timedelta(days=7),
+        ).exclude(
+            email__in=marketing_emails,
         ).count()
-        in_stock_requests_count = ProductInStockReport.objects.filter(created__gt=now - timedelta(days=7)).count()
+        in_stock_requests_count = ProductInStockReport.objects.filter(
+            created__gt=now - timedelta(days=7),
+        ).exclude(
+            email__in=marketing_emails,
+        ).count()
         return {
             'new_mailjet_subscribers_count': mailjet_analyzer.new_subscribers_count,
             'new_mailjet_unsubscribe_count': mailjet_analyzer.new_unsubscribe_count,
