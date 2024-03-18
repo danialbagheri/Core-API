@@ -4,7 +4,7 @@ from rest_framework import serializers
 from common.services import RequestIPRetriever
 from surveys.models import SurveySubmission, Survey
 from .survey_answer import SurveyAnswerSerializer
-from ...tasks import SendSurveyResultsEmailTask
+from ...tasks import SendSurveyResultsEmailTask, SendSurveySubmissionNotificationEmailTask
 
 
 class SurveySubmissionSerializer(serializers.ModelSerializer):
@@ -43,4 +43,5 @@ class SurveySubmissionSerializer(serializers.ModelSerializer):
             survey_submission = super().create(validated_data)
             self.create_survey_answers(survey_submission, survey_answers_data)
         SendSurveyResultsEmailTask().delay(survey_submission.id)
+        SendSurveySubmissionNotificationEmailTask().delay(survey_submission.id)
         return survey_submission

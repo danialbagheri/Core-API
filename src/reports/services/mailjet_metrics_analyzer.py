@@ -14,7 +14,7 @@ class MailjetMetricsAnalyzer(BaseService):
         self.now = timezone.now().date()
         super().__init__(now=self.now)
         self.mailjet = Client(auth=(settings.MAILJET_API_KEY, settings.MAILJET_SECRET_KEY), version='v3')
-        self.contact_list_id = Configuration.objects.get(key='main-contact-list-id').first()
+        self.contact_list_id = Configuration.objects.filter(key='main-contact-list-id').first()
         self.new_subscribers_count = 0
         self.new_unsubscribe_count = 0
 
@@ -40,7 +40,7 @@ class MailjetMetricsAnalyzer(BaseService):
         previous_week = self.now - timezone.timedelta(days=7)
         metrics = MailjetWeeklyAnalytics.objects.filter(date=previous_week).first()
         if not metrics:
-            metrics = MailjetWeeklyAnalytics.objects.all().order_by('-date').first()
+            metrics = MailjetWeeklyAnalytics.objects.filter(date__lt=self.now).order_by('-date').first()
         return metrics
 
     def analyze_metrics(self):
