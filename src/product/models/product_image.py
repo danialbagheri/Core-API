@@ -98,6 +98,10 @@ class ProductImage(models.Model):
         default=False,
     )
 
+    secondary = models.BooleanField(
+        default=False,
+    )
+
     is_public = models.BooleanField(
         default=True,
     )
@@ -146,6 +150,13 @@ class ProductImage(models.Model):
                 ProductImage.objects.filter(
                     variant=self.variant
                 ).exclude(pk=self.pk).update(main=False)
+            except:
+                pass
+        if self.secondary:
+            try:
+                ProductImage.objects.filter(
+                    variant=self.variant
+                ).exclude(pk=self.pk).update(secondary=False)
             except:
                 pass
         super(ProductImage, self).save(*args, **kwargs)

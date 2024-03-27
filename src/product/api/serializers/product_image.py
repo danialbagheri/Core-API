@@ -10,7 +10,7 @@ class ProductImageListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
-        data = data.filter(is_public=True).order_by('-main')
+        data = data.filter(is_public=True).order_by('-main', '-secondary')
         return super().to_representation(data)
 
 
@@ -32,6 +32,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
             'height',
             'width',
             'main',
+            'secondary',
             'resized',
             'webp',
         )

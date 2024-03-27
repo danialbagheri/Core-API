@@ -7,7 +7,7 @@ from product.models import ProductVariant
 class VariantOutOfStockEmailService(MarketingEmailService):
     subject = f'{settings.BRAND_NAME}: Variant Out of Stock'
     message = '''
-Variant {variant_name} with SKU {variant_sku} is out of stock.
+{variant_name} - {variant_sku} is out of stock.
 '''
     service_name = 'Variant Out of Stock Email Service'
 

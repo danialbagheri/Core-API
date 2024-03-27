@@ -10,6 +10,7 @@ class ProductImageAdmin(admin.ModelAdmin):
         'variant',
         'image_preview',
         'main',
+        'secondary',
         'image_type',
         'image_angle',
         'is_public',
