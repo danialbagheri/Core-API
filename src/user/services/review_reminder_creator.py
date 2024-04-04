@@ -13,7 +13,10 @@ class ReviewReminderCreatorService:
 
     def _create_order_bought_variants(self, review_reminder):
         line_items = self._order_data['line_items']
-        variants_map = {int(variant.shopify_rest_variant_id): variant.id for variant in ProductVariant.objects.all()}
+        variants_map = {
+            int(variant.shopify_rest_variant_id):
+                variant.id for variant in ProductVariant.objects.filter(is_public=True)
+        }
         review_reminder_bought_variants = []
         bought_variant_ids = set()
 
