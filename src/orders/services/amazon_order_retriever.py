@@ -12,7 +12,7 @@ class AmazonOrderRetriever(BaseService):
     def __init__(self, start_datetime=None, end_datetime=None):
         yesterday = datetime.now() - timedelta(days=1)
         self.start_datetime = start_datetime or yesterday
-        self.end_datetime = end_datetime or (start_datetime + timedelta(days=1))
+        self.end_datetime = end_datetime or (self.start_datetime + timedelta(days=1))
         super().__init__(start_datetime=self.start_datetime, end_datetime=self.end_datetime)
         self.orders_resource = Orders(credentials=settings.AMAZON_SP_API_CREDENTIALS)
 
