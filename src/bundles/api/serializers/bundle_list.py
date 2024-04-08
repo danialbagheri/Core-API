@@ -27,17 +27,20 @@ class BundleListSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bundle_price_processor = BundlePriceProcessor(self.instance)
-        self.bundle_price_processor.process_bundle_price()
+        self.bundle_price_processor = BundlePriceProcessor()
 
     def get_compare_at_price(self, bundle: Bundle):
+        self.bundle_price_processor.process_bundle_price(bundle)
         return self.bundle_price_processor.compare_at_price
 
     def get_final_price(self, bundle: Bundle):
+        self.bundle_price_processor.process_bundle_price(bundle)
         return self.bundle_price_processor.final_price
 
     def get_euro_compare_at_price(self, bundle: Bundle):
+        self.bundle_price_processor.process_bundle_price(bundle)
         return self.bundle_price_processor.euro_compare_at_price
 
     def get_euro_final_price(self, bundle: Bundle):
+        self.bundle_price_processor.process_bundle_price(bundle)
         return self.bundle_price_processor.euro_final_price

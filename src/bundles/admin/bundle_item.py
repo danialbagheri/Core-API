@@ -11,6 +11,7 @@ class BundleItemAdmin(admin.ModelAdmin):
     list_display = ('bundle', 'product', 'quantity')
     list_filter = ('bundle',)
     search_fields = ('bundle__name', 'product__name')
+    filter_horizontal = ('variants',)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if 'variants' not in db_field.name:
