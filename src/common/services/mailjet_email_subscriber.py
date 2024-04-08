@@ -4,6 +4,7 @@ from django.conf import settings
 from mailjet_rest import Client
 
 from common.services import BaseService
+from user.models import User
 from web.models import Configuration
 
 logger = logging.getLogger(__name__)
@@ -31,3 +32,5 @@ class MailjetEmailSubscriber(BaseService):
         response = self.mailjet.contact_managecontactslists.create(id=self.email, data=data)
         if not response.ok:
             logger.error(f'Failed to subscribe email {self.email}')
+        else:
+            User.objects.filter(email=self.email).update(is_subscribed=True)
