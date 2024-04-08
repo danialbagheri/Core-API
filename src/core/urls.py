@@ -20,6 +20,7 @@ urlpatterns = [
     path('get_template/', GetTemplate.as_view(), name='dgjs_get_template'),
     path('summernote/', include('django_summernote.urls')),
     path('api/users/', include('user.api.urls', namespace='user')),
+    path('api/bundles/', include('bundles.api.urls', namespace='bundles_api')),
     path('', include('web.urls', namespace='web')),
     path('admin/', admin.site.urls),
 ]
