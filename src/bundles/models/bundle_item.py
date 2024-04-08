@@ -27,9 +27,9 @@ class BundleItem(models.Model):
 
     quantity = models.PositiveIntegerField()
 
-    excluded_variants = models.ManyToManyField(
+    variants = models.ManyToManyField(
         to=ProductVariant,
-        related_name='excluded_bundle_items',
+        related_name='variant_bundle_items',
     )
 
     position = models.PositiveIntegerField(

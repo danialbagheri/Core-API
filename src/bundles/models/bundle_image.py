@@ -79,6 +79,10 @@ class BundleImage(models.Model):
         default=False,
     )
 
+    secondary = models.BooleanField(
+        default=False,
+    )
+
     position = models.PositiveIntegerField(
         default=0
     )

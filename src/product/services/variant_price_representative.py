@@ -2,11 +2,8 @@ from product.models import ProductVariant
 
 
 class VariantPriceRepresentative:
-    def __init__(self, variant: ProductVariant):
-        self.variant = variant
-        self.ml_number = self._get_variant_ml_number()
-
-    def _get_variant_ml_number(self):
+    @staticmethod
+    def _get_variant_ml_number(variant: ProductVariant):
         def extract_number(number_str):
             number = ""
             number_started = False
@@ -18,12 +15,12 @@ class VariantPriceRepresentative:
                     return int(number)
             return int(number)
 
-        if not self.variant.size:
+        if not variant.size:
             return None
 
         litre_const = 1
         quantity_number = 1
-        ml_string = self.variant.size.lower()
+        ml_string = variant.size.lower()
         if 'x' in ml_string.lower():
             index = ml_string.index('x')
             quantity_number = ml_string[:index]
@@ -36,24 +33,30 @@ class VariantPriceRepresentative:
 
         return ml_number * quantity_number * litre_const
 
-    def get_price(self):
-        return '%.2f' % self.variant.price
+    @staticmethod
+    def get_price(variant: ProductVariant):
+        return '%.2f' % variant.price
 
-    def get_compare_at_price(self):
-        return '%.2f' % self.variant.compare_at_price if self.variant.compare_at_price else None
+    @staticmethod
+    def get_compare_at_price(variant: ProductVariant):
+        return '%.2f' % variant.compare_at_price if variant.compare_at_price else None
 
-    def get_price_per_100ml(self):
-        if not self.ml_number:
+    def get_price_per_100ml(self, variant: ProductVariant):
+        ml_number = self._get_variant_ml_number(variant)
+        if not ml_number:
             return None
-        return '%.2f' % (100 * (self.variant.price / self.ml_number))
+        return '%.2f' % (100 * (variant.price / ml_number))
 
-    def get_euro_price(self):
-        return '%.2f' % self.variant.euro_price if self.variant.euro_price else None
+    @staticmethod
+    def get_euro_price(variant: ProductVariant):
+        return '%.2f' % variant.euro_price if variant.euro_price else None
 
-    def get_euro_compare_at_price(self):
-        return '%.2f' % self.variant.euro_compare_at_price if self.variant.euro_compare_at_price else None
+    @staticmethod
+    def get_euro_compare_at_price(variant: ProductVariant):
+        return '%.2f' % variant.euro_compare_at_price if variant.euro_compare_at_price else None
 
-    def get_euro_price_per_100ml(self):
-        if not self.ml_number or not self.variant.euro_price:
+    def get_euro_price_per_100ml(self, variant: ProductVariant):
+        ml_number = self._get_variant_ml_number(variant)
+        if not ml_number or not variant.euro_price:
             return None
-        return '%.2f' % (100 * (self.variant.euro_price / self.ml_number))
+        return '%.2f' % (100 * (variant.euro_price / ml_number))

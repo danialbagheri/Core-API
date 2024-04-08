@@ -40,25 +40,25 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.variant_price_representative = VariantPriceRepresentative(self.instance)
+        self.variant_price_representative = VariantPriceRepresentative()
 
-    def get_price(self, _):
-        return self.variant_price_representative.get_price()
+    def get_price(self, variant: ProductVariant):
+        return self.variant_price_representative.get_price(variant)
 
-    def get_compare_at_price(self, _):
-        return self.variant_price_representative.get_compare_at_price()
+    def get_compare_at_price(self, variant: ProductVariant):
+        return self.variant_price_representative.get_compare_at_price(variant)
 
-    def get_price_per_100ml(self, _):
-        return self.variant_price_representative.get_price_per_100ml()
+    def get_price_per_100ml(self, variant: ProductVariant):
+        return self.variant_price_representative.get_price_per_100ml(variant)
 
-    def get_euro_price(self, _):
-        return self.variant_price_representative.get_euro_price()
+    def get_euro_price(self, variant: ProductVariant):
+        return self.variant_price_representative.get_euro_price(variant)
 
-    def get_euro_compare_at_price(self, _):
-        return self.variant_price_representative.get_euro_compare_at_price()
+    def get_euro_compare_at_price(self, variant: ProductVariant):
+        return self.variant_price_representative.get_euro_compare_at_price(variant)
 
-    def get_euro_price_per_100ml(self, _):
-        return self.variant_price_representative.get_euro_price_per_100ml()
+    def get_euro_price_per_100ml(self, variant: ProductVariant):
+        return self.variant_price_representative.get_euro_price_per_100ml(variant)
 
     @staticmethod
     def get_ingredients(variant: ProductVariant):

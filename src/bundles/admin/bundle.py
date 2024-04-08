@@ -28,7 +28,7 @@ class BundleImageInlineAdmin(SortableHiddenMixin,
 class BundleAdmin(NestedModelAdmin):
     list_display = (
         'name',
-        'base_discount_percentage',
+        'price',
         'extra_discount_percentage',
         'is_active',
     )
