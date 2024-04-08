@@ -1,10 +1,11 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from product.models import ProductType
 from ..serializers import ProductTypeSerializer
-from ...models import ProductType
 
 
-class ProductTypeListAPIView(ListAPIView):
+class ProductTypeViewSet(ReadOnlyModelViewSet):
     serializer_class = ProductTypeSerializer
     queryset = ProductType.objects.all()
+    lookup_field = 'slug'
     pagination_class = None

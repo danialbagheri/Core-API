@@ -9,10 +9,10 @@ admin.site.site_header = settings.BRAND_NAME
 
 class SlidesThroughOrderedStackedInline(OrderedTabularInline):
     model = SliderSlidesThroughModel
-    fields = ("slide", "order", 'move_up_down_links',)
+    fields = ('slide', 'order', 'move_up_down_links',)
     readonly_fields = ('order', 'move_up_down_links',)
     extra = 1
-    ordering = ("order", )
+    ordering = ('order', )
 
 
 @admin.register(Slider)

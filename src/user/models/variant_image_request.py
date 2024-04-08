@@ -54,6 +54,10 @@ class VariantImageRequest(models.Model):
 
     image_formats = models.TextField()
 
+    no_directories = models.BooleanField(
+        default=False,
+    )
+
     email = models.EmailField()
 
     zip_file = models.FileField(

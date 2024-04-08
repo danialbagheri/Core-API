@@ -18,6 +18,7 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
             'image_types',
             'image_angles',
             'image_formats',
+            'no_directories',
             'email',
         )
         read_only_fields = (

@@ -188,3 +188,11 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return '{}, {}, {}'.format(self.sku, self.product, self.name, self.size)
+
+    def save(self, *args, **kwargs):
+        old_object = None
+        if self.pk:
+            old_object = ProductVariant.objects.get(pk=self.pk)
+        super().save(*args, **kwargs)
+        if self.inventory_quantity == 0 and old_object.inventory_quantity > 0:
+            self.out_of_stock = True

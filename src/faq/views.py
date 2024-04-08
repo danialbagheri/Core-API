@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 
+from reports.tasks import SendWeeklyMarketingEmailTask
 from .filters import FAQFilter
 from .models import Faq
 from .serializers import FaqSerializer

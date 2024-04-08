@@ -25,4 +25,8 @@ app.conf.beat_schedule = {
         'task': 'orders.tasks.SyncAmazonOrdersTask',
         'schedule': crontab(hour=15, minute=0),
     },
+    'send weekly marketing email': {
+        'task': 'reports.tasks.SendWeeklyMarketingEmailTask',
+        'schedule': crontab(hour=8, minute=30, day_of_week=1),
+    },
 }
