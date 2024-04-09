@@ -34,7 +34,7 @@ class BundleItemProductSerializer(serializers.ModelSerializer):
     def get_plain_description(product: Product):
         if not product.description:
             return ''
-        soup = BeautifulSoup(product.description, parser='html.parser')
+        soup = BeautifulSoup(product.description, features='html.parser')
         return soup.text
 
     @staticmethod

@@ -20,7 +20,7 @@ class BundleItemInlineAdmin(SortableHiddenMixin,
 class BundleImageInlineAdmin(SortableHiddenMixin,
                              NestedTabularInline):
     model = BundleImage
-    fields = ('image', 'alternate_text', 'image_type', 'image_angle', 'main', 'position')
+    fields = ('image', 'alternate_text', 'image_type', 'image_angle', 'main', 'secondary', 'position')
     extra = 0
 
 

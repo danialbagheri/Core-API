@@ -26,7 +26,7 @@ class BundlePriceProcessor(BaseService):
             self.euro_compare_at_price += (variant.euro_compare_at_price or variant.euro_price) * item.quantity
 
     def _calculate_final_price(self, bundle: Bundle):
-        self.final_price = Decimal(bundle.price) * (100 - bundle.discount_percentage) / 100
+        self.final_price = Decimal(bundle.price) * (100 - bundle.extra_discount_percentage) / 100
         self.final_price = float(self.final_price)
 
     def process_bundle_price(self, bundle: Bundle):
