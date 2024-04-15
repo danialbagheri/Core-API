@@ -52,7 +52,7 @@ class IconGroupItem(models.Model):
         if self.pk:
             old_object = IconGroupItem.objects.get(pk=self.pk)
         super().save(*args, **kwargs)
-        if self.svg_icon and self.svg_icon == old_object.svg_icon:
+        if self.svg_icon and self.svg_icon != old_object.svg_icon:
             signature(
                 varies='web.tasks.ProcessIconGroupSvgFileTask',
                 args=(self.id, 'svg_icon'),
