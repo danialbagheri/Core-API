@@ -4,19 +4,21 @@ from rest_framework import serializers
 from product.models import Product
 from review.api.serializers import ReviewSerializer
 from review.models import Review
+from web.api.serializers import SliderSerializer
 from . import ProductSerializer, ProductReviewQuestionSerializer, ProductVariantSerializer, TagSerializer
 
 
 class SingleProductSerializer(ProductSerializer):
     """
     Similar to ProductSerializer but with more info such as reviews and related_products,
-    seperated for faster performance
+    separated for faster performance
     """
     questions = ProductReviewQuestionSerializer(many=True, read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     reviews = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
     score_chart = serializers.SerializerMethodField()
+    slider = SliderSerializer(read_only=True)
 
     class Meta:
         model = Product

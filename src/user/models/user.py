@@ -80,6 +80,11 @@ class User(AbstractUser):
         blank=True,
     )
 
+    is_subscribed = models.BooleanField(
+        null=True,
+        blank=True,
+    )
+
     objects = UserManager()
 
     def save(self, *args, **kwargs):
