@@ -36,19 +36,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRetrieveSerializer(DjoserUserSerializer):
-    is_subscribed = serializers.SerializerMethodField()
+    # is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = DjoserUserSerializer.Meta.fields + ('mobile_number', 'is_subscribed')
+        fields = DjoserUserSerializer.Meta.fields + ('mobile_number',)
         read_only_fields = DjoserUserSerializer.Meta.read_only_fields
 
-    @staticmethod
-    def get_is_subscribed(user: User):
-        if user.is_subscribed is not None:
-            return user.is_subscribed
-
-        is_subscribed = EmailSubscriptionValidator(user.email).validate()
-        user.is_subscribed = is_subscribed
-        user.save(update_fields=['is_subscribed'])
-        return is_subscribed
+    # @staticmethod
+    # def get_is_subscribed(user: User):
+    #     if user.is_subscribed is not None:
+    #         return user.is_subscribed
+    #
+    #     is_subscribed = EmailSubscriptionValidator(user.email).validate()
+    #     user.is_subscribed = is_subscribed
+    #     user.save(update_fields=['is_subscribed'])
+    #     return is_subscribed

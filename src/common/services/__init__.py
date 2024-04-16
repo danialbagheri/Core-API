@@ -7,3 +7,4 @@ from .mailjet_transactional_email import TransactionalMailJetEmailService
 from .request_ip_retriever import RequestIPRetriever
 from .mailjet_email_subscriber import MailjetEmailSubscriber
 from .svg_file_processor import SvgFileProcessor
+from .tiktok_client import TiktokClient
