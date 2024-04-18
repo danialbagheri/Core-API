@@ -22,4 +22,6 @@ urlpatterns = [
     path('stock-reports/', views.ProductInStockReportCreateAPI.as_view(), name='stock-report-create'),
     path('variant-image-requests/', views.VariantImageRequestCreateAPIView.as_view(), name='image-request-create'),
     path('subscribe/mailjet/', views.SubscribeMailjetEmailAPIView.as_view(), name='subscribe-mailjet-email'),
+    path('remove/mailjet/', views.RemoveMailjetEmailAPIView.as_view(), name='remove-mailjet-email'),
+    path('validate/mailjet/', views.ValidateEmailSubscriptionAPIView.as_view(), name='validate-email-subscription'),
 ] + router.urls

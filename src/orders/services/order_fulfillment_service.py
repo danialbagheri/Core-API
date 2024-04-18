@@ -25,9 +25,13 @@ class OrderFulfillmentService(BaseService):
                 return tracking_number
 
     def fulfill_order(self):
+        order_id = self._get_tiktok_order_id()
+        tracking_number = self._get_tracking_number()
+        if not order_id or not tracking_number:
+            return
         body = {
-            'tiktok_order_id': self._get_tiktok_order_id(),
-            'tracking_number': self._get_tracking_number(),
+            'order_id': order_id,
+            'tracking_number': tracking_number,
             'provider_id': settings.AMAZON_LOGISTICTS_PROVIDER_ID,
         }
         self.tiktok_client.send_post_request(

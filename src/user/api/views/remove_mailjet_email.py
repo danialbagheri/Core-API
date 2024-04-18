@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from common.services import MailjetEmailManager
 
 
-class SubscribeMailjetEmailAPIView(APIView):
+class RemoveMailjetEmailAPIView(APIView):
     permission_classes = (AllowAny,)
     http_method_names = ('post',)
 
@@ -18,8 +18,8 @@ class SubscribeMailjetEmailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         mailjet_email_manager = MailjetEmailManager(email)
-        mailjet_email_manager.subscribe_email()
+        mailjet_email_manager.remove_email()
         return Response(
-            data='Email subscribed',
+            data='Email removed',
             status=status.HTTP_200_OK,
         )
