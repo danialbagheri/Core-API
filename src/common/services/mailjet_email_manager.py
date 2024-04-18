@@ -10,7 +10,7 @@ from web.models import Configuration
 logger = logging.getLogger(__name__)
 
 
-class MailjetEmailSubscriber(BaseService):
+class MailjetEmailManager(BaseService):
     def __init__(self, email: str):
         super().__init__(email=email)
         self.email = email
@@ -19,18 +19,29 @@ class MailjetEmailSubscriber(BaseService):
             version='v3',
         )
 
-    def subscribe_email(self):
+    def _do_action(self, action):
         contact_list_id = Configuration.objects.filter(key='main-contact-list-id').first()
         if not contact_list_id:
             logger.error(msg='Contact list configuration not set.')
-            return
+            return False
         data = {
             'ContactsLists': [
-                {'ListID': contact_list_id.value, 'Action': 'addnoforce'},
+                {'ListID': contact_list_id.value, 'Action': action},
             ],
         }
         response = self.mailjet.contact_managecontactslists.create(id=self.email, data=data)
         if not response.ok:
             logger.error(f'Failed to subscribe email {self.email}')
-        else:
+            return False
+        return True
+
+    def subscribe_email(self):
+        success = self._do_action('addnoforce')
+        if success:
             User.objects.filter(email=self.email).update(is_subscribed=True)
+
+    def remove_email(self):
+        self._do_action('remove')
+
+    def unsub_email(self):
+        self._do_action('unsub')

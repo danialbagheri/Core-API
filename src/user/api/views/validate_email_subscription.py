@@ -3,10 +3,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from common.services import MailjetEmailManager
+from user.services import EmailSubscriptionValidator
 
 
-class SubscribeMailjetEmailAPIView(APIView):
+class ValidateEmailSubscriptionAPIView(APIView):
     permission_classes = (AllowAny,)
     http_method_names = ('post',)
 
@@ -17,9 +17,9 @@ class SubscribeMailjetEmailAPIView(APIView):
                 data='Email is required',
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        mailjet_email_manager = MailjetEmailManager(email)
-        mailjet_email_manager.subscribe_email()
+        email_subscription_validator = EmailSubscriptionValidator(email)
+        is_subscribed = email_subscription_validator.validate()
         return Response(
-            data='Email subscribed',
+            data={'is_subscribed': is_subscribed},
             status=status.HTTP_200_OK,
         )
