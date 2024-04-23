@@ -1,2 +1,1 @@
 from .subscribe_invitation_mailjet_email import SubscribeInvitationMailjetEmail
-from .subscription_verifier import SubscriptionVerifier

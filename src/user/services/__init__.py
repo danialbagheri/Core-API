@@ -4,6 +4,6 @@ from .review_reminder import (
 from .ip_location_finder import IPLocationFinderService
 from .variant_image_request import VariantImageZipper, VariantRequestEmailService, VariantImagesRetriever
 from .in_stock_mailjet_email import InStockMailjetEmail
-from .subscription import SubscribeInvitationMailjetEmail, SubscriptionVerifier
-from .scheduled_emails_sender import ScheduledEmailsSender
+from .subscription import SubscribeInvitationMailjetEmail
 from .email_subscription_validator import EmailSubscriptionValidator
+from .scheduled_emails_sender import ScheduledEmailsSender

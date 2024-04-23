@@ -4,20 +4,11 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import serializers
 
+from common.services import MailjetEmailManager
 from common.services import RecaptchaValidator
 from user.models import ScheduledEmail
-from web.services import ContactUsEmailSender
-from common.services import MailjetEmailManager
 from web.models import ContactForm
-
-REASON_CHOICES = [
-    'Urgent: Change Order detail or Address',
-    'Question about order or Delivery',
-    'Press Contact & Media',
-    'Wholesale, Discount, promo code query',
-    'Product Question',
-    'Other'
-]
+from web.services import ContactUsEmailSender
 
 
 class ContactFormSerializer(serializers.ModelSerializer):

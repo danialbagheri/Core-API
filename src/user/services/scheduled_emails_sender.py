@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from common.services import BaseService
 from user.models import ScheduledEmail, SentEmail
-from user.services import SubscribeInvitationMailjetEmail, SubscriptionVerifier
+from user.services import SubscribeInvitationMailjetEmail, EmailSubscriptionValidator
 
 
 class ScheduledEmailsSender(BaseService):
@@ -23,7 +23,7 @@ class ScheduledEmailsSender(BaseService):
                     email=email,
                     template_name=SentEmail.TEMPLATE_SUBSCRIBE_INVITATION,
                 ).exists() and
-                not SubscriptionVerifier(email).is_subscribed()
+                not EmailSubscriptionValidator(email).validate()
             ):
                 SubscribeInvitationMailjetEmail([email]).send_emails()
             scheduled_email.email_sent = True
