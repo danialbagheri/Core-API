@@ -6,3 +6,4 @@ from .variant_image_request import VariantImageZipper, VariantRequestEmailServic
 from .in_stock_mailjet_email import InStockMailjetEmail
 from .subscription import SubscribeInvitationMailjetEmail, SubscriptionVerifier
 from .scheduled_emails_sender import ScheduledEmailsSender
+from .email_subscription_validator import EmailSubscriptionValidator

@@ -13,15 +13,15 @@ class ProductVariantListSerializer(serializers.ListSerializer):
         pass
 
     def to_representation(self, data):
+        if not hasattr(data, 'filter'):
+            return super().to_representation(data)
         data = data.filter(is_public=True).order_by(F('position').asc(nulls_last=True))
         return super().to_representation(data)
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    image_list = ProductImageSerializer(
-        many=True, read_only=True, source='variant_images')
-    where_to_buy = WhereToBuySerializer(
-        many=True, read_only=True, source='wheretobuy')
+    image_list = ProductImageSerializer(many=True, read_only=True, source='variant_images')
+    where_to_buy = WhereToBuySerializer(many=True, read_only=True, source='wheretobuy')
     price_per_100ml = serializers.SerializerMethodField()
     instagram_posts = InstagramSerializer(many=True, read_only=True)
     price = serializers.SerializerMethodField()
@@ -29,6 +29,9 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     euro_price = serializers.SerializerMethodField()
     euro_compare_at_price = serializers.SerializerMethodField()
     ingredients = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
+    product_slug = serializers.CharField(source='product.slug', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
 
     class Meta:
         model = ProductVariant
@@ -69,3 +72,11 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         ).select_related('ingredient').order_by('priority')
         ingredient_names = [variant_ingredient.ingredient.name for variant_ingredient in variant_ingredients]
         return ingredient_names
+
+    def get_is_favorite(self, variant: ProductVariant):
+        if 'request' not in self.context:
+            return False
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return user.favorite_variants.all().filter(id=variant.id).exists()

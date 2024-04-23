@@ -6,3 +6,4 @@ from .variant_image_request import VariantImageRequest
 from .sent_email import SentEmail
 from .session_cookie import SessionCookie
 from .scheduled_email import ScheduledEmail
+from .amazon_review_reminder import AmazonReviewReminder

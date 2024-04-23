@@ -1,10 +1,13 @@
+from django.db.models import Q
 from rest_framework import viewsets
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from product.models import Product, ProductType
+from product.models import Product
 from ..serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = (JWTAuthentication,)
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
@@ -13,16 +16,14 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         product_type = self.request.query_params.get('type', None)
         count = self.request.query_params.get('count', None)
 
-        # image_width = self.request.query_params.get('image_width', None)
         if product_type is not None:
             try:
-                product_type_instance = ProductType.objects.filter(
-                    name__icontains=product_type,
-                ).first()
-                queryset = queryset.filter(types=product_type_instance)
+                queryset = queryset.filter(
+                    Q(types__name__icontains=product_type) |
+                    Q(types__slug=product_type)
+                )
             except:
                 pass
-        # slide should happen after filtering
         if count:
             queryset = queryset[:int(count)]
         return queryset

@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 
 
@@ -34,6 +35,12 @@ class Slide(models.Model):
     xs_image = models.ImageField(
         upload_to='slide/xs/',
         max_length=None,
+        blank=True,
+    )
+
+    video = models.FileField(
+        upload_to='slide/videos/',
+        validators=[FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])],
         blank=True,
     )
 

@@ -87,6 +87,13 @@ class Product(AutoSlugifyMixin,
         related_name='secondary_product',
     )
 
+    slider = models.ForeignKey(
+        to='web.Slider',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
     @property
     def related_products(self):
         related_products = Product.objects.filter(

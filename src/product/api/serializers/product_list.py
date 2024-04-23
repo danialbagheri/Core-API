@@ -6,13 +6,15 @@ from sorl.thumbnail import get_thumbnail
 from faq.serializers import FaqSerializer
 from product.models import Product, ProductImage, CollectionItem
 from product.utils import check_request_image_size_params
-from . import ProductVariantSerializer, TagSerializer
+from . import ProductVariantSerializer, TagSerializer, ProductImageSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True, read_only=True)
     faq_list = FaqSerializer(many=True, read_only=True, source='faqs')
     tags = TagSerializer(many=True, read_only=True)
+    main_image_data = ProductImageSerializer(read_only=True, source='main_image')
+    secondary_image_data = ProductImageSerializer(read_only=True, source='secondary_image')
     lowest_variant_price = serializers.ReadOnlyField()
     main_image = serializers.SerializerMethodField()
     secondary_image = serializers.SerializerMethodField()

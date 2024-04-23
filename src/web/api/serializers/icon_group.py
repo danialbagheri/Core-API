@@ -21,6 +21,7 @@ class IconGroupItemSerializer(serializers.ModelSerializer):
             'name',
             'icon',
             'svg_icon',
+            'svg_icon_text',
             'url',
             'position',
         )

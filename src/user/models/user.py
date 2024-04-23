@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 from blog.models import BlogPost
-from product.models import Product
+from product.models import Product, ProductVariant
 
 
 class UserManager(BaseUserManager):
@@ -60,13 +60,28 @@ class User(AbstractUser):
         auto_now_add=True,
     )
 
+    mobile_number = models.CharField(
+        max_length=32,
+        blank=True,
+    )
+
     favorite_products = models.ManyToManyField(
         to=Product,
         blank=True,
     )
 
+    favorite_variants = models.ManyToManyField(
+        to=ProductVariant,
+        blank=True,
+    )
+
     bookmarked_blogposts = models.ManyToManyField(
         to=BlogPost,
+        blank=True,
+    )
+
+    is_subscribed = models.BooleanField(
+        null=True,
         blank=True,
     )
 

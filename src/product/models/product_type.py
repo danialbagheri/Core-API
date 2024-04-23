@@ -22,6 +22,13 @@ class ProductType(AutoSlugifyMixin,
         blank=True,
     )
 
+    slider = models.ForeignKey(
+        to='web.Slider',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         verbose_name = 'Product Category'
         verbose_name_plural = 'Product Categories'

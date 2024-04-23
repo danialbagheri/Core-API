@@ -10,5 +10,6 @@ from .slider import SliderAdmin
 from .top_bar import TopBarAdmin
 from .icon_group import IconGroupAdmin
 from .menu import MenuAdmin
+from .attachment import AttachmentAdmin
 
 admin.site.site_header = settings.BRAND_NAME

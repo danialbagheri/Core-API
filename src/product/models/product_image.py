@@ -98,6 +98,14 @@ class ProductImage(models.Model):
         default=False,
     )
 
+    secondary = models.BooleanField(
+        default=False,
+    )
+
+    is_public = models.BooleanField(
+        default=True,
+    )
+
     def image_preview(self):
         if self.image:
             return mark_safe('<img src="{}" width="50" />'.format(self.image.url))
@@ -140,8 +148,15 @@ class ProductImage(models.Model):
         if self.main:
             try:
                 ProductImage.objects.filter(
-                    variant__product=self.variant.product
+                    variant=self.variant
                 ).exclude(pk=self.pk).update(main=False)
+            except:
+                pass
+        if self.secondary:
+            try:
+                ProductImage.objects.filter(
+                    variant=self.variant
+                ).exclude(pk=self.pk).update(secondary=False)
             except:
                 pass
         super(ProductImage, self).save(*args, **kwargs)

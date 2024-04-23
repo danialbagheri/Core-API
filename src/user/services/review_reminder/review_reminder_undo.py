@@ -7,7 +7,9 @@ class ReviewReminderUndoService:
         self._refund_data = refund_data
 
     def _update_review_reminder_bought_variants(self, review_reminder):
-        variants_map = {variant.shopify_rest_variant_id: variant.id for variant in ProductVariant.objects.all()}
+        variants_map = {
+            variant.shopify_rest_variant_id: variant.id for variant in ProductVariant.objects.filter(is_public=True)
+        }
         refund_line_items = self._refund_data['refund_line_items']
         for refund_line_item in refund_line_items:
             restock_type = refund_line_item['restock_type']

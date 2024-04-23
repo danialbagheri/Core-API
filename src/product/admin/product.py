@@ -35,6 +35,9 @@ class ProductAdmin(ExportableAdminMixin,
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name not in ['main_image', 'secondary_image']:
             return super().formfield_for_foreignkey(db_field, request, **kwargs)
-        product_id = request.resolver_match.kwargs['object_id']
-        kwargs['queryset'] = ProductImage.objects.filter(variant__product_id=product_id)
+        product_id = request.resolver_match.kwargs.get('object_id')
+        kwargs['queryset'] = (
+            ProductImage.objects.filter(variant__product_id=product_id) if product_id
+            else ProductImage.objects.none()
+        )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)

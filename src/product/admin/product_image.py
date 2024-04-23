@@ -9,8 +9,11 @@ class ProductImageAdmin(admin.ModelAdmin):
     list_display = (
         'variant',
         'image_preview',
+        'main',
+        'secondary',
         'image_type',
         'image_angle',
+        'is_public',
         'alternate_text',
     )
     search_fields = ('variant__sku', 'variant__name')

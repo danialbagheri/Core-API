@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 import environ
 import os
@@ -86,7 +87,10 @@ INSTALLED_APPS = [
     'review',
     'faq',
     'surveys',
+    'orders',
     'oauth2',
+    'reports',
+
     'django.contrib.sitemaps',
     'rest_framework',
     'djoser',
@@ -190,6 +194,15 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {
+        'user': 'user.api.serializers.UserRetrieveSerializer',
+        'current_user': 'user.api.serializers.UserRetrieveSerializer',
+    }
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
 DOMAIN = env('DOMAIN')
@@ -285,6 +298,7 @@ PHONENUMBER_DEFAULT_REGION = 'GB'
 SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
 SUMMERNOTE_CONFIG = {
     'iframe': True,
+    'attachment_filesize_limit': 1024 * 1024 * 15,
     'summernote': {
         'focus': True,
         'fontSizes': ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'],
@@ -418,3 +432,16 @@ LOGGING = {
         # },
     },
 }
+
+AMAZON_SP_API_CREDENTIALS = {
+    'refresh_token': env('AMAZON_SP_API_REFRESH_TOKEN', default=''),
+    'lwa_app_id': env('AMAZON_SP_API_APP_ID', default=''),
+    'lwa_client_secret': env('AMAZON_SP_API_CLIENT_SECRET', default=''),
+}
+SP_API_DEFAULT_MARKETPLACE = env('SP_API_DEFAULT_MARKETPLACE', default='')
+
+TIKTOK_API_URL = env('TIKTOK_API_URL', default='')
+TIKTOK_APP_KEY = env('TIKTOK_APP_KEY', default='')
+TIKTOK_APP_SECRET = env('TIKTOK_APP_SECRET', default='')
+TIKTOK_ACCESS_TOKEN = env('TIKTOK_ACCESS_TOKEN', default='')
+AMAZON_LOGISTICS_PROVIDER_ID = env('AMAZON_LOGISTICS_PROVIDER_ID', default='')
