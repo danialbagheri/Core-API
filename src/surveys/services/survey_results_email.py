@@ -34,13 +34,13 @@ class SurveyResultsMailjetEmail(TransactionalMailJetEmailService):
                 'product_title': variant.product.name,
             })
         return {
-            "white_logo_url": "https://calypso-static.s3.eu-west-2.amazonaws.com/media/email-images/Calypso-white.png",
-            "website_url": "https://calypsosun.com",
-            "secondary_text_color": "white",
-            "primary_background_color": "#ff6b00",
-            "primary_text_color": "#ff6b00",
-            "discount_code": "P2HNMT42GKA1",
-            "variants_data": variants_data
+            'white_logo_url': 'https://calypso-static.s3.eu-west-2.amazonaws.com/media/email-images/Calypso-white.png',
+            'website_url': 'https://calypsosun.com',
+            'secondary_text_color': 'white',
+            'primary_background_color': '#ff6b00',
+            'primary_text_color': '#ff6b00',
+            'discount_code': 'P2HNMT42GKA1',
+            'variants_data': variants_data
           }
 
     def _get_extra_data(self):
