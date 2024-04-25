@@ -5,11 +5,15 @@ class SentEmail(models.Model):
     TEMPLATE_IN_STOCK = 'in-stock'
     TEMPLATE_REVIEW_REMINDER = 'review-reminder'
     TEMPLATE_REVIEW_APPROVAL = 'review-approval'
+    TEMPLATE_SUBSCRIBE_INVITATION = 'subscribe-invitation'
+    TEMPLATE_SPF_RECOMMENDER = 'spf-recommender'
     TEMPLATE_SURVEY_RESULTS = 'survey-results'
     TEMPLATE_CHOICES = (
         (TEMPLATE_IN_STOCK, 'In Stock'),
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
         (TEMPLATE_REVIEW_APPROVAL, 'Review Approval'),
+        (TEMPLATE_SUBSCRIBE_INVITATION, 'Subscribe Invitation'),
+        (TEMPLATE_SPF_RECOMMENDER, 'SPF Recommender'),
         (TEMPLATE_SURVEY_RESULTS, 'Survey Results'),
     )
 

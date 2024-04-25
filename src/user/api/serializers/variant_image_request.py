@@ -1,9 +1,7 @@
-import requests
-from django.conf import settings
 from django.core.exceptions import ValidationError
-from ipware import get_client_ip
 from rest_framework import serializers
 
+from common.services import RecaptchaValidator
 from user.models import VariantImageRequest
 from user.tasks import SendVariantImagesEmailTask
 from ..validators import ImageRequestFiltersValidator
@@ -55,14 +53,7 @@ class VariantImageRequestSerializer(serializers.ModelSerializer):
 
         if not self.recaptcha_value:
             raise ValidationError('Recaptcha data not sent.')
-        ip, _ = get_client_ip(self.context['request'])
-        response = requests.post(
-            url=f'https://www.google.com/recaptcha/api/siteverify?'
-                f'secret={settings.DRF_RECAPTCHA_SECRET_KEY}&response={self.recaptcha_value}&remoteip={ip}',
-        )
-        data = response.json()
-        if response.status_code != 200 or not data.get('success', False):
-            raise ValidationError('Recaptcha validation failed.')
+        RecaptchaValidator(self.recaptcha_value).validate(self.context['request'])
         return attrs
 
     def create(self, validated_data):

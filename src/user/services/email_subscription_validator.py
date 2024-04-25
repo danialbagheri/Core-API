@@ -15,7 +15,7 @@ class EmailSubscriptionValidator(BaseService):
             auth=(settings.MAILJET_API_KEY, settings.MAILJET_API_SECRET),
             version='v3',
         )
-        self.main_contact_list_id = Configuration.objects.filter(key='main-contact-list-id').first().value
+        self.main_contact_list_id = int(Configuration.objects.filter(key='main-contact-list-id').first().value)
 
     def validate(self):
         response = self.mailjet.contact_getcontactslists.get(id=self.email)

@@ -5,21 +5,15 @@ from django.conf import settings
 from common.services import TransactionalMailJetEmailService
 from product.models import ProductVariant
 from user.models import SentEmail
-from web.models import Configuration
 
 
 class ReviewReminderMailjetEmail(TransactionalMailJetEmailService):
     template_name = SentEmail.TEMPLATE_REVIEW_REMINDER
+    template_config_key = 'review-reminder-email-template-id'
 
     def __init__(self, variants: List[ProductVariant], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.variants = variants
-
-    def _get_template_id(self):
-        template_id_config = Configuration.objects.filter(key='review-reminder-email-template-id').first()
-        if not template_id_config:
-            return None
-        return int(template_id_config.value)
 
     def _get_variables(self) -> Dict[str, Any]:
         variants_data = []

@@ -6,22 +6,16 @@ from common.services import TransactionalMailJetEmailService
 from product.services import RelatedProductsRetriever
 from review.models import Review
 from user.models import SentEmail
-from web.models import Configuration
 
 
 class ReviewApprovalMailjetEmail(TransactionalMailJetEmailService):
     template_name = SentEmail.TEMPLATE_REVIEW_APPROVAL
+    template_config_key = 'review-approval-email-template-id'
 
     def __init__(self, review: Review, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.review = review
         self.related_products = RelatedProductsRetriever(review.product).get_related_products(3)
-
-    def _get_template_id(self):
-        template_id_config = Configuration.objects.filter(key='review-approval-email-template-id').first()
-        if not template_id_config:
-            return None
-        return int(template_id_config.value)
 
     def _get_variables(self) -> Dict[str, Any]:
         product = self.review.product

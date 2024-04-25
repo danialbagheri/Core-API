@@ -4,7 +4,7 @@ from typing import Dict, Set
 
 from product.models import ProductImage
 from .image_convertor import ImageConvertor
-from .image_request_variants_csv_builder import ImageRequestVariantsCsvBuilder
+from ..image_request_variants_csv_builder import ImageRequestVariantsCsvBuilder
 
 
 class VariantImageZipper:

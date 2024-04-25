@@ -445,3 +445,26 @@ TIKTOK_APP_KEY = env('TIKTOK_APP_KEY', default='')
 TIKTOK_APP_SECRET = env('TIKTOK_APP_SECRET', default='')
 TIKTOK_ACCESS_TOKEN = env('TIKTOK_ACCESS_TOKEN', default='')
 AMAZON_LOGISTICS_PROVIDER_ID = env('AMAZON_LOGISTICS_PROVIDER_ID', default='')
+
+SOCIAL_URLS = {
+    'instagram': env('INSTAGRAM_ACCOUNT_URL', default=''),
+    'facebook': env('FACEBOOK_ACCOUNT_URL', default=''),
+    'x': env('X_ACCOUNT_URL', default=''),
+    'youtube': env('YOUTUBE_ACCOUNT_URL', default=''),
+}
+
+MAILJET_EMAILS_THEME = {
+    'primary_background_color': env('PRIMARY_BACKGROUND_COLOR', default=''),
+    'primary_text_color': env('PRIMARY_TEXT_COLOR', default=''),
+    'secondary_text_color': env('SECONDARY_TEXT_COLOR', default=''),
+}
+
+MAILJET_EMAIL_IMAGES = {
+    'instagram_logo': env('INSTAGRAM_LOGO_URL', default=''),
+    'facebook_logo': env('FACEBOOK_LOGO_URL', default=''),
+    'x_logo': env('X_LOGO_URL', default=''),
+    'youtube_logo': env('YOUTUBE_LOGO_URL', default=''),
+    'footer_logo': env('FOOTER_LOGO_URL', default=''),
+    'subscribe_invitation_top': env('SUBSCRIBE_INVITATION_TOP_IMAGE_URL', default=''),
+    'subscribe_invitation_form': env('SUBSCRIBE_INVITATION_FORM_IMAGE_URL', default=''),
+}

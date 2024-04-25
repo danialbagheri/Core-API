@@ -6,13 +6,14 @@ from mailjet_rest import Client
 from requests import Response
 
 from user.models import SentEmail
+from web.models import Configuration
 
 logger = logging.getLogger(__name__)
 
 
 class TransactionalMailJetEmailService:
     template_name = None
-    template_id = None
+    template_config_key = None
 
     def __init__(self, emails: List[str]) -> None:
         self.emails = emails
@@ -22,7 +23,10 @@ class TransactionalMailJetEmailService:
         )
 
     def _get_template_id(self):
-        return self.template_id
+        template_id_config = Configuration.objects.filter(key=self.template_config_key).first()
+        if not template_id_config:
+            return None
+        return int(template_id_config.value)
 
     def _get_receiver_emails(self) -> List[str]:
         return self.emails

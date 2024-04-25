@@ -1,0 +1,1 @@
+from .subscribe_invitation_mailjet_email import SubscribeInvitationMailjetEmail
