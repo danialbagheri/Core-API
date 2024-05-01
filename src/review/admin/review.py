@@ -57,13 +57,14 @@ class ReviewAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         field_name = 'approved'
-        if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
+        is_approved = form.cleaned_data.get(field_name)
+        if change and field_name in form.changed_data and is_approved:
             email = obj.email
             if email:
                 ReviewApprovalMailjetEmail(obj, [email]).send_emails()
 
         field_name = 'reply'
-        if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
+        if is_approved and change and field_name in form.changed_data and form.cleaned_data.get(field_name):
             email = obj.email
             has_sent_email = SentEmail.objects.filter(
                 email=email,
