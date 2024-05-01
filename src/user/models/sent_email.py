@@ -5,11 +5,13 @@ class SentEmail(models.Model):
     TEMPLATE_IN_STOCK = 'in-stock'
     TEMPLATE_REVIEW_REMINDER = 'review-reminder'
     TEMPLATE_REVIEW_APPROVAL = 'review-approval'
+    TEMPLATE_REVIEW_REPLY = 'review-reply'
     TEMPLATE_SURVEY_RESULTS = 'survey-results'
     TEMPLATE_CHOICES = (
         (TEMPLATE_IN_STOCK, 'In Stock'),
         (TEMPLATE_REVIEW_REMINDER, 'Review Reminder'),
         (TEMPLATE_REVIEW_APPROVAL, 'Review Approval'),
+        (TEMPLATE_REVIEW_REPLY, 'Review Reply'),
         (TEMPLATE_SURVEY_RESULTS, 'Survey Results'),
     )
 

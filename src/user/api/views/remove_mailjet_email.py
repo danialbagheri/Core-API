@@ -18,8 +18,8 @@ class RemoveMailjetEmailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         mailjet_email_manager = MailjetEmailManager(email)
-        mailjet_email_manager.remove_email()
+        is_removed = mailjet_email_manager.remove_email()
         return Response(
-            data='Email removed',
-            status=status.HTTP_200_OK,
+            data={'status': mailjet_email_manager.mailjet_email_status.value},
+            status=status.HTTP_200_OK if is_removed else status.HTTP_400_BAD_REQUEST,
         )

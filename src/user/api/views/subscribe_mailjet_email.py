@@ -18,8 +18,8 @@ class SubscribeMailjetEmailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         mailjet_email_manager = MailjetEmailManager(email)
-        mailjet_email_manager.subscribe_email()
+        is_subscribed = mailjet_email_manager.subscribe_email()
         return Response(
-            data='Email subscribed',
-            status=status.HTTP_200_OK,
+            data={'status': mailjet_email_manager.mailjet_email_status.value},
+            status=status.HTTP_200_OK if is_subscribed else status.HTTP_400_BAD_REQUEST,
         )

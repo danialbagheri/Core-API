@@ -3,7 +3,6 @@ from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
 from user.models import User
-from user.services import EmailSubscriptionValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,19 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRetrieveSerializer(DjoserUserSerializer):
-    # is_subscribed = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = DjoserUserSerializer.Meta.fields + ('mobile_number',)
         read_only_fields = DjoserUserSerializer.Meta.read_only_fields
-
-    # @staticmethod
-    # def get_is_subscribed(user: User):
-    #     if user.is_subscribed is not None:
-    #         return user.is_subscribed
-    #
-    #     is_subscribed = EmailSubscriptionValidator(user.email).validate()
-    #     user.is_subscribed = is_subscribed
-    #     user.save(update_fields=['is_subscribed'])
-    #     return is_subscribed
