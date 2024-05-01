@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from review.models import Review, ReviewAnswer, ReviewImage
-from review.services import ReviewApprovalMailjetEmail
+from review.services import ReviewApprovalMailjetEmail, ReviewReplyMailjetEmail
+from user.models import SentEmail
 
 
 class ReviewAnswerInlineAdmin(admin.StackedInline):
@@ -58,6 +59,16 @@ class ReviewAdmin(admin.ModelAdmin):
         field_name = 'approved'
         if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
             email = obj.email
-            if not email:
-                return
-            ReviewApprovalMailjetEmail(obj, [email]).send_emails()
+            if email:
+                ReviewApprovalMailjetEmail(obj, [email]).send_emails()
+
+        field_name = 'reply'
+        if change and field_name in form.changed_data and form.cleaned_data.get(field_name):
+            email = obj.email
+            has_sent_email = SentEmail.objects.filter(
+                email=email,
+                template=SentEmail.TEMPLATE_REVIEW_REPLY,
+                extra_data=obj.id,
+            ).exists()
+            if email and not has_sent_email:
+                ReviewReplyMailjetEmail(obj, [email]).send_emails()
