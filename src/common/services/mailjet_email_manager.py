@@ -40,7 +40,7 @@ class MailjetEmailManager(BaseService):
             'Email': self.email,
             'IsExcludedFromCampaigns': False,
         }
-        self.mailjet.contact_create(data=data)
+        self.mailjet.contact.create(data=data)
 
     def _do_action(self, action):
         if not self.contact_list_id:
