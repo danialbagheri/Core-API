@@ -1,7 +1,6 @@
 from django.db import models
 
 from product.models import Product, ProductVariant
-from review.models import Reply
 from user.models import User
 
 
@@ -96,11 +95,8 @@ class Review(models.Model):
         null=True,
     )
 
-    reply = models.ManyToManyField(
-        to=Reply,
+    reply = models.TextField(
         blank=True,
-        related_name='review',
-        verbose_name='Replies',
     )
 
     opened = models.BooleanField(

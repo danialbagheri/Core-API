@@ -12,7 +12,7 @@ class EmailSubscriptionValidator(BaseService):
         super().__init__(email=email)
         self.email = email
         self.mailjet = Client(
-            auth=(settings.MAILJET_API_KEY, settings.MAILJET_API_SECRET),
+            auth=(settings.MAILJET_API_KEY, settings.MAILJET_SECRET_KEY),
             version='v3',
         )
         self.main_contact_list_id = Configuration.objects.filter(key='main-contact-list-id').first().value

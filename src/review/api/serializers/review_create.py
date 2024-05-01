@@ -3,13 +3,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from product.models import Product
-from . import ReplySerializer, ReviewImageSerializer
+from . import ReviewImageSerializer
 from ...models import Review, ReviewImage, ReviewAnswer
 from ...services import ReviewNotificationEmail
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
-    reply = ReplySerializer(many=True, read_only=True,)
     name = serializers.ReadOnlyField()
     approved = serializers.ReadOnlyField()
     image_ids = serializers.ListField(write_only=True, required=False)
