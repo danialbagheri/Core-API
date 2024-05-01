@@ -20,6 +20,6 @@ class ValidateEmailSubscriptionAPIView(APIView):
         mailjet_email_manager = MailjetEmailManager(email)
         is_subscribed = mailjet_email_manager.validate()
         return Response(
-            data={'is_subscribed': is_subscribed, status: mailjet_email_manager.mailjet_email_status.value},
+            data={'is_subscribed': is_subscribed, 'status': mailjet_email_manager.mailjet_email_status.value},
             status=status.HTTP_200_OK,
         )
