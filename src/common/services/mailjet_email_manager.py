@@ -89,6 +89,7 @@ class MailjetEmailManager(BaseService):
             return False
         response = self.mailjet.contact_getcontactslists.get(id=self.email)
         if response.status_code != 200:
+            self.mailjet_email_status = MailjetEmailStatus.NOT_SUBBED
             return False
 
         results = response.json()['Data']
