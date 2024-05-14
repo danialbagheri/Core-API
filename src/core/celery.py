@@ -19,7 +19,7 @@ app.conf.beat_schedule = {
     },
     'send amazon review reminder emails': {
         'task': 'orders.tasks.SendAmazonReviewReminderTask',
-        'schedule': crontab(hour=10, minute=0),
+        'schedule': crontab(hour=14, minute=0),
     },
     'sync amazon orders': {
         'task': 'orders.tasks.SyncAmazonOrdersTask',

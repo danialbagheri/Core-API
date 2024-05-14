@@ -18,7 +18,7 @@ class AmazonReviewReminderEditor(BaseService):
         AmazonReviewReminder.objects.filter(amazon_order=self.amazon_order).delete()
 
     def edit_review_reminder(self):
-        if self.amazon_order.ORDER_STATUS_CANCELED:
+        if self.amazon_order.order_status == AmazonOrder.ORDER_STATUS_CANCELED:
             self._delete_review_reminder()
             return
 
