@@ -15,7 +15,7 @@ class AmazonOrderSyncer(BaseService):
     def sync_order(self):
         purchase_date = self.order_data.get('PurchaseDate')
         earliest_delivery_date = self.order_data.get('EarliestDeliveryDate')
-        date_format = '%Y-%m-%dT%H:%M:%S%Z'
+        date_format = '%Y-%m-%dT%H:%M:%SZ'
         amazon_order, _ = AmazonOrder.objects.update_or_create(
             amazon_order_id=self.order_data['AmazonOrderId'],
             defaults={
