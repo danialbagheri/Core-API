@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from product.models import ProductVariant
+from web.models import Configuration
+from ..fixtures.orders import orders_fixture
 
 
 class OrderAPIView(APIView):
@@ -149,7 +151,21 @@ class OrderAPIView(APIView):
             data['orders'].append(order_data)
         return data
 
+    def _is_test_email(self):
+        email = self.request.user.email
+        test_emails = Configuration.objects.first(key='test_emails')
+        if not test_emails:
+            return False
+        return email in test_emails.value.split(',')
+
     def get(self, *args, **kwargs):
+        if self._is_test_email():
+            response = orders_fixture['data']['orders']
+            results = self._get_response_data(response)
+            return Response(
+                data=results['orders'],
+                status=status.HTTP_200_OK,
+            )
         cursor = None
         results = []
         while True:
