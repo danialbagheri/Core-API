@@ -153,7 +153,7 @@ class OrderAPIView(APIView):
 
     def _is_test_email(self):
         email = self.request.user.email
-        test_emails = Configuration.objects.first(key='test_emails')
+        test_emails = Configuration.objects.filter(key='test_emails').first()
         if not test_emails:
             return False
         return email in test_emails.value.split(',')
