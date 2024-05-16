@@ -130,6 +130,7 @@ class OrderAPIView(APIView):
                 'total_discount': self._extract_money_data(order_node, 'totalDiscountsSet'),
                 'total_refunded': self._extract_money_data(order_node, 'totalRefundedSet'),
                 'total_refunded_shipping': self._extract_money_data(order_node, 'totalRefundedShippingSet'),
+                'shipping_address': order_node.get('shippingAddress'),
             }
             response_items = order_node['lineItems']['edges']
             items_data = []
@@ -154,10 +155,11 @@ class OrderAPIView(APIView):
                 items_data.append(item_data)
 
             tracking_numbers = []
-            for fulfillment in order_node['fulfillments']:
-                if not fulfillment or not fulfillment['trackingInfo'] or not fulfillment['trackingInfo']['number']:
+            for fulfillment in order_node.get('fulfillments', []):
+                tracking_info = fulfillment.get('trackingInfo', [])
+                if not tracking_info:
                     continue
-                tracking_numbers.append(fulfillment['trackingInfo']['number'])
+                tracking_numbers.append(fulfillment['trackingInfo'][0]['number'])
             order_data['items'] = items_data
             order_data['tracking_numbers'] = tracking_numbers
             data['orders'].append(order_data)

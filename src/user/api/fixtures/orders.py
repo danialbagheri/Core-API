@@ -59,6 +59,13 @@ orders_fixture = {
                 ]
               }
             ],
+            "shippingAddress": {
+              "address1": "3 Greenfields Drive",
+              "address2": None,
+              "city": "Coalville",
+              "country": "United Kingdom",
+              "zip": "LE67 4DJ"
+            },
             "lineItems": {
               "edges": [
                 {
@@ -127,6 +134,13 @@ orders_fixture = {
               }
             },
             "fulfillments": [],
+            "shippingAddress": {
+              "address1": "YAN LTD",
+              "address2": "53a- 55 Queens rd",
+              "city": "Leicester",
+              "country": "United Kingdom",
+              "zip": "LE2 1TT"
+            },
             "lineItems": {
               "edges": [
                 {
@@ -193,6 +207,20 @@ orders_fixture = {
                 "amount": "0.0",
                 "currencyCode": "GBP"
               }
+            },
+            "fulfillments": [{
+                "trackingInfo": [
+                  {
+                    "number": "QB0665384086"
+                  }
+                ]
+            }],
+            "shippingAddress": {
+              "address1": "YAN LTD",
+              "address2": "53a- 55 Queens rd",
+              "city": "Leicester",
+              "country": "United Kingdom",
+              "zip": "LE2 1TT"
             },
             "lineItems": {
               "edges": [
