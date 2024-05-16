@@ -43,6 +43,22 @@ orders_fixture = {
                 "currencyCode": "GBP"
               }
             },
+            "fulfillments": [
+              {
+                "trackingInfo": [
+                  {
+                    "number": "QB0667623375"
+                  }
+                ]
+              },
+              {
+                "trackingInfo": [
+                  {
+                    "number": "QB0667494664"
+                  }
+                ]
+              }
+            ],
             "lineItems": {
               "edges": [
                 {
@@ -110,6 +126,7 @@ orders_fixture = {
                 "currencyCode": "GBP"
               }
             },
+            "fulfillments": [],
             "lineItems": {
               "edges": [
                 {

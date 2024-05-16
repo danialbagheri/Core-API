@@ -69,6 +69,11 @@ class OrderAPIView(APIView):
             currencyCode
           }
         }
+        fulfillments(first: 3) {
+          trackingInfo {
+            number
+          }
+        }
         lineItems(first:10) {
           edges {
             node {
@@ -147,7 +152,14 @@ class OrderAPIView(APIView):
                     'total_price': self._extract_money_data(item_node, 'discountedTotalSet'),
                 }
                 items_data.append(item_data)
+
+            tracking_numbers = []
+            for fulfillment in order_node['fulfillments']:
+                if not fulfillment or not fulfillment['trackingInfo'] or not fulfillment['trackingInfo']['number']:
+                    continue
+                tracking_numbers.append(fulfillment['trackingInfo']['number'])
             order_data['items'] = items_data
+            order_data['tracking_numbers'] = tracking_numbers
             data['orders'].append(order_data)
         return data
 
