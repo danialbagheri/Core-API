@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import logging
 import time
 from typing import List, Tuple
 
@@ -7,6 +8,9 @@ import requests
 from django.conf import settings
 
 from common.services import BaseService
+from web.models import Configuration
+
+logger = logging.getLogger(__name__)
 
 
 class TiktokClient(BaseService):
@@ -48,3 +52,26 @@ class TiktokClient(BaseService):
         url = f'{settings.TIKTOK_API_URL}{path}'
         response = requests.post(url, json=body, params=params)
         return response.json()
+
+    def refresh_access_token(self):
+        refresh_token_config = Configuration.objects.filter(key='tiktok_refresh_token').first()
+        if not refresh_token_config:
+            logger.exception(msg='TikTok refresh token not found in configuration')
+            return
+
+        url = f'{settings.TIKTOK_AUTH_URL}/api/v2/token/refresh'
+        params = {
+            'app_key': self.app_key,
+            'app_secret': self.app_secret,
+            'refresh_token': refresh_token_config.value,
+            'grant_type': 'refresh_token',
+        }
+        response = requests.get(url, params=params)
+        data = response.json()['data']
+        access_token = data['access_token']
+        refresh_token = data['refresh_token']
+        Configuration.objects.filter(key='tiktok_refresh_token').update(value=refresh_token)
+        Configuration.objects.update_or_create(
+            key='tiktok_access_token',
+            defaults={'value': access_token},
+        )

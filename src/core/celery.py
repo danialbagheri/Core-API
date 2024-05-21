@@ -29,4 +29,8 @@ app.conf.beat_schedule = {
         'task': 'reports.tasks.SendWeeklyMarketingEmailTask',
         'schedule': crontab(hour=8, minute=30, day_of_week=1),
     },
+    'refresh tiktok access token': {
+        'task': 'orders.tasks.RefreshTikTokAccessTokenTask',
+        'schedule': crontab(hour=2, minute=0),
+    }
 }
