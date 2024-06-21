@@ -445,6 +445,8 @@ TIKTOK_APP_KEY = env('TIKTOK_APP_KEY', default='')
 TIKTOK_APP_SECRET = env('TIKTOK_APP_SECRET', default='')
 TIKTOK_ACCESS_TOKEN = env('TIKTOK_ACCESS_TOKEN', default='')
 AMAZON_LOGISTICS_PROVIDER_ID = env('AMAZON_LOGISTICS_PROVIDER_ID', default='')
+VEEQO_API_KEY = env('VEEQO_API_KEY', default='')
+VEEQO_API_URL = env('VEEQO_API_URL', default='')
 
 SOCIAL_URLS = {
     'instagram': env('INSTAGRAM_ACCOUNT_URL', default=''),

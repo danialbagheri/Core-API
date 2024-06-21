@@ -9,3 +9,4 @@ from .recaptcha_validator import RecaptchaValidator
 from .mailjet_email_manager import MailjetEmailManager
 from .svg_file_processor import SvgFileProcessor
 from .tiktok_client import TiktokClient
+from .veeqo_client import VeeqoClient

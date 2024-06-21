@@ -3,12 +3,15 @@
 </h1>
 
 # Introduction[](#introduction)
+
 Backend project for linco care brands.
 
 ---
 
 # Table of Contents
 
+- [Introduction](#introduction)
+- [Table of Contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Settings](#settings)
   - [Security and Debug](#security-and-debug)
@@ -20,12 +23,13 @@ Backend project for linco care brands.
   - [Mailjet](#mailjet)
   - [File or Directory Locations](#file-or-directory-locations)
   - [Google reCAPTCHA](#google-recaptcha)
+  - [Veeqo](#veeqo)
   - [Cookie Keys](#cookie-keys)
-  - [AWS](#aws-optional)
+  - [AWS (optional)](#aws-optional)
     - [Setup](#setup)
     - [Environment Variables](#environment-variables)
-  - [Instagram](#instagram-optional)
-  - [IP Info](#ip-info-optional)
+  - [Instagram (optional)](#instagram-optional)
+  - [IP Info (optional)](#ip-info-optional)
 - [Deployment](#deployment)
   - [Clone the Project](#clone-the-project)
   - [Set Environment Variables](#set-environment-variables)
@@ -33,12 +37,14 @@ Backend project for linco care brands.
   - [Build All the Containers](#build-all-the-containers)
   - [Apply Migrations](#apply-migrations)
   - [Collect Statics](#collect-statics)
+  - [Cloudflare](#cloudflare)
   - [Nginx](#nginx)
 - [Configuration Model](#configuration-model)
 
 ---
 
 # Prerequisites
+
 Before deploying the project you have to make sure that you have the following pre-requisites installed:
 
 - Nginx
@@ -49,6 +55,7 @@ Before deploying the project you have to make sure that you have the following p
 ---
 
 # Settings[](#settings)
+
 There are some configurations needed before starting the deployment. Most of the
 configurations are saved as environment variables. To add an environment variable, you must
 create a `.env` file beside the docker-compose file of the project and add the variables in that file.
@@ -101,6 +108,7 @@ the following environment variables:
   - Extra parameters to use when connection to the database.
 
 ## Email Service
+
 You have to set up an email service for your brand and afterward, set the
 following environment variables:
 
@@ -179,17 +187,17 @@ which are as following:
   - If a product doesn't have a product image, this image will be used.
   - It should be manually uploaded somewhere inside the media directory.
   - If media files are being served locally and
-its path is `media/foo/bar.jpg`, this variable
-should be set to `/media/foo/bar.jpg`.
+    its path is `media/foo/bar.jpg`, this variable
+    should be set to `/media/foo/bar.jpg`.
   - If media files are being served by AWS, this variable should be
-the complete url of the image.
+    the complete url of the image.
 - `INSTAGRAM_IMAGES_PATH`
   - This is the directory containing all the instagram images.
   - It should be manually uploaded somewhere inside the media directory.
   - If its path is `media/foo`, this variable should be set to `/media/foo`.
 - `BRAND_DIR_NAME`
   - This field is used in the docker-compose file to name directories related
-to your project.
+    to your project.
   - It should be the brand name but lowercase.
 
 ## Google reCAPTCHA
@@ -202,6 +210,15 @@ variables:
 - `DRF_RECAPTCHA_PROXY`
   - Found in google admin.
 
+## Veeqo
+
+We need the below Veeqo environment variables:
+
+- `VEEQO_API_URL`
+  - https://api.veeqo.com
+- `VEEQO_API_KEY`
+  - Found in Veeqo under user settings
+
 ## Cookie Keys
 
 This projects uses cookies in some of its procedures. The following
@@ -209,15 +226,17 @@ environment variables are the cookie keys:
 
 - `REVIEW_RATE_COOKIE_KEY`
   - In the process of liking and disliking a review, we set a cookie to stop
-(to some extent)
-anonymous users from spamming like or dislike.
+    (to some extent)
+    anonymous users from spamming like or dislike.
   - By default, it's set to `review-rate`.
 
 ## AWS (optional)
+
 If you want to use AWS for the project's static and media files, take the
 following steps:
 
 ### Setup
+
 Login to your AWS account and follow these steps to set up your bucket.
 
 <details>
@@ -235,12 +254,15 @@ Now click on the "Create bucket" button. On this page set the following settings
 - Set the bucket name to something unique containing your brand name.
 
 ![](readme-images/bucket-name.png)
+
 - Enable ACLs and set the object ownership to "Bucket owner preferred".
 
 ![](readme-images/object-ownership.png)
+
 - Uncheck the "Block all public access" and all other checkboxes on that section.
 
 ![](readme-images/check-public-access.png)
+
 - Don't change other settings and create the bucket.
 </details>
 
@@ -251,65 +273,47 @@ Click on your bucket and select the "Permissions" tab in your bucket's page.
 Make the following changes:
 
 - Add the JSON object below to the "Bucket Policy" section.
-This will fully public all the files in the bucket. Note that you
-should replace "$BUCKET_NAME" with the project's bucket name.
+  This will fully public all the files in the bucket. Note that you
+  should replace "$BUCKET_NAME" with the project's bucket name.
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "allowPerm",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::$BUCKET_NAME/*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "allowPerm",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::$BUCKET_NAME/*"
+    }
+  ]
 }
 ```
 
 - Add the JSON object below to the CORS section.
-This will prevent later CORS errors.
+  This will prevent later CORS errors.
 
 <div style="height: 400px; overflow: auto;">
 
 ```json
 [
-    {
-        "AllowedHeaders": [
-            "Authorization"
-        ],
-        "AllowedMethods": [
-            "GET"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    },
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "HEAD",
-            "GET",
-            "PUT",
-            "POST",
-            "DELETE"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": [
-            "ETag",
-            "x-amz-meta-custom-header"
-        ]
-    }
+  {
+    "AllowedHeaders": ["Authorization"],
+    "AllowedMethods": ["GET"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": [],
+    "MaxAgeSeconds": 3000
+  },
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["HEAD", "GET", "PUT", "POST", "DELETE"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": ["ETag", "x-amz-meta-custom-header"]
+  }
 ]
 ```
+
 </div>
 </details>
 
@@ -328,28 +332,26 @@ Now click on the "Create Group" button. On this page, set the following settings
 - Set the group name to your brand name.
 
 ![](readme-images/group-name.png)
+
 - On the "Attach permissions policies" section, click on "Create policy".
-Copy the JSON object below to the policy editor, and name the policy
-"<BRAND>S3FullAccess".
+  Copy the JSON object below to the policy editor, and name the policy
+  "<BRAND>S3FullAccess".
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::$BRAND_NAME",
-                "arn:aws:s3:::$BRAND_NAME/*"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": ["arn:aws:s3:::$BRAND_NAME", "arn:aws:s3:::$BRAND_NAME/*"]
+    }
+  ]
 }
 ```
 
 - Go back to the group create page and refresh the policies list.
-Choose the policy you just created.
+  Choose the policy you just created.
 - Create the group.
 </details>
 
@@ -378,15 +380,16 @@ just created. To create the access keys, take the following steps:
 - Select the "Security credentials" tab.
 - Scroll down to "Access keys" section and click on "Create access key" button.
 - You will see a list of use-cases to choose from. For this project the use case
-is "Application running outside AWS".
+  is "Application running outside AWS".
 - It's optional to add a description.
 - Create access key.
-- On the next page, it will show you an access key and a secret access key. 
-You will only see the secret access key once, so be sure to never lose it.
+- On the next page, it will show you an access key and a secret access key.
+  You will only see the secret access key once, so be sure to never lose it.
 
 </details>
 
 ### Environment Variables
+
 After retrieving AWS API keys, to connect your project to AWS,
 you must set the following environment variables:
 
@@ -420,14 +423,18 @@ set the following environment variable:
 ---
 
 # Deployment
+
 ### Clone the Project
+
 Clone the project and cd into the project directory.
+
 ```shell
 git clone git@github.com:danialbagheri/Core-API.git
 cd Core-API/
 ```
 
 ### Set Environment Variables
+
 Add the `.env` file created in the [settings](#settings) section to this directory.
 <br>
 Also add a `.env.postgres` file with only one field, `POSTGRES_PASSWORD`,
@@ -437,12 +444,14 @@ which is the password for the user `postgres`.
 
 First create the postgres container. You should use `docker-compse.staging.yml`
 if you are setting up the staging server.
+
 <details>
 <summary>Main server</summary>
 
 ```shell
 docker-compose build postgres && docker-compose up -d postgres
 ```
+
 </details>
 
 <details>
@@ -451,6 +460,7 @@ docker-compose build postgres && docker-compose up -d postgres
 ```shell
 docker-compose -f docker-compose.staging.yml build postgres && docker-compose -f docker-compose.staging.yml up -d postgres
 ```
+
 </details>
 
 Next connect to the postgres container bash. You can check the container
@@ -486,6 +496,7 @@ Similar to before, we will use `docker-compose.staging.yml` for our staging serv
 ```shell
 docker-compose build && docker-compose up -d
 ```
+
 </details>
 
 <details>
@@ -494,6 +505,7 @@ docker-compose build && docker-compose up -d
 ```shell
 docker-compose -f docker-compose.staging.yml build && docker-compose -f docker-compose.staging.yml up -d
 ```
+
 </details>
 
 ### Apply Migrations
@@ -533,11 +545,11 @@ Take the following steps to set up your Cloudflare account.
 - Register your site.
 - Go to the "DNS" tab in the left menu and add a record for your domain.
   - The type of the record should be A.
-- Go to the "Overview" section of "SSL/TLS" tab in the left menu 
-and select the "Full (strict)" mode.
+- Go to the "Overview" section of "SSL/TLS" tab in the left menu
+  and select the "Full (strict)" mode.
 - Go to the "Origin Server" section of "SSL/TLS" tab.
 - Create a certificate. NOTE: Only create it for the exact hosts you are using.
-Using for all the subdomains might break another website.
+  Using for all the subdomains might break another website.
   - Save the "Origin Certificate" at `/etc/ssl/<brand>-cert.pem`.
   - Save the "Private key" at `/etc/ssl/<brand>-key.pem`.
 - Add the Cloudflare certificate below to `/etc/ssl/cloudflare.crt`.
@@ -583,7 +595,7 @@ fVQ6VpyjEXdiIXWUq/o=
 
 ### Nginx
 
-At this moment, all of your containers are up and running, and 
+At this moment, all of your containers are up and running, and
 the connection between your server and Cloudflare is configured.
 all you need to do is to set up your Nginx. Take the following steps
 to set up your nginx:
@@ -647,6 +659,7 @@ server {
     }
 }
 ```
+
 </details>
 
 <details>
@@ -693,10 +706,11 @@ server {
     }
 }
 ```
+
 </details>
 
 - If you are hosting more than one website, add
-this line to the `http` bracket of `/etc/nginx/nginx.conf`:
+  this line to the `http` bracket of `/etc/nginx/nginx.conf`:
 
 ```
 server_names_hash_bucket_size 64;
@@ -714,7 +728,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-This is it! You have successfully deployed your project ^_^
+This is it! You have successfully deployed your project ^\_^
 
 ---
 
