@@ -3,3 +3,4 @@ from .amazon_review_reminder_sender import AmazonReviewReminderSender
 from .amazon_order_retriever import AmazonOrderRetriever
 from .order_builder import OrderBuilder
 from .order_fulfillment_service import OrderFulfillmentService
+from .veeqo_order_retriever import VeeqoOrderRetriever

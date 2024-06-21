@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from common.services import BaseService, TiktokClient
-
+from .veeqo_order_retriever import VeeqoOrderRetriever
 
 class OrderFulfillmentService(BaseService):
     service_name = 'Order Fulfillment Service'
@@ -22,6 +22,11 @@ class OrderFulfillmentService(BaseService):
         for fulfillment in fulfillments:
             tracking_number = fulfillment['tracking_number']
             if tracking_number:
+                return tracking_number
+            else:
+                #TODO: get shopify_order_number from order_data
+                shopify_order_number = self.order_data['order_number'] 
+                tracking_number = VeeqoOrderRetriever(shopify_order_number).get_tracking_number()
                 return tracking_number
 
     def fulfill_order(self):
